@@ -1,16 +1,12 @@
 import React from "react";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
-import { prisma } from "@/lib/prisma";
+import { DEFAULT_SETTINGS } from "@/lib/static-data";
 import ContactForm from "@/components/ContactForm";
 
 export const revalidate = 0; // Dynamic server-side rendering
 
 export default async function ContactPage() {
-  const settingsList = await prisma.websiteSetting.findMany();
-  const settings: Record<string, string> = {};
-  settingsList.forEach((s) => {
-    settings[s.key] = s.value;
-  });
+  const settings = DEFAULT_SETTINGS;
 
   const address = settings["store_address"] || "12, Freeganj Main Road, Opp. Gold Gym, Ujjain, Madhya Pradesh - 456001";
   const timings = settings["store_timings"] || "10:00 AM - 09:30 PM (All Days)";

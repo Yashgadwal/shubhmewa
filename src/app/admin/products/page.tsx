@@ -1,25 +1,15 @@
 import React from "react";
-import { prisma } from "@/lib/prisma";
+import { PRODUCTS, CATEGORIES } from "@/lib/static-data";
 import ProductsManager from "@/components/ProductsManager";
 
 export const revalidate = 0; // Dynamic server-side rendering
 
 export default async function AdminProductsPage() {
-  const [products, categories] = await Promise.all([
-    prisma.product.findMany({
-      include: {
-        images: { orderBy: { displayOrder: "asc" } },
-        variants: { orderBy: { weight: "asc" } },
-        category: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    }),
-    prisma.category.findMany({
-      where: { isActive: true },
-    }),
-  ]);
+  const categories = CATEGORIES;
+  const products = PRODUCTS.map((p) => ({
+    ...p,
+    category: CATEGORIES.find((c) => c.id === p.categoryId) || { name: "General" }
+  }));
 
   return (
     <div className="space-y-6 font-sans">

@@ -1,14 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { CATEGORIES } from "@/lib/static-data";
 
 export const revalidate = 0; // Dynamic server-side rendering
 
 export default async function CategoriesPage() {
-  const categories = await prisma.category.findMany({
-    where: { isActive: true },
-    orderBy: { displayOrder: "asc" },
-  });
+  const categories = CATEGORIES;
 
   return (
     <div className="w-full bg-brand-cream-light/30 min-h-screen py-16">

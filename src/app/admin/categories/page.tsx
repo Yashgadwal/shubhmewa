@@ -1,15 +1,11 @@
 import React from "react";
-import { prisma } from "@/lib/prisma";
+import { CATEGORIES } from "@/lib/static-data";
 import CategoriesManager from "@/components/CategoriesManager";
 
 export const revalidate = 0; // Dynamic server-side rendering
 
 export default async function AdminCategoriesPage() {
-  const categories = await prisma.category.findMany({
-    orderBy: {
-      displayOrder: "asc",
-    },
-  });
+  const categories = CATEGORIES;
 
   return (
     <div className="space-y-6 font-sans">

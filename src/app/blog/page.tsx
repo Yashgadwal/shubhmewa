@@ -1,15 +1,14 @@
 import React from "react";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { BLOG_POSTS } from "@/lib/static-data";
 
 export const revalidate = 0; // Dynamic server-side rendering
 
 export default async function BlogListPage() {
-  const posts = await prisma.blogPost.findMany({
-    where: { status: "PUBLISHED" },
-    include: { category: true },
-    orderBy: { createdAt: "desc" },
-  });
+  const posts = BLOG_POSTS.map((p) => ({
+    ...p,
+    category: { name: p.categoryName }
+  }));
 
   return (
     <div className="w-full bg-brand-cream-light/30 min-h-screen py-16 font-sans">

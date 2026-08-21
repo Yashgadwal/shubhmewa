@@ -1,15 +1,11 @@
 import React from "react";
-import { prisma } from "@/lib/prisma";
+import { DEFAULT_SETTINGS } from "@/lib/static-data";
 import BulkOrderForm from "@/components/BulkOrderForm";
 
 export const revalidate = 0; // Dynamic server-side rendering
 
 export default async function WeddingGiftingPage() {
-  const settingsList = await prisma.websiteSetting.findMany({
-    where: { key: "whatsapp_number" }
-  });
-  
-  const whatsappNumber = settingsList[0]?.value || "919876543210";
+  const whatsappNumber = DEFAULT_SETTINGS["whatsapp_number"] || "919876543210";
 
   return (
     <div className="w-full bg-brand-cream-light/30 min-h-screen py-16 font-sans">

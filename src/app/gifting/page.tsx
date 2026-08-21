@@ -1,28 +1,13 @@
 import React from "react";
-import { prisma } from "@/lib/prisma";
+import { PRODUCTS, DEFAULT_SETTINGS } from "@/lib/static-data";
 import ProductCard, { ProductWithDetails } from "@/components/ProductCard";
 import HamperBuilder from "@/components/HamperBuilder";
 
 export const revalidate = 0; // Dynamic server-side rendering
 
 export default async function GiftingPage() {
-  // Query all gift hampers products
-  const products = await prisma.product.findMany({
-    where: {
-      isActive: true,
-      category: { slug: "hampers" }
-    },
-    include: {
-      images: { orderBy: { displayOrder: "asc" } },
-      variants: { orderBy: { weight: "asc" } },
-    },
-  });
-
-  const settingsList = await prisma.websiteSetting.findMany({
-    where: { key: "whatsapp_number" }
-  });
-  
-  const whatsappNumber = settingsList[0]?.value || "919876543210";
+  const products = PRODUCTS.filter((p) => p.categoryId === "cat-hampers");
+  const whatsappNumber = DEFAULT_SETTINGS["whatsapp_number"] || "919876543210";
 
   return (
     <div className="w-full bg-brand-cream-light/30 min-h-screen py-16 font-sans">

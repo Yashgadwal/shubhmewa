@@ -1,7 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { BLOG_POSTS } from "@/lib/static-data";
 import { ArrowLeft, Clock, User, Tag } from "lucide-react";
 
 export const revalidate = 0; // Dynamic server-side rendering
@@ -16,26 +16,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Resolve params promise in Next.js 15
   const { slug } = await params;
 
-  // Fetch blog post details
-  const post = await prisma.blogPost.findUnique({
-    where: { slug },
-    include: { category: true },
-  });
+  // Find static blog post details
+  const staticPost = BLOG_POSTS.find((p) => p.slug === slug);
 
-  if (!post) {
+  if (!staticPost) {
     notFound();
   }
 
-  // Fetch recent posts (excluding current)
-  const recentPosts = await prisma.blogPost.findMany({
-    where: {
-      status: "PUBLISHED",
-      id: { not: post.id },
-    },
-    include: { category: true },
-    take: 3,
-    orderBy: { createdAt: "desc" },
-  });
+  const post = {
+    ...staticPost,
+    category: { name: staticPost.categoryName }
+  };
+
+  // Filter recent posts
+  const recentPosts = BLOG_POSTS.filter((p) => p.slug !== slug)
+    .slice(0, 3)
+    .map((p) => ({
+      ...p,
+      category: { name: p.categoryName }
+    }));
 
   // Zero-dependency simple Markdown-to-React elements parser
   const renderContent = (content: string) => {

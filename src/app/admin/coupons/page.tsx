@@ -1,15 +1,14 @@
 import React from "react";
-import { prisma } from "@/lib/prisma";
 import CouponsManager from "@/components/CouponsManager";
 
 export const revalidate = 0; // Dynamic server-side rendering
 
 export default async function AdminCouponsPage() {
-  const coupons = await prisma.coupon.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const coupons = [
+    { id: "cp-1", code: "WELCOME10", type: "PERCENTAGE", value: 10, minOrderValue: 500, usageCount: 5, isActive: true },
+    { id: "cp-2", code: "SHUBH15", type: "PERCENTAGE", value: 15, minOrderValue: 999, usageCount: 12, isActive: true },
+    { id: "cp-3", code: "MEWA100", type: "FIXED", value: 100, minOrderValue: 750, usageCount: 8, isActive: true }
+  ];
 
   return (
     <div className="space-y-6 font-sans">

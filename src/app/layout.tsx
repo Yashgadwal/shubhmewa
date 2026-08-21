@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
-import { prisma } from "@/lib/prisma";
+import { DEFAULT_SETTINGS } from "@/lib/static-data";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import Script from "next/script";
 
@@ -41,16 +41,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Fetch settings at server level
-  const settingsMap: Record<string, string> = {};
-  try {
-    const settings = await prisma.websiteSetting.findMany();
-    settings.forEach((s) => {
-      settingsMap[s.key] = s.value;
-    });
-  } catch (error) {
-    console.error("Failed to load layout settings:", error);
-  }
+  const settingsMap = DEFAULT_SETTINGS;
 
   return (
     <html

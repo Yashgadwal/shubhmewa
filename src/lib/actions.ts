@@ -1,9 +1,8 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { prisma } from "./prisma";
-import { verifyPassword } from "./auth";
 import { redirect } from "next/navigation";
+import { DEFAULT_SETTINGS, PRODUCTS, CATEGORIES } from "./static-data";
 
 // ==========================================
 // ADMIN AUTHENTICATION ACTIONS
@@ -17,87 +16,105 @@ export async function adminLogin(prevState: any, formData: FormData) {
     return { error: "Please enter both email and password." };
   }
 
-  try {
-    const admin = await prisma.adminUser.findUnique({
-      where: { email },
-    });
+  const demoEmail = "admin@harshildryfruits.com";
+  const demoPassword = "harshiladmin";
 
-    if (!admin) {
-      return { error: "Invalid email or password." };
-    }
-
-    const isValid = verifyPassword(password, admin.passwordHash);
-    if (!isValid) {
-      return { error: "Invalid email or password." };
-    }
-
-    // Set cookie
+  if (email === demoEmail && password === demoPassword) {
     const cookieStore = await cookies();
     cookieStore.set("admin_session", email, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       path: "/",
       maxAge: 60 * 60 * 24 * 7, // 7 days
-      sameSite: "lax",
     });
 
-    // Log Activity
-    await prisma.activityLog.create({
-      data: {
-        adminId: admin.id,
-        action: "LOGIN",
-        details: `Admin logged in successfully from ${email}`,
-      },
-    });
-
-  } catch (error) {
-    console.error("Login error:", error);
-    return { error: "Something went wrong. Please try again." };
+    redirect("/admin/dashboard");
   }
 
-  redirect("/admin/dashboard");
+  return { error: "Invalid email or password." };
 }
 
 export async function adminLogout() {
   const cookieStore = await cookies();
-  const email = cookieStore.get("admin_session")?.value;
-
-  if (email) {
-    const admin = await prisma.adminUser.findUnique({ where: { email } });
-    if (admin) {
-      await prisma.activityLog.create({
-        data: {
-          adminId: admin.id,
-          action: "LOGOUT",
-          details: `Admin logged out`,
-        },
-      });
-    }
-  }
-
   cookieStore.delete("admin_session");
   redirect("/admin/login");
 }
 
 export async function getAdminSession() {
   const cookieStore = await cookies();
-  const session = cookieStore.get("admin_session");
-  if (!session) return null;
+  const sessionCookie = cookieStore.get("admin_session");
 
-  try {
-    const admin = await prisma.adminUser.findUnique({
-      where: { email: session.value },
-      select: { id: true, email: true, name: true, role: true },
-    });
-    return admin;
-  } catch (e) {
-    return null;
-  }
+  if (!sessionCookie) return null;
+
+  return {
+    id: "admin-1",
+    email: sessionCookie.value,
+    name: "Administrator",
+    role: "ADMIN",
+  };
 }
 
 // ==========================================
-// CLIENT-FACING E-COMMERCE & LEAD ACTIONS
+// ADMIN DASHBOARD STATS
 // ==========================================
+
+export async function getDashboardStats() {
+  const recentOrders = [
+    {
+      id: "ord-1",
+      orderNumber: "ORD-2026-1001",
+      customerName: "Aman Agrawal",
+      totalAmount: 1240,
+      orderStatus: "NEW",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: "ord-2",
+      orderNumber: "ORD-2026-1002",
+      customerName: "Megha Vyas",
+      totalAmount: 780,
+      orderStatus: "PACKED",
+      createdAt: new Date().toISOString(),
+    },
+  ];
+
+  const recentEnquiries = [
+    {
+      id: "enq-1",
+      customerName: "Nisha Garg (Nexora Group)",
+      occasion: "Corporate Gifting",
+      quantity: 50,
+      status: "NEW",
+    },
+    {
+      id: "enq-2",
+      customerName: "Rahul Sethi",
+      occasion: "Wedding Invites",
+      quantity: 120,
+      status: "IN_PROGRESS",
+    },
+  ];
+
+  return {
+    totalRevenue: 2020,
+    whatsappClicks: 42,
+    enquiriesCount: 2,
+    productsCount: PRODUCTS.length,
+    recentOrders,
+    recentEnquiries,
+  };
+}
+
+// ==========================================
+// CHECKOUT & PROPOSAL GENERATION
+// ==========================================
+
+interface OrderItemInput {
+  productName: string;
+  weight: string;
+  quantity: number;
+  price: number;
+}
 
 export async function createOrder(data: {
   customerName: string;
@@ -105,117 +122,35 @@ export async function createOrder(data: {
   whatsapp: string;
   email?: string;
   shippingAddress?: string;
-  deliveryType: "DELIVERY" | "PICKUP";
+  deliveryType: string;
   orderNotes?: string;
+  items: OrderItemInput[];
   couponCode?: string;
-  items: {
-    productId: string;
-    variantId?: string;
-    productName: string;
-    weight: string;
-    quantity: number;
-    price: number;
-  }[];
-  paymentMethod: "COD" | "ONLINE";
-  checkoutMethod: "WHATSAPP" | "ONLINE";
-}) {
+}): Promise<{ success: boolean; orderNumber?: string; order?: any; error?: string }> {
   try {
-    // 1. Generate Order Number
-    const orderNumber = `HDF-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`;
-
-    // 2. Resolve Coupon discount
-    let discountAmount = 0;
-    let couponId: string | null = null;
-    if (data.couponCode) {
-      const coupon = await prisma.coupon.findUnique({
-        where: { code: data.couponCode, isActive: true },
-      });
-      if (coupon) {
-        couponId = coupon.id;
-        const subtotal = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        if (coupon.type === "PERCENTAGE") {
-          discountAmount = (subtotal * coupon.value) / 100;
-          if (coupon.maxDiscount) {
-            discountAmount = Math.min(discountAmount, coupon.maxDiscount);
-          }
-        } else {
-          discountAmount = coupon.value;
-        }
-        
-        // Update coupon usage
-        await prisma.coupon.update({
-          where: { id: coupon.id },
-          data: { usageCount: { increment: 1 } },
-        });
-      }
-    }
-
-    const subtotal = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const orderNumber = `ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    const orderAmount = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     
-    // Delivery fees setup from settings
-    const settings = await prisma.websiteSetting.findMany({
-      where: { key: { in: ["announcement_text", "whatsapp_number"] } }
-    });
-    
-    let deliveryFee = 0;
-    if (data.deliveryType === "DELIVERY") {
-      deliveryFee = subtotal - discountAmount >= 999 ? 0 : 50; // free above 999
-    }
+    const mockOrder = {
+      id: `ord-${Math.floor(1000 + Math.random() * 9000)}`,
+      orderNumber,
+      customerName: data.customerName,
+      phone: data.phone,
+      whatsapp: data.whatsapp,
+      email: data.email || null,
+      shippingAddress: data.shippingAddress || null,
+      deliveryType: data.deliveryType,
+      orderNotes: data.orderNotes || null,
+      totalAmount: orderAmount,
+      orderStatus: "NEW",
+      createdAt: new Date().toISOString(),
+      items: data.items,
+    };
 
-    const totalAmount = subtotal - discountAmount + deliveryFee;
-
-    // 4. Create Order
-    const order = await prisma.order.create({
-      data: {
-        orderNumber,
-        customerId: null,
-        customerName: data.customerName,
-        phone: data.phone,
-        whatsapp: data.whatsapp,
-        email: data.email || null,
-        shippingAddress: data.shippingAddress || null,
-        deliveryType: data.deliveryType,
-        orderNotes: data.orderNotes || null,
-        couponId,
-        discountAmount,
-        deliveryFee,
-        totalAmount,
-        paymentStatus: data.paymentMethod === "ONLINE" ? "PAID" : "PENDING",
-        orderStatus: "NEW",
-        paymentMethod: data.paymentMethod,
-        checkoutMethod: data.checkoutMethod,
-        items: {
-          create: data.items.map((item) => ({
-            productId: item.productId,
-            variantId: item.variantId || null,
-            productName: item.productName,
-            weight: item.weight,
-            quantity: item.quantity,
-            price: item.price,
-          })),
-        },
-      },
-    });
-
-    // 5. Update stock levels
-    for (const item of data.items) {
-      if (item.variantId) {
-        await prisma.productVariant.update({
-          where: { id: item.variantId },
-          data: { stockQuantity: { decrement: item.quantity } },
-        });
-      } else {
-        await prisma.product.update({
-          where: { id: item.productId },
-          data: { stockQuantity: { decrement: item.quantity } },
-        });
-      }
-    }
-
-    return { success: true, orderNumber, totalAmount, order };
-  } catch (error) {
-    console.error("Order creation failed:", error);
-    return { success: false, error: "Failed to place order. Please try again." };
+    console.log("Database-Free Checkout - Generated Order:", mockOrder);
+    return { success: true, orderNumber, order: mockOrder };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Failed to place order." };
   }
 }
 
@@ -230,29 +165,135 @@ export async function createEnquiry(data: {
   requiredDeliveryDate?: string;
   customizationDetails?: string;
   message?: string;
-}) {
+}): Promise<{ success: boolean; enquiry?: any; error?: string }> {
   try {
-    const enquiry = await prisma.enquiry.create({
-      data: {
-        customerName: data.customerName,
-        phone: data.phone,
-        whatsapp: data.whatsapp,
-        email: data.email || null,
-        occasion: data.occasion || null,
-        quantity: data.quantity ? Number(data.quantity) : null,
-        budgetPerHamper: data.budgetPerHamper ? Number(data.budgetPerHamper) : null,
-        requiredDeliveryDate: data.requiredDeliveryDate ? new Date(data.requiredDeliveryDate) : null,
-        customizationDetails: data.customizationDetails || null,
-        message: data.message || null,
-        status: "NEW",
-      },
-    });
-
-    return { success: true, enquiry };
-  } catch (error) {
-    console.error("Enquiry creation failed:", error);
-    return { success: false, error: "Failed to submit enquiry. Please try again." };
+    const mockEnquiry = {
+      id: `enq-${Math.floor(1000 + Math.random() * 9000)}`,
+      customerName: data.customerName,
+      phone: data.phone,
+      whatsapp: data.whatsapp,
+      email: data.email || null,
+      occasion: data.occasion || null,
+      quantity: data.quantity || null,
+      budgetPerHamper: data.budgetPerHamper || null,
+      requiredDeliveryDate: data.requiredDeliveryDate || null,
+      customizationDetails: data.customizationDetails || null,
+      message: data.message || null,
+      status: "NEW",
+      createdAt: new Date().toISOString(),
+    };
+    console.log("Database-Free Proposal - Saved Enquiry:", mockEnquiry);
+    return { success: true, enquiry: mockEnquiry };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Failed to submit enquiry." };
   }
+}
+
+// ==========================================
+// COUPON VALIDATIONS
+// ==========================================
+
+export async function validateCouponCode(
+  code: string,
+  subtotal: number
+): Promise<{ valid: boolean; discount?: number; discountAmount?: number; couponId?: string; error?: string }> {
+  const upperCode = code.toUpperCase().trim();
+
+  const staticCoupons = [
+    { code: "WELCOME10", type: "PERCENTAGE", value: 10, minOrderValue: 500 },
+    { code: "SHUBH15", type: "PERCENTAGE", value: 15, minOrderValue: 999 },
+    { code: "MEWA100", type: "FIXED", value: 100, minOrderValue: 750 },
+  ];
+
+  const coupon = staticCoupons.find((c) => c.code === upperCode);
+
+  if (!coupon) {
+    return { valid: false, error: "Invalid coupon code." };
+  }
+
+  if (subtotal < coupon.minOrderValue) {
+    return { valid: false, error: `Minimum purchase of ₹${coupon.minOrderValue} required.` };
+  }
+
+  let discountAmount = 0;
+  if (coupon.type === "PERCENTAGE") {
+    discountAmount = Math.round((subtotal * coupon.value) / 100);
+  } else {
+    discountAmount = coupon.value;
+  }
+
+  return {
+    valid: true,
+    discount: discountAmount,
+    discountAmount,
+    couponId: coupon.code,
+  };
+}
+
+// ==========================================
+// CMS WEBSITE CONFIGURATIONS
+// ==========================================
+
+export async function getPublicSettings() {
+  return DEFAULT_SETTINGS;
+}
+
+export async function updateWebsiteSetting(key: string, value: string) {
+  console.log(`Setting updated in memory: ${key} -> ${value}`);
+  return { success: true };
+}
+
+// ==========================================
+// ADMIN DASHBOARD CRUDS (MOCKS WITH FULL TYPES)
+// ==========================================
+
+export async function updateOrderStatus(orderId: string, status: string): Promise<{ success: boolean; order?: any; error?: string }> {
+  return { success: true, order: { id: orderId, orderStatus: status } };
+}
+
+export async function updateOrderInternalNotes(orderId: string, notes: string): Promise<{ success: boolean; order?: any; error?: string }> {
+  return { success: true, order: { id: orderId, internalNotes: notes } };
+}
+
+export async function updateEnquiryStatus(enquiryId: string, status: string): Promise<{ success: boolean; enquiry?: any; error?: string }> {
+  return { success: true, enquiry: { id: enquiryId, status } };
+}
+
+export async function updateEnquiryNotes(enquiryId: string, notes: string): Promise<{ success: boolean; enquiry?: any; error?: string }> {
+  return { success: true, enquiry: { id: enquiryId, notes } };
+}
+
+export async function deleteProduct(productId: string): Promise<{ success: boolean; error?: string }> {
+  return { success: true };
+}
+
+export async function toggleProductField(
+  productId: string,
+  field: "isBestseller" | "isNewArrival" | "isActive",
+  value: boolean
+): Promise<{ success: boolean; product?: any; error?: string }> {
+  const mockProduct = { id: productId, [field]: value };
+  return { success: true, product: mockProduct };
+}
+
+export async function deleteCategory(categoryId: string): Promise<{ success: boolean; error?: string }> {
+  return { success: true };
+}
+
+export async function createCouponAction(
+  code: string,
+  type: string,
+  value: number,
+  minOrder: number
+): Promise<{ success: boolean; coupon?: any; error?: string }> {
+  return {
+    success: true,
+    coupon: { id: `cp-${code}`, code, type, value, minOrderValue: minOrder, usageCount: 0, isActive: true },
+  };
+}
+
+export async function deleteCoupon(couponId: string): Promise<{ success: boolean; error?: string }> {
+  return { success: true };
 }
 
 export async function createContactSubmission(data: {
@@ -261,346 +302,35 @@ export async function createContactSubmission(data: {
   phone: string;
   subject?: string;
   message: string;
-}) {
-  try {
-    const submission = await prisma.contactSubmission.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        subject: data.subject || null,
-        message: data.message,
-        status: "NEW",
-      },
-    });
-    return { success: true, submission };
-  } catch (error) {
-    console.error("Contact submission failed:", error);
-    return { success: false, error: "Failed to send message. Please try again." };
-  }
-}
-
-export async function validateCouponCode(code: string, subtotal: number) {
-  try {
-    const coupon = await prisma.coupon.findUnique({
-      where: { code, isActive: true },
-    });
-
-    if (!coupon) {
-      return { valid: false, error: "Invalid coupon code." };
-    }
-
-    if (coupon.expiryDate && new Date(coupon.expiryDate) < new Date()) {
-      return { valid: false, error: "Coupon code has expired." };
-    }
-
-    if (coupon.usageLimit && coupon.usageCount >= coupon.usageLimit) {
-      return { valid: false, error: "Coupon usage limit reached." };
-    }
-
-    if (subtotal < coupon.minOrderValue) {
-      return { valid: false, error: `Minimum order of ₹${coupon.minOrderValue} required for this coupon.` };
-    }
-
-    let discount = 0;
-    if (coupon.type === "PERCENTAGE") {
-      discount = (subtotal * coupon.value) / 100;
-      if (coupon.maxDiscount) {
-        discount = Math.min(discount, coupon.maxDiscount);
-      }
-    } else {
-      discount = coupon.value;
-    }
-
-    return { valid: true, discount, type: coupon.type, value: coupon.value };
-  } catch (error) {
-    return { valid: false, error: "Error validating coupon." };
-  }
-}
-
-export async function trackOrderOrEnquiry(query: string) {
-  try {
-    // Check if order exists
-    const order = await prisma.order.findFirst({
-      where: {
-        OR: [
-          { orderNumber: query },
-          { phone: query }
-        ]
-      },
-      include: {
-        items: true,
-      },
-      orderBy: { createdAt: "desc" },
-    });
-
-    if (order) {
-      return { type: "order", data: order };
-    }
-
-    // Check if bulk enquiry exists
-    const enquiry = await prisma.enquiry.findFirst({
-      where: {
-        OR: [
-          { id: query },
-          { phone: query }
-        ]
-      },
-      orderBy: { createdAt: "desc" },
-    });
-
-    if (enquiry) {
-      return { type: "enquiry", data: enquiry };
-    }
-
-    return { error: "No order or bulk enquiry found matching the details." };
-  } catch (e) {
-    return { error: "Tracking request failed. Please check the ID and try again." };
-  }
-}
-
-// ==========================================
-// ADMIN DASHBOARD ACTIONS (CRUD)
-// ==========================================
-
-export async function getDashboardStats() {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  const [
-    productsCount,
-    categoriesCount,
-    enquiriesCount,
-    ordersCount,
-    orders,
-    recentEnquiries,
-    recentOrders,
-    testimonialsCount,
-  ] = await Promise.all([
-    prisma.product.count(),
-    prisma.category.count(),
-    prisma.enquiry.count(),
-    prisma.order.count(),
-    prisma.order.findMany({ select: { totalAmount: true, checkoutMethod: true, orderStatus: true } }),
-    prisma.enquiry.findMany({ take: 5, orderBy: { createdAt: "desc" } }),
-    prisma.order.findMany({ take: 5, orderBy: { createdAt: "desc" } }),
-    prisma.testimonial.count(),
-  ]);
-
-  const whatsappClicks = orders.filter(o => o.checkoutMethod === "WHATSAPP").length;
-  const totalRevenue = orders
-    .filter(o => o.orderStatus !== "CANCELLED")
-    .reduce((sum, o) => sum + o.totalAmount, 0);
-
-  // Group revenue by status
-  const salesByStatus = {
-    DELIVERED: orders.filter(o => o.orderStatus === "DELIVERED").reduce((sum, o) => sum + o.totalAmount, 0),
-    PENDING: orders.filter(o => o.orderStatus === "NEW" || o.orderStatus === "CONFIRMED").reduce((sum, o) => sum + o.totalAmount, 0),
-    CANCELLED: orders.filter(o => o.orderStatus === "CANCELLED").reduce((sum, o) => sum + o.totalAmount, 0),
-  };
-
-  return {
-    productsCount,
-    categoriesCount,
-    enquiriesCount,
-    ordersCount,
-    whatsappClicks,
-    totalRevenue,
-    salesByStatus,
-    recentEnquiries,
-    recentOrders,
-    testimonialsCount,
-  };
-}
-
-export async function updateWebsiteSetting(key: string, value: string) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  await prisma.websiteSetting.upsert({
-    where: { key },
-    update: { value },
-    create: { key, value, group: "GENERAL" },
-  });
-
+}): Promise<{ success: boolean; error?: string }> {
+  console.log("Database-Free Contact Submission:", data);
   return { success: true };
 }
 
-export async function getPublicSettings() {
-  try {
-    const settings = await prisma.websiteSetting.findMany();
-    const map: Record<string, string> = {};
-    settings.forEach((s) => {
-      map[s.key] = s.value;
-    });
-    return map;
-  } catch (e) {
-    return {};
-  }
+export async function trackOrderOrEnquiry(query: string) {
+  const cleanQuery = query.trim().toUpperCase();
+  if (!cleanQuery) return { error: "Please enter an order or phone number." };
+
+  return {
+    success: true,
+    type: "ORDER",
+    details: {
+      orderNumber: cleanQuery.startsWith("ORD") ? cleanQuery : "ORD-2026-1001",
+      customerName: "Valued Customer",
+      totalAmount: 1240,
+      orderStatus: "OUT_FOR_DELIVERY",
+      deliveryType: "DELIVERY",
+      shippingAddress: "55, Freeganj Main Road, Ujjain",
+      createdAt: new Date().toISOString(),
+      items: [
+        { productName: "California Jumbo Almonds (Badam)", weight: "500g", quantity: 2, price: 500 }
+      ],
+      timeline: [
+        { status: "NEW", title: "Order Placed", date: new Date().toISOString(), description: "Your order has been received and is pending confirmation." },
+        { status: "CONFIRMED", title: "Confirmed", date: new Date().toISOString(), description: "Our boutique store has accepted your order." },
+        { status: "PACKED", title: "Packed & Sealed", date: new Date().toISOString(), description: "Items have been hand-sorted and vacuum-packed." },
+        { status: "OUT_FOR_DELIVERY", title: "Out for Delivery", date: new Date().toISOString(), description: "Our delivery partner is on the way to Freeganj." }
+      ]
+    }
+  };
 }
-
-export async function updateOrderStatus(orderId: string, status: string) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  try {
-    const order = await prisma.order.update({
-      where: { id: orderId },
-      data: { orderStatus: status },
-    });
-
-    await prisma.activityLog.create({
-      data: {
-        adminId: session.id,
-        action: "UPDATE_ORDER_STATUS",
-        details: `Updated order ${order.orderNumber} status to ${status}`,
-      },
-    });
-
-    return { success: true, order };
-  } catch (error) {
-    return { success: false, error: "Failed to update status" };
-  }
-}
-
-export async function updateOrderInternalNotes(orderId: string, notes: string) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  try {
-    const order = await prisma.order.update({
-      where: { id: orderId },
-      data: { internalNotes: notes },
-    });
-
-    return { success: true, order };
-  } catch (error) {
-    return { success: false, error: "Failed to update notes" };
-  }
-}
-
-export async function updateEnquiryStatus(enquiryId: string, status: string) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  try {
-    const enquiry = await prisma.enquiry.update({
-      where: { id: enquiryId },
-      data: { status },
-    });
-
-    return { success: true, enquiry };
-  } catch (error) {
-    return { success: false, error: "Failed to update lead status" };
-  }
-}
-
-export async function updateEnquiryNotes(enquiryId: string, notes: string) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  try {
-    const enquiry = await prisma.enquiry.update({
-      where: { id: enquiryId },
-      data: { notes },
-    });
-
-    return { success: true, enquiry };
-  } catch (error) {
-    return { success: false, error: "Failed to update notes" };
-  }
-}
-
-export async function deleteProduct(productId: string) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  try {
-    await prisma.product.delete({
-      where: { id: productId },
-    });
-
-    await prisma.activityLog.create({
-      data: {
-        adminId: session.id,
-        action: "DELETE_PRODUCT",
-        details: `Deleted product ${productId}`,
-      },
-    });
-
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: "Failed to delete product" };
-  }
-}
-
-export async function toggleProductField(productId: string, field: "isBestseller" | "isNewArrival" | "isActive", value: boolean) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  try {
-    const data: Record<string, boolean> = {};
-    data[field] = value;
-
-    const product = await prisma.product.update({
-      where: { id: productId },
-      data,
-    });
-
-    return { success: true, product };
-  } catch (error) {
-    return { success: false, error: "Failed to toggle product status" };
-  }
-}
-
-export async function deleteCategory(categoryId: string) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  try {
-    await prisma.category.delete({
-      where: { id: categoryId },
-    });
-
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: "Failed to delete category. Ensure no products are linked." };
-  }
-}
-
-export async function createCouponAction(code: string, type: string, value: number, minOrder: number) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  try {
-    const coupon = await prisma.coupon.create({
-      data: {
-        code: code.toUpperCase().trim(),
-        type,
-        value,
-        minOrderValue: minOrder,
-        isActive: true,
-      },
-    });
-
-    return { success: true, coupon };
-  } catch (error) {
-    return { success: false, error: "Failed to create coupon. Code may already exist." };
-  }
-}
-
-export async function deleteCoupon(couponId: string) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  try {
-    await prisma.coupon.delete({
-      where: { id: couponId },
-    });
-
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: "Failed to delete coupon" };
-  }
-}
-

@@ -1,6 +1,6 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { PRODUCTS, CATEGORIES, DEFAULT_SETTINGS } from "@/lib/static-data";
 import ProductDetailsView from "@/components/ProductDetailsView";
 
 export const revalidate = 0; // Dynamic server-side rendering
@@ -15,39 +15,27 @@ export default async function ProductDetailsPage({ params }: ProductDetailsPageP
   // Resolve params promise in Next.js 15
   const { slug } = await params;
 
-  // Query product details from database
-  const product = await prisma.product.findUnique({
-    where: { slug },
-    include: {
-      images: { orderBy: { displayOrder: "asc" } },
-      variants: { orderBy: { weight: "asc" } },
-      category: true,
-    },
-  });
+  // Find static product details
+  const staticProduct = PRODUCTS.find((p) => p.slug === slug);
 
-  if (!product) {
+  if (!staticProduct) {
     notFound();
   }
 
-  // Fetch related products in the same category
-  const relatedProducts = await prisma.product.findMany({
-    where: {
-      categoryId: product.categoryId,
-      id: { not: product.id },
-      isActive: true,
-    },
-    include: {
-      images: { orderBy: { displayOrder: "asc" } },
-      variants: { orderBy: { weight: "asc" } },
-    },
-    take: 4,
-  });
+  const product = {
+    ...staticProduct,
+    category: {
+      name: CATEGORIES.find((c) => c.id === staticProduct.categoryId)?.name || "General",
+      slug: CATEGORIES.find((c) => c.id === staticProduct.categoryId)?.slug || "general"
+    }
+  };
 
-  const settingsList = await prisma.websiteSetting.findMany({
-    where: { key: "whatsapp_number" }
-  });
-  
-  const whatsappNumber = settingsList[0]?.value || "919876543210";
+  // Find related products
+  const relatedProducts = PRODUCTS.filter(
+    (p) => p.categoryId === staticProduct.categoryId && p.id !== staticProduct.id
+  ).slice(0, 4);
+
+  const whatsappNumber = DEFAULT_SETTINGS["whatsapp_number"] || "919876543210";
 
   return (
     <div className="w-full bg-brand-cream-light/30 min-h-screen py-12">

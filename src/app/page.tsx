@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Star, ShieldCheck, Truck, Sparkles, ArrowRight, HeartPulse, MapPin, Clock, Phone, MessageSquare } from "lucide-react";
-import { prisma } from "@/lib/prisma";
+import { CATEGORIES, PRODUCTS, TESTIMONIALS, DEFAULT_SETTINGS } from "@/lib/static-data";
 import HeroCanvas from "@/components/HeroCanvas";
 import ProductCard, { ProductWithDetails } from "@/components/ProductCard";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
@@ -11,34 +11,11 @@ import HamperBuilder from "@/components/HamperBuilder";
 export const revalidate = 0; // Dynamic server-side rendering
 
 export default async function HomePage() {
-  // 1. Fetch data from SQLite db
-  const [categories, products, testimonials, settingsList, banners] = await Promise.all([
-    prisma.category.findMany({
-      where: { isActive: true },
-      orderBy: { displayOrder: "asc" },
-    }),
-    prisma.product.findMany({
-      where: { isActive: true },
-      include: {
-        images: { orderBy: { displayOrder: "asc" } },
-        variants: { orderBy: { weight: "asc" } },
-      },
-      orderBy: { displayOrder: "asc" },
-    }),
-    prisma.testimonial.findMany({
-      where: { isFeatured: true },
-    }),
-    prisma.websiteSetting.findMany(),
-    prisma.banner.findMany({
-      where: { isActive: true },
-    }),
-  ]);
-
-  // 2. Build settings map
-  const settings: Record<string, string> = {};
-  settingsList.forEach((s) => {
-    settings[s.key] = s.value;
-  });
+  const categories = CATEGORIES;
+  const products = PRODUCTS;
+  const testimonials = TESTIMONIALS;
+  const settings = DEFAULT_SETTINGS;
+  const banners: any[] = [];
 
   const whatsappNumber = settings["whatsapp_number"] || "919876543210";
   const contactPhone = settings["contact_phone"] || "+91 98765 43210";

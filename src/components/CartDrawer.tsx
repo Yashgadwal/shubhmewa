@@ -101,7 +101,7 @@ export default function CartDrawer({ settings }: CartDrawerProps) {
       const res = await createOrder(orderPayload);
 
       if (res.success && res.order) {
-        const orderNum = res.orderNumber;
+        const orderNum = res.orderNumber || "";
         
         if (checkoutMethod === "whatsapp") {
           // Format WhatsApp message

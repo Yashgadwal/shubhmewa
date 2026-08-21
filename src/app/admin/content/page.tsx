@@ -1,5 +1,5 @@
 import React from "react";
-import { prisma } from "@/lib/prisma";
+import { DEFAULT_SETTINGS } from "@/lib/static-data";
 import { updateWebsiteSetting } from "@/lib/actions";
 import { revalidatePath } from "next/cache";
 import { FileText, Save, CheckCircle } from "lucide-react";
@@ -11,11 +11,7 @@ export default async function AdminContentPage({
 }: {
   searchParams: Promise<{ success?: string }>;
 }) {
-  const settingsList = await prisma.websiteSetting.findMany();
-  const settings: Record<string, string> = {};
-  settingsList.forEach((s) => {
-    settings[s.key] = s.value;
-  });
+  const settings = DEFAULT_SETTINGS;
 
   const params = await searchParams;
   const showSuccess = params.success === "true";
