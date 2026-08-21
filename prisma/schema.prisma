@@ -1,0 +1,266 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("ADMIN") // ADMIN, EDITOR
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  ActivityLog  ActivityLog[]
+}
+
+model Category {
+  id           String    @id @default(uuid())
+  name         String
+  slug         String    @unique
+  description  String?
+  image        String?   // Premium WebP category image
+  displayOrder Int       @default(0)
+  isActive     Boolean   @default(true)
+  products     Product[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Product {
+  id                 String           @id @default(uuid())
+  name               String
+  slug               String           @unique
+  description        String
+  categoryId         String
+  category           Category         @relation(fields: [categoryId], references: [id])
+  originalPrice      Float            // Base price for default weight
+  discountedPrice    Float?           // Offer price
+  discountPercent    Int?
+  sku                String           @unique
+  stockQuantity      Int              @default(0)
+  stockStatus        String           @default("IN_STOCK") // IN_STOCK, OUT_OF_STOCK, LOW_STOCK
+  isBestseller       Boolean          @default(false)
+  isNewArrival       Boolean          @default(false)
+  isActive           Boolean          @default(true)
+  benefits           String?          // Comma-separated or JSON list of health benefits
+  storageInstructions String?         // Storage tips
+  shelfLife          String?          // e.g. "6 Months"
+  deliveryInfo       String?          // e.g. "Ships in 24 hours"
+  seoTitle           String?
+  seoDescription     String?
+  displayOrder       Int              @default(0)
+  variants           ProductVariant[]
+  images             ProductImage[]
+  orderItems         OrderItem[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model ProductVariant {
+  id              String      @id @default(uuid())
+  productId       String
+  product         Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  weight          String      // e.g., "250g", "500g", "1kg"
+  originalPrice   Float
+  discountedPrice Float?
+  sku             String?
+  stockQuantity   Int         @default(0)
+  orderItems      OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model ProductImage {
+  id           String   @id @default(uuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url          String
+  isPrimary    Boolean  @default(false)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  orderNumber     String      @unique
+  customerId      String?
+  customerName    String
+  phone           String
+  whatsapp        String
+  email           String?
+  shippingAddress String?
+  deliveryType    String      @default("DELIVERY") // DELIVERY, PICKUP
+  orderNotes      String?
+  couponId        String?
+  discountAmount  Float       @default(0)
+  deliveryFee     Float       @default(0)
+  totalAmount     Float
+  paymentStatus   String      @default("PENDING") // PENDING, PAID, REFUNDED
+  orderStatus     String      @default("NEW")     // NEW, CONFIRMED, PACKED, OUT_FOR_DELIVERY, DELIVERED, CANCELLED, FOLLOW_UP
+  paymentMethod   String      @default("COD")     // COD, ONLINE
+  checkoutMethod  String      @default("WHATSAPP") // WHATSAPP, ONLINE
+  internalNotes   String?
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model OrderItem {
+  id           String          @id @default(uuid())
+  orderId      String
+  order        Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product         @relation(fields: [productId], references: [id])
+  variantId    String?
+  variant      ProductVariant? @relation(fields: [variantId], references: [id])
+  productName  String
+  weight       String
+  quantity     Int
+  price        Float
+  createdAt    DateTime        @default(now())
+}
+
+
+
+model Enquiry {
+  id                   String    @id @default(uuid())
+  customerName         String
+  phone                String
+  whatsapp             String?
+  email                String?
+  occasion             String?   // Corporate Gifting, Wedding, festival, etc.
+  quantity             Int?
+  budgetPerHamper      Float?
+  requiredDeliveryDate DateTime?
+  customizationDetails String?
+  message              String?
+  status               String    @default("NEW") // NEW, IN_PROGRESS, CLOSED, CANCELLED
+  assignedTo           String?
+  followUpDate         DateTime?
+  notes                String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
+
+model Testimonial {
+  id             String   @id @default(uuid())
+  name           String
+  rating         Int      @default(5)
+  review         String
+  image          String?
+  isFeatured     Boolean  @default(true)
+  isGoogleReview Boolean  @default(false)
+  createdAt      DateTime @default(now())
+}
+
+model BlogCategory {
+  id        String     @id @default(uuid())
+  name      String
+  slug      String     @unique
+  posts     BlogPost[]
+  createdAt DateTime   @default(now())
+}
+
+model BlogPost {
+  id             String       @id @default(uuid())
+  title          String
+  slug           String       @unique
+  content        String       // Markdown text
+  featuredImage  String
+  categoryId     String
+  category       BlogCategory @relation(fields: [categoryId], references: [id])
+  tags           String?      // Comma-separated values
+  status         String       @default("DRAFT") // DRAFT, PUBLISHED
+  publishDate    DateTime?
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Coupon {
+  id            String    @id @default(uuid())
+  code          String    @unique
+  type          String    @default("PERCENTAGE") // PERCENTAGE, FIXED
+  value         Float
+  minOrderValue Float     @default(0)
+  maxDiscount   Float?
+  expiryDate    DateTime?
+  usageLimit    Int?
+  usageCount    Int       @default(0)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+}
+
+model Banner {
+  id           String    @id @default(uuid())
+  title        String
+  subtitle     String?
+  image        String
+  link         String?
+  section      String    @default("FESTIVAL") // HERO, FESTIVAL, PROMO
+  isActive     Boolean   @default(true)
+  startDate    DateTime?
+  endDate      DateTime?
+  displayOrder Int       @default(0)
+  createdAt    DateTime  @default(now())
+}
+
+model WebsiteSetting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  group     String   @default("GENERAL") // GENERAL, CONTACT, FOOTER, SHOP_TIMINGS
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DeliveryArea {
+  id                      String   @id @default(uuid())
+  areaName                String
+  pincode                 String   @unique
+  minOrderForFreeDelivery Float    @default(999)
+  deliveryCharge          Float    @default(0)
+  isActive                Boolean  @default(true)
+  createdAt               DateTime @default(now())
+}
+
+model ContactSubmission {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String
+  subject   String?
+  message   String
+  status    String   @default("NEW") // NEW, READ, ARCHIVED
+  createdAt DateTime @default(now())
+}
+
+model ActivityLog {
+  id        String    @id @default(uuid())
+  adminId   String
+  admin     AdminUser @relation(fields: [adminId], references: [id])
+  action    String
+  details   String?
+  ipAddress String?
+  createdAt DateTime  @default(now())
+}
+
+
+
+model GiftHamper {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  startingPrice Float
+  images      String   // Semicolon or comma-separated image URLs
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
