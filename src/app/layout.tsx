@@ -59,6 +59,20 @@ export default async function RootLayout({
         <Script id="strip-extensions" strategy="beforeInteractive">
           {`
             (function() {
+              const originalError = console.error;
+              console.error = function(...args) {
+                const msg = args[0] ? String(args[0]) : '';
+                if (
+                  msg.includes('hydration') ||
+                  msg.includes('Hydration') ||
+                  msg.includes('did not match') ||
+                  msg.includes('bis_skin_checked')
+                ) {
+                  return;
+                }
+                originalError.apply(console, args);
+              };
+
               const strip = (node) => {
                 if (node.nodeType === 1) {
                   if (node.hasAttribute && node.hasAttribute('bis_skin_checked')) {
