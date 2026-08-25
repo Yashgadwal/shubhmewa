@@ -23,7 +23,7 @@ export default async function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-brand-cream-light/60 flex font-sans select-none">
+    <div className="min-h-screen bg-brand-cream-light/60 flex font-sans select-none" suppressHydrationWarning>
       {/* Sidebar navigation */}
       <aside className="w-64 bg-brand-green border-r border-brand-gold/20 text-brand-cream-light flex flex-col justify-between p-6 shrink-0">
         <div className="space-y-8">

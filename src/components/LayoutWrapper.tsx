@@ -17,7 +17,7 @@ export default function LayoutWrapper({ children, settings }: LayoutWrapperProps
   const isAppView = pathname?.startsWith("/admin");
 
   if (isAppView) {
-    return <div className="min-h-screen bg-brand-cream-light/35 font-sans">{children}</div>;
+    return <div className="min-h-screen bg-brand-cream-light/35 font-sans" suppressHydrationWarning>{children}</div>;
   }
 
   return (
