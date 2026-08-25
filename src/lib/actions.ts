@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { DEFAULT_SETTINGS, PRODUCTS, CATEGORIES } from "./static-data";
+import { prisma, isDbActive } from "./db";
 
 // In-session mutable settings configuration
 let GLOBAL_CONFIG: Record<string, string> = {
@@ -69,7 +70,7 @@ export async function getAdminSession() {
 // ==========================================
 
 export async function getDashboardStats() {
-  const recentOrders = [
+  let recentOrders = [
     {
       id: "ord-1",
       orderNumber: "ORD-2026-1001",
@@ -88,7 +89,7 @@ export async function getDashboardStats() {
     },
   ];
 
-  const recentEnquiries = [
+  let recentEnquiries = [
     {
       id: "enq-1",
       customerName: "Nisha Garg (Nexora Group)",
@@ -105,10 +106,56 @@ export async function getDashboardStats() {
     },
   ];
 
+  let totalRevenue = 2020;
+  let enquiriesCount = 2;
+
+  if (isDbActive()) {
+    try {
+      const dbOrders = await prisma.order.findMany({
+        take: 5,
+        orderBy: { createdAt: "desc" },
+      });
+      const dbEnquiries = await prisma.enquiry.findMany({
+        take: 5,
+        orderBy: { createdAt: "desc" },
+      });
+      const dbStats = await prisma.order.aggregate({
+        _sum: { totalAmount: true },
+      });
+      const dbEnquiriesCount = await prisma.enquiry.count();
+
+      if (dbOrders.length > 0) {
+        recentOrders = dbOrders.map((o) => ({
+          id: o.id,
+          orderNumber: o.orderNumber,
+          customerName: o.customerName,
+          totalAmount: o.totalAmount,
+          orderStatus: o.orderStatus,
+          createdAt: o.createdAt.toISOString(),
+        }));
+      }
+
+      if (dbEnquiries.length > 0) {
+        recentEnquiries = dbEnquiries.map((e) => ({
+          id: e.id,
+          customerName: e.customerName,
+          occasion: e.occasion || "Celebration",
+          quantity: e.quantity || 1,
+          status: e.status,
+        }));
+      }
+
+      totalRevenue = dbStats._sum.totalAmount || 0;
+      enquiriesCount = dbEnquiriesCount;
+    } catch (e) {
+      console.error("Postgres dashboard stats fetch failed:", e);
+    }
+  }
+
   return {
-    totalRevenue: 2020,
+    totalRevenue,
     whatsappClicks: 42,
-    enquiriesCount: 2,
+    enquiriesCount,
     productsCount: PRODUCTS.length,
     recentOrders,
     recentEnquiries,
@@ -120,6 +167,8 @@ export async function getDashboardStats() {
 // ==========================================
 
 interface OrderItemInput {
+  productId: string;
+  variantId?: string | null;
   productName: string;
   weight: string;
   quantity: number;
@@ -141,6 +190,36 @@ export async function createOrder(data: {
     const orderNumber = `SM-${Math.floor(100000 + Math.random() * 900000)}`;
     const orderAmount = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     
+    if (isDbActive()) {
+      const dbOrder = await prisma.order.create({
+        data: {
+          orderNumber,
+          customerName: data.customerName,
+          phone: data.phone,
+          whatsapp: data.whatsapp,
+          email: data.email || null,
+          shippingAddress: data.shippingAddress || null,
+          deliveryType: data.deliveryType,
+          orderNotes: data.orderNotes || null,
+          totalAmount: orderAmount,
+          discountAmount: 0,
+          paymentMethod: "COD",
+          checkoutMethod: "WHATSAPP",
+          items: {
+            create: data.items.map((item) => ({
+              productId: item.productId,
+              variantId: item.variantId || null,
+              productName: item.productName,
+              weight: item.weight,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+          },
+        },
+      });
+      return { success: true, orderNumber, order: dbOrder };
+    }
+
     const mockOrder = {
       id: `ord-${Math.floor(1000 + Math.random() * 9000)}`,
       orderNumber,
@@ -157,7 +236,7 @@ export async function createOrder(data: {
       items: data.items,
     };
 
-    console.log("ShubhMewa Checkout - Generated Order:", mockOrder);
+    console.log("ShubhMewa Checkout - Generated Order (Memory):", mockOrder);
     return { success: true, orderNumber, order: mockOrder };
   } catch (error: any) {
     return { success: false, error: error.message || "Failed to place order." };
@@ -177,6 +256,25 @@ export async function createEnquiry(data: {
   message?: string;
 }): Promise<{ success: boolean; enquiry?: any; error?: string }> {
   try {
+    if (isDbActive()) {
+      const dbEnquiry = await prisma.enquiry.create({
+        data: {
+          customerName: data.customerName,
+          phone: data.phone,
+          whatsapp: data.whatsapp || null,
+          email: data.email || null,
+          occasion: data.occasion || null,
+          quantity: data.quantity || null,
+          budgetPerHamper: data.budgetPerHamper || null,
+          requiredDeliveryDate: data.requiredDeliveryDate ? new Date(data.requiredDeliveryDate) : null,
+          customizationDetails: data.customizationDetails || null,
+          message: data.message || null,
+          status: "NEW",
+        },
+      });
+      return { success: true, enquiry: dbEnquiry };
+    }
+
     const mockEnquiry = {
       id: `enq-${Math.floor(1000 + Math.random() * 9000)}`,
       customerName: data.customerName,
@@ -192,7 +290,7 @@ export async function createEnquiry(data: {
       status: "NEW",
       createdAt: new Date().toISOString(),
     };
-    console.log("ShubhMewa Proposal - Saved Enquiry:", mockEnquiry);
+    console.log("ShubhMewa Proposal - Saved Enquiry (Memory):", mockEnquiry);
     return { success: true, enquiry: mockEnquiry };
   } catch (error: any) {
     return { success: false, error: error.message || "Failed to submit enquiry." };
@@ -296,13 +394,29 @@ export async function validateCouponCode(
 
 export async function getLoyaltyStatus(phone: string) {
   // Checks if customer qualifying: 3 orders within 1 month.
-  // Demowise, any phone ending in "210" (ShubhMewa number) is eligible.
   const cleanPhone = phone.trim();
-  const qualifies = cleanPhone.endsWith("8982010210") || cleanPhone.endsWith("210");
+  let orderCount = cleanPhone.endsWith("8982010210") || cleanPhone.endsWith("210") ? 3 : 1;
+
+  if (isDbActive()) {
+    try {
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      orderCount = await prisma.order.count({
+        where: {
+          phone: cleanPhone,
+          createdAt: { gte: oneMonthAgo },
+        },
+      });
+    } catch (e) {
+      console.error("Postgres order count failed for loyalty status:", e);
+    }
+  }
+
+  const qualifies = orderCount >= 3;
   
   return {
     success: true,
-    orderCount: qualifies ? 3 : 1,
+    orderCount,
     eligible: qualifies,
     couponCode: qualifies ? "LIFETIME5" : null,
     discountPercent: 5,
@@ -333,36 +447,113 @@ export async function syncOrderToShiprocket(orderId: string) {
 // ==========================================
 
 export async function getPublicSettings() {
+  if (isDbActive()) {
+    try {
+      const dbSettings = await prisma.websiteSetting.findMany();
+      const settingsMap = { ...GLOBAL_CONFIG };
+      dbSettings.forEach((s) => {
+        settingsMap[s.key] = s.value;
+      });
+      return settingsMap;
+    } catch (e) {
+      console.error("Postgres settings fetch error, fallback to in-memory:", e);
+      return GLOBAL_CONFIG;
+    }
+  }
   return GLOBAL_CONFIG;
 }
 
 export async function updateWebsiteSetting(key: string, value: string) {
   GLOBAL_CONFIG[key] = value;
-  console.log(`Setting updated in memory: ${key} -> ${value}`);
+  if (isDbActive()) {
+    try {
+      await prisma.websiteSetting.upsert({
+        where: { key },
+        update: { value },
+        create: { key, value },
+      });
+    } catch (e) {
+      console.error("Postgres settings update error:", e);
+    }
+  }
+  console.log(`Setting updated: ${key} -> ${value}`);
   return { success: true };
 }
 
 // ==========================================
-// ADMIN DASHBOARD CRUDS (MOCKS WITH FULL TYPES)
+// ADMIN DASHBOARD CRUDS (MOCKS & PERSISTENCE)
 // ==========================================
 
 export async function updateOrderStatus(orderId: string, status: string): Promise<{ success: boolean; order?: any; error?: string }> {
+  if (isDbActive()) {
+    try {
+      const order = await prisma.order.update({
+        where: { id: orderId },
+        data: { orderStatus: status },
+      });
+      return { success: true, order };
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
+  }
   return { success: true, order: { id: orderId, orderStatus: status } };
 }
 
 export async function updateOrderInternalNotes(orderId: string, notes: string): Promise<{ success: boolean; order?: any; error?: string }> {
+  if (isDbActive()) {
+    try {
+      const order = await prisma.order.update({
+        where: { id: orderId },
+        data: { internalNotes: notes },
+      });
+      return { success: true, order };
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
+  }
   return { success: true, order: { id: orderId, internalNotes: notes } };
 }
 
 export async function updateEnquiryStatus(enquiryId: string, status: string): Promise<{ success: boolean; enquiry?: any; error?: string }> {
+  if (isDbActive()) {
+    try {
+      const enquiry = await prisma.enquiry.update({
+        where: { id: enquiryId },
+        data: { status },
+      });
+      return { success: true, enquiry };
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
+  }
   return { success: true, enquiry: { id: enquiryId, status } };
 }
 
 export async function updateEnquiryNotes(enquiryId: string, notes: string): Promise<{ success: boolean; enquiry?: any; error?: string }> {
+  if (isDbActive()) {
+    try {
+      const enquiry = await prisma.enquiry.update({
+        where: { id: enquiryId },
+        data: { notes },
+      });
+      return { success: true, enquiry };
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
+  }
   return { success: true, enquiry: { id: enquiryId, notes } };
 }
 
 export async function deleteProduct(productId: string): Promise<{ success: boolean; error?: string }> {
+  if (isDbActive()) {
+    try {
+      await prisma.product.delete({
+        where: { id: productId },
+      });
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
+  }
   return { success: true };
 }
 
@@ -371,11 +562,31 @@ export async function toggleProductField(
   field: "isBestseller" | "isNewArrival" | "isActive",
   value: boolean
 ): Promise<{ success: boolean; product?: any; error?: string }> {
+  if (isDbActive()) {
+    try {
+      const product = await prisma.product.update({
+        where: { id: productId },
+        data: { [field]: value },
+      });
+      return { success: true, product };
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
+  }
   const mockProduct = { id: productId, [field]: value };
   return { success: true, product: mockProduct };
 }
 
 export async function deleteCategory(categoryId: string): Promise<{ success: boolean; error?: string }> {
+  if (isDbActive()) {
+    try {
+      await prisma.category.delete({
+        where: { id: categoryId },
+      });
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
+  }
   return { success: true };
 }
 
@@ -385,6 +596,21 @@ export async function createCouponAction(
   value: number,
   minOrder: number
 ): Promise<{ success: boolean; coupon?: any; error?: string }> {
+  if (isDbActive()) {
+    try {
+      const coupon = await prisma.coupon.create({
+        data: {
+          code: code.toUpperCase().trim(),
+          type,
+          value,
+          minOrderValue: minOrder,
+        },
+      });
+      return { success: true, coupon };
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
+  }
   return {
     success: true,
     coupon: { id: `cp-${code}`, code, type, value, minOrderValue: minOrder, usageCount: 0, isActive: true },
@@ -392,6 +618,15 @@ export async function createCouponAction(
 }
 
 export async function deleteCoupon(couponId: string): Promise<{ success: boolean; error?: string }> {
+  if (isDbActive()) {
+    try {
+      await prisma.coupon.delete({
+        where: { id: couponId },
+      });
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
+  }
   return { success: true };
 }
 
@@ -402,13 +637,73 @@ export async function createContactSubmission(data: {
   subject?: string;
   message: string;
 }): Promise<{ success: boolean; error?: string }> {
-  console.log("Database-Free Contact Submission:", data);
+  console.log("Database Contact Submission:", data);
+  if (isDbActive()) {
+    try {
+      await prisma.contactSubmission.create({
+        data: {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          subject: data.subject || null,
+          message: data.message,
+        },
+      });
+    } catch (e: any) {
+      console.error("Postgres contact submission fail:", e);
+      return { success: false, error: e.message };
+    }
+  }
   return { success: true };
 }
 
 export async function trackOrderOrEnquiry(query: string) {
   const cleanQuery = query.trim().toUpperCase();
   if (!cleanQuery) return { error: "Please enter an order or phone number." };
+
+  if (isDbActive()) {
+    try {
+      const order = await prisma.order.findFirst({
+        where: {
+          OR: [
+            { orderNumber: cleanQuery },
+            { phone: cleanQuery },
+            { whatsapp: cleanQuery }
+          ]
+        },
+        include: {
+          items: true
+        }
+      });
+      if (order) {
+        return {
+          success: true,
+          type: "ORDER",
+          details: {
+            orderNumber: order.orderNumber,
+            customerName: order.customerName,
+            totalAmount: order.totalAmount,
+            orderStatus: order.orderStatus,
+            deliveryType: order.deliveryType,
+            shippingAddress: order.shippingAddress,
+            createdAt: order.createdAt.toISOString(),
+            items: order.items.map((item) => ({
+              productName: item.productName,
+              weight: item.weight,
+              quantity: item.quantity,
+              price: item.price
+            })),
+            timeline: [
+              { status: "NEW", title: "Order Placed", date: order.createdAt.toISOString(), description: "Your order has been received and is pending confirmation." },
+              { status: "CONFIRMED", title: "Confirmed", date: order.updatedAt.toISOString(), description: "Our boutique store has accepted your order." }
+            ]
+          }
+        };
+      }
+    } catch (e) {
+      console.error("Postgres tracking fetch error:", e);
+    }
+  }
 
   return {
     success: true,
