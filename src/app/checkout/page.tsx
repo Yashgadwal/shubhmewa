@@ -67,6 +67,63 @@ export default function CheckoutPage() {
 
   const finalShipping = shippingCharge + (isUrgent ? urgentCharge : 0);
   const grandTotal = Math.max(0, subtotal - discount + finalShipping);
+  const handleSandboxSimulate = async () => {
+    if (items.length === 0) return;
+
+    if (!name || !phone || !address || !pincode) {
+      setErrorMsg("Please fill in all required delivery fields.");
+      return;
+    }
+
+    if (!/^\d{10}$/.test(phone)) {
+      setErrorMsg("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+
+    if (!/^\d{6}$/.test(pincode)) {
+      setErrorMsg("Please enter a valid 6-digit pincode.");
+      return;
+    }
+
+    setErrorMsg("");
+    setIsSubmitting(true);
+
+    try {
+      // Create Order in DB directly
+      const dbOrderRes = await createOrder({
+        customerName: name,
+        phone: phone,
+        whatsapp: phone,
+        email: email || undefined,
+        shippingAddress: `${apartment}, ${address}, ${area}, ${city}, ${state} - ${pincode}`,
+        deliveryType: "DELIVERY",
+        orderNotes: `SIMULATED TEST CHECKOUT (SANDBOX). ${isUrgent ? "URGENT. " : ""}${isBulkOrder ? "FLAG: BULK ORDER 10+." : ""}`,
+        items: items.map(item => ({
+          productId: item.id,
+          variantId: item.variantId || null,
+          productName: item.name,
+          weight: item.weight,
+          quantity: item.quantity,
+          price: item.price
+        }))
+      });
+
+      if (dbOrderRes.success && dbOrderRes.orderNumber) {
+        // Sync order to Shiprocket
+        const { syncOrderToShiprocket } = await import("@/lib/actions");
+        await syncOrderToShiprocket(dbOrderRes.orderNumber);
+
+        clearCart();
+        router.push(`/track?query=${dbOrderRes.orderNumber}&success=true`);
+      } else {
+        throw new Error(dbOrderRes.error || "Order saving failed.");
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || "Failed to process sandbox payment.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -354,6 +411,15 @@ export default function CheckoutPage() {
           >
             <CreditCard className="w-4 h-4 text-brand-gold" />
             <span>{isSubmitting ? "Generating secure payment link..." : `Pay Securely (₹${grandTotal})`}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSandboxSimulate}
+            disabled={isSubmitting}
+            className="w-full border-2 border-dashed border-brand-gold hover:border-brand-gold/80 text-brand-gold py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50 mt-2 bg-white cursor-pointer"
+          >
+            <span>Simulate Sandbox Checkout (Save Test Data)</span>
           </button>
         </form>
       </div>
