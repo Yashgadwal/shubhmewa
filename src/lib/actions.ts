@@ -29,9 +29,14 @@ export async function adminLogin(prevState: any, formData: FormData) {
     return { error: "Please enter both email and password." };
   }
 
-  const demoPassword = "harshiladmin";
+  const demoPassword = "admindryfruit";
 
-  if ((email === "admin@harshildryfruits.com" || email === "admin@shubhmewa.com") && password === demoPassword) {
+  if (
+    (email === "admin" ||
+      email === "admin@harshildryfruits.com" ||
+      email === "admin@shubhmewa.com") &&
+    password === demoPassword
+  ) {
     const cookieStore = await cookies();
     cookieStore.set("admin_session", email, {
       httpOnly: true,

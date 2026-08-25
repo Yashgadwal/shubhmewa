@@ -58,14 +58,14 @@ export default function AdminLoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-[10px] uppercase tracking-wider font-bold text-brand-green block">
-              Admin Email
+              Admin Username / Email
             </label>
             <div className="relative">
               <input
-                type="email"
+                type="text"
                 name="email"
                 required
-                placeholder="e.g. admin@shubhmewa.com"
+                placeholder="admin or admin@shubhmewa.com"
                 className="w-full border border-brand-cream-dark/50 px-3.5 py-2.5 rounded-xl text-xs focus:outline-none focus:border-brand-gold text-brand-green bg-brand-cream-light/10 pl-9"
               />
               <Mail className="w-4 h-4 text-brand-muted absolute left-3 top-3" />
