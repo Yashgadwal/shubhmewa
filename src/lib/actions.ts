@@ -741,9 +741,37 @@ export async function trackOrderOrEnquiry(query: string) {
 
 export async function createRazorpayOrderAction(amount: number) {
   try {
+    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (keyId && keySecret) {
+      const auth = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
+      const res = await fetch("https://api.razorpay.com/v1/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${auth}`,
+        },
+        body: JSON.stringify({
+          amount: Math.round(amount * 100), // in paise
+          currency: "INR",
+          receipt: `rcpt_${Date.now()}`,
+        }),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Razorpay API error: ${errText}`);
+      }
+
+      const orderData = await res.json();
+      return { success: true, orderId: orderData.id };
+    }
+
     const orderId = `order_${Math.random().toString(36).substring(2, 16)}`;
     return { success: true, orderId };
   } catch (e: any) {
+    console.error("createRazorpayOrderAction error:", e);
     return { success: false, error: e.message };
   }
 }

@@ -158,7 +158,7 @@ export default function CheckoutPage() {
 
       // 2. Configure Razorpay modal options
       const options = {
-        key: "rzp_test_mockkey123456", // Test key mockup
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_mockkey123456", // Load live or test key
         amount: grandTotal * 100,
         currency: "INR",
         name: "ShubhMewa",
@@ -413,14 +413,16 @@ export default function CheckoutPage() {
             <span>{isSubmitting ? "Generating secure payment link..." : `Pay Securely (₹${grandTotal})`}</span>
           </button>
 
-          <button
-            type="button"
-            onClick={handleSandboxSimulate}
-            disabled={isSubmitting}
-            className="w-full border-2 border-dashed border-brand-gold hover:border-brand-gold/80 text-brand-gold py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50 mt-2 bg-white cursor-pointer"
-          >
-            <span>Simulate Sandbox Checkout (Save Test Data)</span>
-          </button>
+          {process.env.NODE_ENV === "development" && (
+            <button
+              type="button"
+              onClick={handleSandboxSimulate}
+              disabled={isSubmitting}
+              className="w-full border-2 border-dashed border-brand-gold hover:border-brand-gold/80 text-brand-gold py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50 mt-2 bg-white cursor-pointer"
+            >
+              <span>Simulate Sandbox Checkout (Save Test Data)</span>
+            </button>
+          )}
         </form>
       </div>
 
