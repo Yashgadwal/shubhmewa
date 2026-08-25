@@ -64,7 +64,8 @@ export default function Header({ settings }: HeaderProps) {
           <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
             <Link href="/" className="flex flex-col">
               <span className="font-serif-editorial text-xl md:text-2xl font-bold tracking-wide text-brand-green uppercase leading-none">
-                ShubhMewa
+                <span className="text-brand-green">Shubh</span>
+                <span className="text-brand-gold">Mewa</span>
               </span>
               <span className="text-[9px] uppercase tracking-widest text-brand-gold mt-1 font-semibold">
                 Premium Quality

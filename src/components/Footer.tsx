@@ -25,7 +25,8 @@ export default function Footer({ settings }: FooterProps) {
         <div className="space-y-5">
           <Link href="/" className="flex flex-col">
             <span className="font-serif-editorial text-2xl font-bold tracking-wide text-brand-cream-light uppercase leading-none">
-              SHUBHMEWA
+              <span className="text-brand-cream-light">Shubh</span>
+              <span className="text-brand-gold">Mewa</span>
             </span>
             <span className="text-[9px] uppercase tracking-widest text-brand-gold mt-1 font-semibold">
               Premium Quality
