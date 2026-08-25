@@ -262,7 +262,9 @@ export default function ProductDetailsView({
         )}
 
         {/* Specifications (Storage, Shelf-life, Delivery) */}
-        <div className={`md:col-span-${product.benefits ? "7" : "12"} bg-white border border-brand-cream-dark/30 p-6 md:p-8 rounded-3xl space-y-4 shadow-xs`}>
+        <div className={`bg-white border border-brand-cream-dark/30 p-6 md:p-8 rounded-3xl space-y-4 shadow-xs ${
+          product.benefits ? "md:col-span-7" : "md:col-span-12"
+        }`}>
           <h3 className="font-serif-editorial text-xl text-brand-green font-bold flex items-center gap-2">
             <Clock className="w-5 h-5 text-brand-gold" />
             Storage & Sourcing Details
