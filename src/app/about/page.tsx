@@ -19,7 +19,7 @@ export default function AboutPage() {
         <div className="w-full aspect-[2/1] rounded-3xl overflow-hidden border border-brand-cream-dark/30 shadow-sm">
           <img
             src="/images/shop_interior.jpg"
-            alt="Harshil Dry Fruits Store Counter"
+            alt="ShubhMewa Store Counter"
             className="w-full h-full object-cover"
           />
         </div>
@@ -30,7 +30,7 @@ export default function AboutPage() {
             Bringing Nature's Finest to Ujjain
           </h2>
           <p>
-            Harshil Dry Fruits was established with a singular objective: to elevate the standard of healthy snacking in Ujjain, Madhya Pradesh. In a market often saturated with low-grade or stale nuts, we committed to supplying only grade-one jumbo almonds, creamy cashiers, split-free roasted pistachios, and royal dates.
+            ShubhMewa was established with a singular objective: to elevate the standard of healthy snacking in Ujjain, Madhya Pradesh. In a market often saturated with low-grade or stale nuts, we committed to supplying only grade-one jumbo almonds, creamy cashews, split-free roasted pistachios, and royal dates.
           </p>
           <p>
             We believe that clean eating should be delightful and trustworthy. That is why we handpick every product, run them through two thorough cleaning and checking cycles, and vacuum-pack them to ensure the original taste, natural oils, and crispiness remain completely intact until they reach your home.
@@ -67,7 +67,7 @@ export default function AboutPage() {
           </div>
 
           <p className="pt-6">
-            Whether you are choosing daily healthy breakfast toppings, planning elegant wedding favor hampers, or ordering corporate client thank-you gifts, Harshil Dry Fruits is proud to be your local trusted partner. Visit our boutique counter in Ujjain to experience our products first-hand.
+            Whether you are choosing daily healthy breakfast toppings, planning elegant wedding favor hampers, or ordering premium celebration gifts, ShubhMewa is proud to be your local trusted partner. Visit our boutique counter in Ujjain to experience our products first-hand.
           </p>
         </div>
 

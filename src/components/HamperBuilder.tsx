@@ -34,9 +34,14 @@ export default function HamperBuilder({ whatsappNumber }: HamperBuilderProps) {
   const [targetBudget, setTargetBudget] = useState("1000");
 
   const handleToggleIngredient = (id: string) => {
-    setSelectedIngredients((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+    setSelectedIngredients((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((item) => item !== id);
+      } else {
+        if (prev.length >= 6) return prev; // Enforce maximum of 6 items
+        return [...prev, id];
+      }
+    });
   };
 
   const selectedPackDetails = packagingOptions.find((p) => p.id === selectedPack)!;
@@ -53,23 +58,24 @@ export default function HamperBuilder({ whatsappNumber }: HamperBuilderProps) {
   const handleWhatsAppSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (ingredientsCount < 2) return;
+
     const selectedIngNames = selectedIngredients.map(
       (id) => ingredientOptions.find((i) => i.id === id)?.name
     );
 
-    let messageStr = `*CUSTOM HAMPER BUILDER REQUEST*\n`;
-    messageStr += `-----------------------------\n`;
-    messageStr += `*Packaging:* ${selectedPackDetails.name}\n`;
-    messageStr += `*Dry Fruits Included:*\n`;
+    let messageStr = `Hello ShubhMewa 👋\n\n`;
+    messageStr += `I want to order a Custom Gifting Hamper:\n\n`;
+    messageStr += `- *Outer Box:* ${selectedPackDetails.name}\n`;
+    messageStr += `- *Items Selected:*\n`;
     selectedIngNames.forEach((name) => {
-      if (name) messageStr += `  - ${name} (200g)\n`;
+      if (name) messageStr += `  • ${name} (200g)\n`;
     });
-    messageStr += `*Target Budget:* ₹${targetBudget} per hamper\n`;
-    messageStr += `*Quantity:* ${quantity} hampers\n`;
-    messageStr += `*Est. Cost (per unit):* ₹${estimatedHamperCost}\n`;
-    if (message.trim()) messageStr += `*Greeting Card Msg:* "${message}"\n`;
-    messageStr += `-----------------------------\n`;
-    messageStr += `Please confirm availability and suggest customization details.`;
+    messageStr += `- *Quantity:* ${quantity} units\n`;
+    messageStr += `- *Estimated Value (per unit):* ₹${estimatedHamperCost}\n`;
+    messageStr += `- *Target Budget Range:* ₹${targetBudget} per unit\n`;
+    if (message.trim()) messageStr += `- *Custom Gift Card Msg:* "${message}"\n`;
+    messageStr += `\nPlease confirm custom print options and delivery charges.`;
 
     const encoded = encodeURIComponent(messageStr);
     const url = `https://wa.me/${whatsappNumber}?text=${encoded}`;
@@ -236,8 +242,8 @@ export default function HamperBuilder({ whatsappNumber }: HamperBuilderProps) {
             <span className="text-[10px] text-brand-muted font-bold block uppercase tracking-wider">
               Dry Fruit Mix ({ingredientsCount} items)
             </span>
-            {ingredientsCount === 0 ? (
-              <p className="text-xs text-red-500 mt-1">Please select at least 1 ingredient.</p>
+            {ingredientsCount < 2 ? (
+              <p className="text-xs text-red-500 mt-1">Please select at least 2 ingredients (Min: 2, Max: 6).</p>
             ) : (
               <ul className="text-xs text-brand-green space-y-1.5 mt-2">
                 {selectedIngredients.map((id) => {
@@ -271,7 +277,7 @@ export default function HamperBuilder({ whatsappNumber }: HamperBuilderProps) {
         <button
           type="button"
           onClick={handleWhatsAppSubmit}
-          disabled={ingredientsCount === 0}
+          disabled={ingredientsCount < 2 || ingredientsCount > 6}
           className="w-full bg-brand-green hover:bg-brand-green/95 disabled:opacity-50 text-brand-cream-light py-3.5 rounded-xl text-xs font-semibold tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-md mt-6"
         >
           <PhoneCall className="w-4 h-4 text-brand-gold" />

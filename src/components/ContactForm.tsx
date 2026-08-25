@@ -63,7 +63,7 @@ export default function ContactForm() {
             Message Sent Successfully
           </h3>
           <p className="text-sm text-brand-muted max-w-sm mx-auto leading-relaxed">
-            Thank you for writing to Harshil Dry Fruits. Your message has been received. Our team will review it and reply within 24 hours.
+            Thank you for writing to ShubhMewa. Your message has been received. Our team will review it and reply within 24 hours.
           </p>
           <button
             onClick={() => setSuccess(false)}

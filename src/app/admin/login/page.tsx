@@ -65,7 +65,7 @@ export default function AdminLoginPage() {
                 type="email"
                 name="email"
                 required
-                placeholder="e.g. admin@harshildryfruits.com"
+                placeholder="e.g. admin@shubhmewa.com"
                 className="w-full border border-brand-cream-dark/50 px-3.5 py-2.5 rounded-xl text-xs focus:outline-none focus:border-brand-gold text-brand-green bg-brand-cream-light/10 pl-9"
               />
               <Mail className="w-4 h-4 text-brand-muted absolute left-3 top-3" />

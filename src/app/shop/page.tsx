@@ -8,6 +8,7 @@ interface ShopPageProps {
   searchParams: Promise<{
     category?: string;
     bestseller?: string;
+    query?: string;
   }>;
 }
 
@@ -16,10 +17,11 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const params = await searchParams;
   const initialCategory = params.category || "";
   const filterBestseller = params.bestseller === "true";
+  const initialQuery = params.query || "";
 
   const products = PRODUCTS;
   const categories = CATEGORIES;
-  const whatsappNumber = DEFAULT_SETTINGS["whatsapp_number"] || "919876543210";
+  const whatsappNumber = DEFAULT_SETTINGS["whatsapp_number"] || "8982010210";
 
   return (
     <div className="w-full bg-brand-cream-light/30 min-h-screen py-12">
@@ -39,6 +41,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
           whatsappNumber={whatsappNumber}
           initialCategory={initialCategory}
           filterBestseller={filterBestseller}
+          initialQuery={initialQuery}
         />
       </div>
     </div>

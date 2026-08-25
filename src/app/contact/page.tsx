@@ -8,12 +8,12 @@ export const revalidate = 0; // Dynamic server-side rendering
 export default async function ContactPage() {
   const settings = DEFAULT_SETTINGS;
 
-  const address = settings["store_address"] || "12, Freeganj Main Road, Opp. Gold Gym, Ujjain, Madhya Pradesh - 456001";
-  const timings = settings["store_timings"] || "10:00 AM - 09:30 PM (All Days)";
-  const phone = settings["contact_phone"] || "+91 98765 43210";
-  const email = settings["contact_email"] || "info@harshildryfruits.com";
-  const whatsappNumber = settings["whatsapp_number"] || "919876543210";
-  const mapsLink = settings["google_maps_link"] || "https://maps.google.com/?q=Freeganj+Ujjain";
+  const address = settings["store_address"] || "Shop No. 5, Gali No. 4, Tilak Marg, Dev Sahab Ki Gali, Fawara Chowk, Daulat Ganj, Ujjain, Madhya Pradesh";
+  const timings = settings["store_timings"] || "10:00 AM - 09:30 PM (All Days Open)";
+  const phone = settings["contact_phone"] || "8982010210";
+  const email = settings["contact_email"] || "info@shubhmewa.com";
+  const whatsappNumber = settings["whatsapp_number"] || "8982010210";
+  const mapsLink = settings["google_maps_link"] || "https://maps.google.com/?q=Shop+No.+5,+Gali+No.+4,+Tilak+Marg,+Fawara+Chowk,+Daulat+Ganj,+Ujjain";
 
   return (
     <div className="w-full bg-brand-cream-light/30 min-h-screen py-16 font-sans">
@@ -22,7 +22,7 @@ export default async function ContactPage() {
         <div className="text-center max-w-xl mx-auto">
           <span className="text-[10px] tracking-widest font-bold uppercase text-brand-gold">Reach Out</span>
           <h1 className="font-serif-editorial text-4xl text-brand-green font-bold mt-2">
-            Contact Harshil Dry Fruits
+            Contact ShubhMewa
           </h1>
           <div className="h-[1px] w-20 bg-brand-gold mx-auto mt-3" />
         </div>

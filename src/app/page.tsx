@@ -17,23 +17,23 @@ export default async function HomePage() {
   const settings = DEFAULT_SETTINGS;
   const banners: any[] = [];
 
-  const whatsappNumber = settings["whatsapp_number"] || "919876543210";
-  const contactPhone = settings["contact_phone"] || "+91 98765 43210";
-  const timings = settings["store_timings"] || "10:00 AM - 09:30 PM (All Days)";
-  const address = settings["store_address"] || "12, Freeganj Main Road, Opp. Gold Gym, Ujjain, Madhya Pradesh - 456001";
-  const mapsLink = settings["google_maps_link"] || "https://maps.google.com/?q=Freeganj+Ujjain";
-  const heroTitle = settings["hero_title"] || "Premium Dry Fruits, Delivered with Trust.";
-  const heroSubtitle = settings["hero_subtitle"] || "Discover carefully selected dry fruits, healthy seeds and thoughtfully crafted gift hampers for every occasion.";
+  const whatsappNumber = settings["whatsapp_number"] || "8982010210";
+  const contactPhone = settings["contact_phone"] || "8982010210";
+  const timings = settings["store_timings"] || "10:00 AM - 09:30 PM (All Days Open)";
+  const address = settings["store_address"] || "Shop No. 5, Gali No. 4, Tilak Marg, Dev Sahab Ki Gali, Fawara Chowk, Daulat Ganj, Ujjain, Madhya Pradesh";
+  const mapsLink = settings["google_maps_link"] || "https://maps.google.com/?q=Shop+No.+5,+Gali+No.+4,+Tilak+Marg,+Fawara+Chowk,+Daulat+Ganj,+Ujjain";
+  const heroTitle = settings["hero_title"] || "Premium Dry Fruits. Packed Fresh. Delivered with Care.";
+  const heroSubtitle = settings["hero_subtitle"] || "ShubhMewa brings carefully selected dry fruits, makhana, seeds, spices and gifting essentials to your doorstep.";
 
   // Filter bestsellers
   const bestsellers = products.filter((p) => p.isBestseller);
 
-  // Health benefits mock list
+  // Health benefits mock list - fully factual and compliant
   const healthBenefits = [
-    { name: "Almond Health", desc: "Saturated with Vitamin E and antioxidants to support cognitive function and lower cholesterol.", benefit: "Brain & Heart" },
-    { name: "Walnut Halves", desc: "Excellent plant source of Omega-3 ALA, vital for heart safety and reducing inflammation.", benefit: "Omega-3 Rich" },
-    { name: "Medjool Dates", desc: "Fleshy and fibrous, providing clean carbohydrate fuels and supporting digestive processes.", benefit: "Instant Energy" },
-    { name: "Salted Pistachios", desc: "Packs essential amino acids, promoting cardiovascular safety and healthy weight.", benefit: "Fiber & Protein" },
+    { name: "California Almonds", desc: "A natural source of healthy fats, protein, and vitamin E. Handpicked for quality.", benefit: "Nutrient Rich" },
+    { name: "Chilean Walnuts", desc: "Premium light halves containing naturally occurring nutrients. Buttery taste and premium texture.", benefit: "Naturally Healthy" },
+    { name: "Medjool Dates", desc: "Delicious natural sugar replacement, high in taste and texture, providing instant freshness.", benefit: "Instant Refresh" },
+    { name: "Salted Pistachios", desc: "Premium crunchy salted split-shell nuts, rich in protein and fiber, roasted to perfection.", benefit: "Roasted Snack" },
   ];
 
   return (
@@ -46,7 +46,7 @@ export default async function HomePage() {
           <div className="lg:col-span-6 space-y-6 text-left">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-gold/10 border border-brand-gold/30 rounded-full text-brand-gold">
               <Sparkles className="w-3.5 h-3.5" />
-              <span className="text-[10px] tracking-widest font-bold uppercase">Ujjain's Premium Sourcing Shop</span>
+              <span className="text-[10px] tracking-widest font-bold uppercase">Premium Retail Food Brand</span>
             </div>
             
             <h1 className="font-serif-editorial text-4xl md:text-5xl lg:text-6xl text-brand-green font-bold leading-[1.1] tracking-tight">
@@ -60,18 +60,18 @@ export default async function HomePage() {
             {/* CTAs */}
             <div className="flex flex-wrap gap-4 pt-2">
               <Link
-                href="/shop"
-                className="bg-brand-green hover:bg-brand-green/95 text-brand-cream-light px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center gap-2 group"
-              >
-                <span>Explore Collection</span>
-                <ArrowRight className="w-4 h-4 text-brand-gold transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link
                 href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
+                className="bg-[#25D366] hover:bg-[#20ba5a] text-white px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center gap-2 group"
+              >
+                <MessageSquare className="w-4 h-4 fill-current" />
+                <span>Order on WhatsApp</span>
+              </Link>
+              <Link
+                href="/shop"
                 className="border border-brand-green hover:border-brand-gold text-brand-green hover:text-brand-gold px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all bg-white shadow-xs"
               >
-                Order on WhatsApp
+                Explore Products
               </Link>
             </div>
 
@@ -174,7 +174,7 @@ export default async function HomePage() {
         <div className="text-center max-w-xl mx-auto mb-16 space-y-2">
           <span className="text-[10px] tracking-widest font-bold uppercase text-brand-gold">Our Philosophy</span>
           <h2 className="font-serif-editorial text-3xl md:text-4xl text-brand-green font-bold">
-            The Harshil Quality Standard
+            The ShubhMewa Sourcing Standard
           </h2>
           <div className="h-[1px] w-20 bg-brand-gold mx-auto mt-3" />
         </div>
@@ -255,28 +255,28 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 7. BULK LEAD GENERATION (WEDDING & CORPORATE) */}
+      {/* 7. BULK LEAD GENERATION (WEDDING & CELEBRATION) */}
       <section className="py-20 max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-5 space-y-6">
           <span className="text-[10px] tracking-widest font-bold uppercase text-brand-gold">Bulk Enquiries</span>
           <h2 className="font-serif-editorial text-3xl md:text-4xl text-brand-green font-bold leading-tight">
-            Corporate & Wedding Royal Gifting proposals
+            Celebration & Wedding Royal Gifting Proposals
           </h2>
           <p className="text-xs text-brand-muted leading-relaxed">
-            For wedding invites, wedding return favors, corporate anniversaries, or corporate client appreciation boxes, Harshil Dry Fruits designs gold-embossed packages customized to your target budgets.
+            For wedding invites, wedding return favors, and festive celebrations, ShubhMewa designs gold-embossed packages customized to your target budgets.
           </p>
           <div className="space-y-3 pt-2 text-xs text-brand-green font-semibold">
             <p className="flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-brand-gold" />
-              Custom wood-engraving and logo printing.
+              Custom wood-engraving and monogram printing.
             </p>
             <p className="flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-brand-gold" />
-              Specialized wholesale rates on premium grade dry fruits.
+              Premium packaging customized for retail gifting.
             </p>
             <p className="flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-brand-gold" />
-              Dedicated corporate executive manager assigned to your order.
+              Express hand delivery options across Ujjain.
             </p>
           </div>
         </div>
@@ -292,20 +292,20 @@ export default async function HomePage() {
           <div className="aspect-[4/3] bg-brand-cream-light rounded-3xl overflow-hidden shadow-md">
             <img
               src="/images/shop_interior.jpg"
-              alt="Harshil Dry Fruits Shop Interior"
+              alt="ShubhMewa Shop Interior"
               className="w-full h-full object-cover"
             />
           </div>
           <div className="space-y-6">
             <span className="text-[10px] tracking-widest font-bold uppercase text-brand-gold">Our Legacy</span>
             <h2 className="font-serif-editorial text-3xl md:text-4xl text-brand-green font-bold">
-              Harshil Sourcing Legacy in Ujjain
+              ShubhMewa Sourcing Legacy in Ujjain
             </h2>
             <p className="text-xs text-brand-muted leading-relaxed">
-              Based in the holy city of Ujjain, Madhya Pradesh, we started with a mission to bring healthy, premium nuts, seeds, and gourmet items to our patrons. We choose only grade-one items from farmers and import terminals worldwide.
+              Based in the holy city of Ujjain, Madhya Pradesh, we are dedicated to bringing healthy, premium nuts, seeds, and gourmet items to our patrons. We choose only grade-one items from select growers and import terminals.
             </p>
             <p className="text-xs text-brand-muted leading-relaxed">
-              Each almond and walnut half undergoes two sorting passes to guarantee uniform color, thickness, and zero decay before bagging. Enjoy clean nutrition directly from our shop.
+              Each almond and cashew kernel undergoes two manual sorting passes to guarantee uniform color, size, and absolute freshness before bagging. Enjoy clean nutrition directly from our Fawara Chowk store.
             </p>
             <Link
               href="/about"
@@ -391,12 +391,52 @@ export default async function HomePage() {
         </div>
         <div className="text-center mt-8">
           <Link
-            href={settings["instagram_link"] || "https://instagram.com/harshildryfruits"}
+            href={settings["instagram_link"] || "https://instagram.com/shubhmewa"}
             target="_blank"
             className="inline-block text-xs font-bold uppercase tracking-wider text-brand-green hover:text-brand-gold border border-brand-green hover:border-brand-gold px-8 py-3 rounded-full transition-all"
           >
             Follow on Instagram
           </Link>
+        </div>
+      </section>
+
+      {/* IMPORTANT BUSINESS POLICIES & SHIPPING DETAILS */}
+      <section className="py-20 bg-brand-cream-light/30 border-y border-brand-cream-dark/20">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <div className="text-center max-w-xl mx-auto mb-12 space-y-2">
+            <span className="text-[10px] tracking-widest font-bold uppercase text-brand-gold">Essential Policies</span>
+            <h2 className="font-serif-editorial text-3xl md:text-4xl text-brand-green font-bold">
+              Important Business Information
+            </h2>
+            <div className="h-[1px] w-20 bg-brand-gold mx-auto mt-3" />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+            <div className="bg-white border border-brand-cream-dark/20 p-6 rounded-2xl space-y-3 shadow-xs">
+              <span className="text-brand-gold font-bold text-[10px] tracking-wider uppercase bg-brand-gold/10 px-2.5 py-1 rounded">01. Same/Next Day Cutoff</span>
+              <p className="text-xs text-brand-muted leading-relaxed">
+                For Ujjain orders, standard delivery is completed same-day or next-day. Orders placed after 5:00 PM will be processed on the next business day.
+              </p>
+            </div>
+            <div className="bg-white border border-brand-cream-dark/20 p-6 rounded-2xl space-y-3 shadow-xs">
+              <span className="text-brand-gold font-bold text-[10px] tracking-wider uppercase bg-brand-gold/10 px-2.5 py-1 rounded">02. Bulk Order Non-Cancellation</span>
+              <p className="text-xs text-brand-muted leading-relaxed">
+                Any order with a quantity of 10 or more units is treated as a Bulk Order and cannot be cancelled or refunded under any circumstances.
+              </p>
+            </div>
+            <div className="bg-white border border-brand-cream-dark/20 p-6 rounded-2xl space-y-3 shadow-xs">
+              <span className="text-brand-gold font-bold text-[10px] tracking-wider uppercase bg-brand-gold/10 px-2.5 py-1 rounded">03. 12-Hour Reporting Window</span>
+              <p className="text-xs text-brand-muted leading-relaxed">
+                Damaged products, missing items, or weight discrepancies must be reported to our support number within 12 hours of delivery.
+              </p>
+            </div>
+            <div className="bg-white border border-brand-cream-dark/20 p-6 rounded-2xl space-y-3 shadow-xs">
+              <span className="text-brand-gold font-bold text-[10px] tracking-wider uppercase bg-brand-gold/10 px-2.5 py-1 rounded">04. Replacement Only Policy</span>
+              <p className="text-xs text-brand-muted leading-relaxed">
+                We maintain a strict "No Refund. Replacement Only" policy. Replacements will be dispatched once verified by our logistics team.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 

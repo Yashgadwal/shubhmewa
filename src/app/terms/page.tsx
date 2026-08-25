@@ -12,7 +12,7 @@ export default function TermsPage() {
         </p>
 
         <p>
-          Welcome to **Harshil Dry Fruits**. By accessing our catalog, ordering dry fruits online, or placing custom hamper enquiries, you agree to comply with the terms defined herein.
+          Welcome to **ShubhMewa**. By accessing our catalog, ordering dry fruits online, or placing custom hamper enquiries, you agree to comply with the terms defined herein.
         </p>
 
         <h2 className="font-serif-editorial text-lg text-brand-green font-bold mt-6">
@@ -26,14 +26,24 @@ export default function TermsPage() {
           2. Gifting Orders & WhatsApp Checkout
         </h2>
         <p>
-          The cart-to-WhatsApp flow acts as an enquiry generation tool. Sourced orders are confirmed once our boutique team confirms quantity availability and delivery slot options in Ujjain.
+          The cart-to-WhatsApp flow acts as an order checklist helper. Sourced orders are confirmed once our boutique team confirms quantity availability and delivery slot options in Ujjain.
         </p>
 
         <h2 className="font-serif-editorial text-lg text-brand-green font-bold mt-6">
-          3. Limitation of Liability
+          3. Cancellation Policy (Bulk Orders)
         </h2>
         <p>
-          Harshil Dry Fruits operates under Madhya Pradesh food hygiene guidelines. Sourced items are packaged hygienically; however, customers must check allergen details (such as nut allergies) before usage.
+          - Standard orders cannot be cancelled once they have been processed or dispatched.
+        </p>
+        <p>
+          - Any order consisting of a quantity of **10 or more units** is treated as a Bulk Order and cannot be cancelled, modified, or refunded under any circumstances once placed.
+        </p>
+
+        <h2 className="font-serif-editorial text-lg text-brand-green font-bold mt-6">
+          4. Limitation of Liability
+        </h2>
+        <p>
+          ShubhMewa operates under Madhya Pradesh food hygiene guidelines. Sourced items are packaged hygienically; however, customers must check allergen details (such as nut allergies) before usage.
         </p>
       </div>
     </div>

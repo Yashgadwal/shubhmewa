@@ -293,7 +293,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
 
                   {/* WhatsApp contact redirect */}
                   <a
-                    href={`https://wa.me/${selectedOrder.phone}?text=Hello%20${selectedOrder.customerName},%20this%20is%20Harshil%20Dry%20Fruits%20regarding%20your%20order%20${selectedOrder.orderNumber}.`}
+                    href={`https://wa.me/${selectedOrder.phone}?text=Hello%20${selectedOrder.customerName},%20this%20is%20ShubhMewa%20regarding%20your%20order%20${selectedOrder.orderNumber}.`}
                     target="_blank"
                     className="mt-4 flex items-center justify-center gap-1 bg-[#25D366] text-white py-2 rounded-xl text-xs font-semibold tracking-wide"
                   >

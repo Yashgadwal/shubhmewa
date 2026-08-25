@@ -73,8 +73,7 @@ export default function ProductCard({ product, whatsappNumber }: ProductCardProp
   const handleWhatsAppOrder = (e: React.MouseEvent) => {
     e.preventDefault();
     
-    // Create WhatsApp Order message
-    const message = `Hello! I would like to order *${product.name}*\nWeight: *${weightLabel}*\nPrice: *₹${currentPrice}*\nQuantity: *1*\n\nPlease confirm availability and share payment/delivery details.\nProduct Link: https://harshildryfruits.com/shop/${product.slug}`;
+    const message = `Hello ShubhMewa 👋\n\nI want to order:\n\nProduct: ${product.name}\nWeight: ${weightLabel}\nQuantity: 1\n\nPlease confirm product availability, delivery charges and final payable amount.`;
     const encoded = encodeURIComponent(message);
     const url = `https://wa.me/${whatsappNumber}?text=${encoded}`;
     window.open(url, "_blank");
@@ -104,14 +103,7 @@ export default function ProductCard({ product, whatsappNumber }: ProductCardProp
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-          <button
-            onClick={handleAddToCart}
-            className="p-3 bg-white hover:bg-brand-green hover:text-white text-brand-green rounded-full shadow-md transition-all scale-90 group-hover:scale-100"
-            title="Add to Cart"
-          >
-            <ShoppingBag className="w-4 h-4" />
-          </button>
+        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <span
             className="p-3 bg-white hover:bg-brand-gold hover:text-white text-brand-gold rounded-full shadow-md transition-all scale-90 group-hover:scale-100"
             title="View Details"
@@ -163,32 +155,25 @@ export default function ProductCard({ product, whatsappNumber }: ProductCardProp
 
         <div className="mt-5 pt-4 border-t border-brand-cream-dark/20">
           {/* Price display */}
-          <div className="flex items-baseline gap-2 mb-4">
-            <span className="text-lg font-bold text-brand-green">₹{currentPrice}</span>
-            {discountedPrice && (
-              <span className="text-xs text-brand-muted line-through">₹{originalPrice}</span>
-            )}
+          <div className="flex items-baseline justify-between gap-2 mb-4">
+            <div className="flex items-baseline gap-2">
+              <span className="text-lg font-bold text-brand-green">₹{currentPrice}</span>
+              {discountedPrice && (
+                <span className="text-xs text-brand-muted line-through">₹{originalPrice}</span>
+              )}
+            </div>
+            <span className="text-[10px] text-brand-gold font-bold uppercase tracking-wider bg-brand-gold/10 px-2 py-0.5 rounded">In Stock</span>
           </div>
 
-          {/* Quick Buttons */}
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={handleAddToCart}
-              className="flex items-center justify-center gap-1.5 border border-brand-green hover:border-brand-gold text-brand-green hover:text-brand-gold py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all"
-            >
-              <ShoppingBag className="w-3.5 h-3.5" />
-              <span>Add Cart</span>
-            </button>
-            <button
-              onClick={handleWhatsAppOrder}
-              className="flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20ba5a] text-white py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all"
-            >
-              <PhoneCall className="w-3.5 h-3.5" />
-              <span>Order WA</span>
-            </button>
-          </div>
+          {/* WhatsApp Order Button */}
+          <button
+            onClick={handleWhatsAppOrder}
+            className="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-sm"
+          >
+            <PhoneCall className="w-3.5 h-3.5 fill-current" />
+            <span>Order on WhatsApp</span>
+          </button>
         </div>
-
       </div>
 
     </div>

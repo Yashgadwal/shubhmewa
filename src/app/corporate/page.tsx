@@ -5,7 +5,7 @@ import BulkOrderForm from "@/components/BulkOrderForm";
 export const revalidate = 0; // Dynamic server-side rendering
 
 export default async function CorporateGiftingPage() {
-  const whatsappNumber = DEFAULT_SETTINGS["whatsapp_number"] || "919876543210";
+  const whatsappNumber = DEFAULT_SETTINGS["whatsapp_number"] || "8982010210";
 
   return (
     <div className="w-full bg-brand-cream-light/30 min-h-screen py-16 font-sans">
@@ -19,7 +19,7 @@ export default async function CorporateGiftingPage() {
           </h1>
           <div className="h-[1px] w-20 bg-brand-gold mt-2" />
           <p className="text-xs text-brand-muted leading-relaxed">
-            Strengthen your business relations, thank clients, and celebrate employee milestones with health-focused dry fruit corporate boxes from Harshil Dry Fruits. 
+            Strengthen your business relations, thank clients, and celebrate employee milestones with health-focused dry fruit corporate boxes from ShubhMewa. 
           </p>
 
           {/* Visual Presentation */}

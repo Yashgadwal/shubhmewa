@@ -12,9 +12,9 @@ export default function PrivacyPolicyPage() {
         </p>
 
         <p>
-          At **Harshil Dry Fruits**, we prioritize your privacy. This Privacy Policy details how we collect, use, and safeguard the information you provide when using our website or placing orders through our cart-to-WhatsApp channels.
+          At **ShubhMewa**, we prioritize your privacy. This Privacy Policy details how we collect, use, and safeguard the information you provide when using our website or placing orders through our cart-to-WhatsApp channels.
         </p>
-
+        
         <h2 className="font-serif-editorial text-lg text-brand-green font-bold mt-6">
           1. Information We Collect
         </h2>
@@ -31,18 +31,18 @@ export default function PrivacyPolicyPage() {
           Your details are utilized to:
           - Process and dispatch dry fruit orders and custom hampers.
           - Pre-fill WhatsApp checkout texts.
-          - Record bulk corporate/wedding RFQ enquiries.
+          - Record bulk celebration/wedding RFQ enquiries.
         </p>
 
         <h2 className="font-serif-editorial text-lg text-brand-green font-bold mt-6">
           3. Sourcing Data Protection
         </h2>
         <p>
-          We store all data in a local secure SQLite database, accessible only by verified store administrators. We do not sell or lease customer numbers or emails to third-party marketing services.
+          We store all data in local secure records, accessible only by verified store administrators. We do not sell or lease customer numbers or emails to third-party marketing services.
         </p>
 
         <p className="pt-6">
-          For any clarifications regarding your details, contact our customer operations team in Ujjain at info@harshildryfruits.com.
+          For any clarifications regarding your details, contact our customer operations team in Ujjain at info@shubhmewa.com.
         </p>
       </div>
     </div>

@@ -52,8 +52,7 @@ export default function ProductDetailsView({
   };
 
   const handleWhatsAppOrder = () => {
-    // Generate pre-filled ordering details
-    const message = `Hello! I would like to order *${product.name}*\nWeight: *${weightLabel}*\nQuantity: *${quantity}*\nPrice: *₹${currentPrice * quantity}* (₹${currentPrice} each)\n\nPlease confirm availability and home delivery details.\nProduct Link: https://harshildryfruits.com/shop/${product.slug}`;
+    const message = `Hello ShubhMewa 👋\n\nI want to order:\n\nProduct: ${product.name}\nWeight: ${weightLabel}\nQuantity: ${quantity}\n\nPlease confirm product availability, delivery charges and final payable amount.`;
     const encoded = encodeURIComponent(message);
     const url = `https://wa.me/${whatsappNumber}?text=${encoded}`;
     window.open(url, "_blank");
@@ -200,9 +199,9 @@ export default function ProductDetailsView({
           </div>
 
           <div className="border-t border-brand-cream-dark/20 pt-6 space-y-4">
-            {/* Quantity Selector & Cart CTA Row */}
+            {/* Quantity Selector & WhatsApp CTA Row */}
             <div className="flex flex-wrap gap-4 items-center">
-              <div className="flex items-center border border-brand-cream-dark px-3 py-1.5 rounded-xl bg-brand-cream-light">
+              <div className="flex items-center border border-brand-cream-dark px-3 py-2.5 rounded-xl bg-brand-cream-light">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   className="p-1 hover:text-brand-gold text-brand-green"
@@ -221,21 +220,20 @@ export default function ProductDetailsView({
               </div>
 
               <button
-                onClick={handleAddToCart}
-                className="flex-1 min-w-[150px] bg-brand-green hover:bg-brand-green/95 text-brand-cream-light py-3 px-6 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md"
+                onClick={handleWhatsAppOrder}
+                className="flex-1 min-w-[200px] bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-6 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-md animate-pulse"
               >
-                <ShoppingBag className="w-4 h-4 text-brand-gold" />
-                <span>Add to Cart</span>
+                <PhoneCall className="w-4 h-4 fill-current text-white" />
+                <span>Order on WhatsApp (₹{currentPrice * quantity})</span>
               </button>
             </div>
 
-            {/* Quick checkout */}
+            {/* Secondary Add to Cart button */}
             <button
-              onClick={handleWhatsAppOrder}
-              className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-6 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
+              onClick={handleAddToCart}
+              className="w-full border border-brand-green hover:border-brand-gold text-brand-green hover:text-brand-gold py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all"
             >
-              <PhoneCall className="w-4 h-4 fill-current text-brand-cream-light" />
-              <span>Order via WhatsApp (₹{currentPrice * quantity})</span>
+              <span>Add to Shopping List</span>
             </button>
           </div>
 

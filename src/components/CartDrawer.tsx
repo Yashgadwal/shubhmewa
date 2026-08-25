@@ -105,7 +105,7 @@ export default function CartDrawer({ settings }: CartDrawerProps) {
         
         if (checkoutMethod === "whatsapp") {
           // Format WhatsApp message
-          let message = `*NEW ORDER - HARSHIL DRY FRUITS*\n`;
+          let message = `Hello ShubhMewa 👋\n\n*NEW ORDER - SHUBHMEWA*\n`;
           message += `Order Number: ${orderNum}\n`;
           message += `-----------------------------\n`;
           message += `*Customer:* ${name}\n`;

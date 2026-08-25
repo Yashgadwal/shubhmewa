@@ -50,7 +50,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="canonical" href="https://harshildryfruits.com" />
+        <link rel="canonical" href="https://shubhmewa.com" />
       </head>
       <body
         className="min-h-full flex flex-col bg-brand-cream-light text-foreground select-none"

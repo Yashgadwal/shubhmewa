@@ -105,7 +105,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="flex flex-wrap gap-4 text-xs text-brand-muted border-y border-brand-cream-dark/30 py-3 font-semibold">
             <div className="flex items-center gap-1">
               <User className="w-4 h-4 text-brand-gold" />
-              <span>Harshil Gupta</span>
+              <span>ShubhMewa Curator</span>
             </div>
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4 text-brand-gold" />

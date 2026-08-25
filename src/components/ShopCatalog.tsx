@@ -16,6 +16,7 @@ interface ShopCatalogProps {
   whatsappNumber: string;
   initialCategory: string;
   filterBestseller: boolean;
+  initialQuery?: string;
 }
 
 export default function ShopCatalog({
@@ -24,8 +25,9 @@ export default function ShopCatalog({
   whatsappNumber,
   initialCategory,
   filterBestseller,
+  initialQuery = "",
 }: ShopCatalogProps) {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(initialQuery);
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
   const [priceRange, setPriceRange] = useState<number>(3000);
   const [sortBy, setSortBy] = useState<"default" | "price-asc" | "price-desc" | "bestseller" | "newest">("default");

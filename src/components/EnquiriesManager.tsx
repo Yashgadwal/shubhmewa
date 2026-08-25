@@ -280,7 +280,7 @@ export default function EnquiriesManager({ initialEnquiries }: EnquiriesManagerP
                   
                   {/* WhatsApp click shortcut */}
                   <a
-                    href={`https://wa.me/${selectedEnquiry.phone}?text=Hello%20${selectedEnquiry.customerName},%20this%20is%20Harshil%20Dry%20Fruits%20regarding%20your%20custom%20gifting%20enquiry%20for%20${selectedEnquiry.occasion}.`}
+                    href={`https://wa.me/${selectedEnquiry.phone}?text=Hello%20${selectedEnquiry.customerName},%20this%20is%20ShubhMewa%20regarding%20your%20custom%20gifting%20enquiry%20for%20${selectedEnquiry.occasion}.`}
                     target="_blank"
                     className="mt-4 flex items-center justify-center gap-1 bg-[#25D366] text-white py-2 rounded-xl text-xs font-semibold tracking-wide"
                   >
