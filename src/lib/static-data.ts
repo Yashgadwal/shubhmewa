@@ -608,5 +608,6 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   online_checkout_active: "true",
   hero_title: "Premium Dry Fruits. Packed Fresh. Delivered with Care.",
   hero_subtitle: "ShubhMewa brings carefully selected dry fruits, makhana, seeds, spices and premium gifting essentials to your doorstep.",
-  free_shipping_threshold: "399"
+  free_shipping_threshold: "399",
+  shiprocket_channel_id: "1196285411962854"
 };

@@ -89,7 +89,7 @@ export default function ProductDetailsView({
       </div>
 
       {/* Main product detail section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 bg-white border border-brand-cream-dark/30 p-6 md:p-10 rounded-3xl shadow-xs">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 bg-white border border-brand-cream-dark/30 p-6 md:p-10 rounded-3xl shadow-xs">
         
         {/* Left Column: Image Gallery with Zoom */}
         <div className="lg:col-span-6 space-y-4">
@@ -130,7 +130,7 @@ export default function ProductDetailsView({
         </div>
 
         {/* Right Column: Information & CTAs */}
-        <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
+        <div className="lg:col-span-6 flex flex-col justify-start space-y-6">
           <div className="space-y-4">
             <span className="text-xs font-bold tracking-widest text-brand-gold uppercase">
               {product.category.name}
@@ -147,7 +147,7 @@ export default function ProductDetailsView({
               <span className="text-xs text-brand-muted font-bold ml-1">(5.0 Rating | 12 customer reviews)</span>
             </div>
 
-            <p className="text-xs text-brand-muted leading-relaxed">
+            <p className="text-sm text-brand-muted leading-relaxed">
               {product.description}
             </p>
 

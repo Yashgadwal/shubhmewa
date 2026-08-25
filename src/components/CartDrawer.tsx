@@ -164,7 +164,7 @@ export default function CartDrawer({ settings }: CartDrawerProps) {
         onClick={() => setIsOpen(false)}
       />
 
-      <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
+      <div className="absolute inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
         <div className="w-screen max-w-md bg-brand-cream-light border-l border-brand-cream-dark/50 flex flex-col shadow-2xl transition-transform duration-300 ease-in-out">
           
           {/* Header */}

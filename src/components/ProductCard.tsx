@@ -165,14 +165,23 @@ export default function ProductCard({ product, whatsappNumber }: ProductCardProp
             <span className="text-[10px] text-brand-gold font-bold uppercase tracking-wider bg-brand-gold/10 px-2 py-0.5 rounded">In Stock</span>
           </div>
 
-          {/* WhatsApp Order Button */}
-          <button
-            onClick={handleWhatsAppOrder}
-            className="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-sm"
-          >
-            <PhoneCall className="w-3.5 h-3.5 fill-current" />
-            <span>Order on WhatsApp</span>
-          </button>
+          {/* Action Buttons */}
+          <div className="flex gap-2">
+            <button
+              onClick={handleWhatsAppOrder}
+              className="flex-grow flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20ba5a] text-white py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-xs"
+            >
+              <PhoneCall className="w-3.5 h-3.5 fill-current" />
+              <span>Order WA</span>
+            </button>
+            <button
+              onClick={handleAddToCart}
+              className="border border-brand-green hover:border-brand-gold text-brand-green hover:text-brand-gold px-3 py-2.5 rounded-xl transition-all bg-white"
+              title="Add to Shopping List"
+            >
+              <ShoppingBag className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
       </div>
 

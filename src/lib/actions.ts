@@ -10,6 +10,7 @@ let GLOBAL_CONFIG: Record<string, string> = {
   ...DEFAULT_SETTINGS,
   razorpay_active: "true",
   shiprocket_active: "true",
+  shiprocket_channel_id: "1196285411962854",
   free_shipping_threshold: "399",
   uj_delivery_charge: "40",
   mp_delivery_charge: "60",
