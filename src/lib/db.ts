@@ -5,8 +5,8 @@ declare global {
 }
 
 const isDatabaseConfigured = !!(
-  process.env.POSTGRES_PRISMA_URL ||
-  process.env.DATABASE_URL
+  (process.env.POSTGRES_PRISMA_URL && process.env.POSTGRES_PRISMA_URL.startsWith("postgres")) ||
+  (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith("postgres"))
 );
 
 export const prisma = global.prisma || new PrismaClient({
