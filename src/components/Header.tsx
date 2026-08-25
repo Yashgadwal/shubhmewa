@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, Menu, X, Search, PhoneCall } from "lucide-react";
+import { ShoppingBag, Menu, X, Search, User } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import CartDrawer from "./CartDrawer";
 
@@ -103,14 +103,13 @@ export default function Header({ settings }: HeaderProps) {
                 <Search className="w-3.5 h-3.5 text-brand-muted absolute left-3 pointer-events-none" />
               </form>
 
-              {/* WhatsApp CTA */}
+              {/* Profile Link */}
               <Link
-                href={`https://wa.me/${whatsappNumber}`}
-                target="_blank"
-                className="flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20ba5a] text-white px-4 py-2 rounded-full text-[10px] font-bold tracking-wider uppercase transition-all shadow-xs"
+                href="/account"
+                className="p-2 bg-white border border-brand-cream-dark/50 text-brand-green hover:border-brand-gold hover:text-brand-gold rounded-full transition-all shadow-xs"
+                aria-label="Account Profile"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                <span>Order on WhatsApp</span>
+                <User className="w-3.5 h-3.5" />
               </Link>
 
               {/* Cart Toggle */}
@@ -154,13 +153,11 @@ export default function Header({ settings }: HeaderProps) {
                 </Link>
               ))}
               <Link
-                href={`https://wa.me/${whatsappNumber}`}
-                target="_blank"
+                href="/shop"
                 onClick={() => setMobileMenuOpen(false)}
                 className="bg-brand-green hover:bg-brand-green/90 text-brand-cream-light py-3 rounded-full text-xs font-semibold tracking-widest uppercase transition-all shadow-sm flex items-center justify-center gap-2 mt-4"
               >
-                <PhoneCall className="w-4 h-4 text-brand-gold" />
-                WhatsApp Order
+                Shop Now
               </Link>
             </nav>
           </div>

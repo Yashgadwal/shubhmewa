@@ -432,7 +432,7 @@ export async function getLoyaltyStatus(phone: string) {
 // ==========================================
 
 export async function syncOrderToShiprocket(orderId: string) {
-  console.log(`Syncing order ${orderId} with Shiprocket API`);
+  console.log(`Syncing order ${orderId} with Shiprocket API (Account ID: ${GLOBAL_CONFIG.shiprocket_channel_id || "1196285411962854"})`);
   return {
     success: true,
     shipmentId: `sr-${Math.floor(100000 + Math.random() * 900000)}`,
@@ -728,4 +728,40 @@ export async function trackOrderOrEnquiry(query: string) {
       ]
     }
   };
+}
+
+// ==========================================
+// RAZORPAY SERVER ACTIONS
+// ==========================================
+
+export async function createRazorpayOrderAction(amount: number) {
+  try {
+    const orderId = `order_${Math.random().toString(36).substring(2, 16)}`;
+    return { success: true, orderId };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+}
+
+export async function verifyRazorpayPaymentAction(
+  paymentId: string,
+  orderId: string,
+  signature: string
+) {
+  try {
+    const secret = process.env.RAZORPAY_KEY_SECRET;
+    if (secret) {
+      const crypto = await import("crypto");
+      const expected = crypto
+        .createHmac("sha256", secret)
+        .update(`${orderId}|${paymentId}`)
+        .digest("hex");
+      if (expected !== signature) {
+        return { success: false, error: "Payment verification failed: Signature mismatch." };
+      }
+    }
+    return { success: true };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
 }

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Star, ShieldCheck, HeartPulse, Clock, Sparkles, Plus, Minus, PhoneCall, ShoppingBag, ArrowRight } from "lucide-react";
+import { Star, ShieldCheck, HeartPulse, Clock, Sparkles, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import ProductCard, { ProductWithDetails } from "./ProductCard";
 
@@ -17,11 +17,14 @@ export default function ProductDetailsView({
   relatedProducts,
   whatsappNumber,
 }: ProductDetailsViewProps) {
-  const { addItem } = useCart();
+  const { addItem, setIsOpen } = useCart();
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({});
+  const [pincode, setPincode] = useState("");
+  const [pincodeResult, setPincodeResult] = useState<{ available: boolean; days: string; charge: number; deliveryType: string } | null>(null);
+  const [pincodeChecking, setPincodeChecking] = useState(false);
 
   const hasVariants = product.variants && product.variants.length > 0;
   const currentVariant = hasVariants ? product.variants[selectedVariantIndex] : null;
@@ -51,11 +54,45 @@ export default function ProductDetailsView({
     }, quantity);
   };
 
-  const handleWhatsAppOrder = () => {
-    const message = `Hello ShubhMewa 👋\n\nI want to order:\n\nProduct: ${product.name}\nWeight: ${weightLabel}\nQuantity: ${quantity}\n\nPlease confirm product availability, delivery charges and final payable amount.`;
-    const encoded = encodeURIComponent(message);
-    const url = `https://wa.me/${whatsappNumber}?text=${encoded}`;
-    window.open(url, "_blank");
+  const handleBuyNow = () => {
+    addItem({
+      id: product.id,
+      variantId: currentVariant?.id,
+      name: product.name,
+      weight: weightLabel,
+      price: currentPrice,
+      image: images[0]?.url,
+    }, quantity);
+    setIsOpen(true);
+  };
+
+  const handlePincodeCheck = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!/^\d{6}$/.test(pincode)) {
+      alert("Please enter a valid 6-digit pincode.");
+      return;
+    }
+    setPincodeChecking(true);
+    try {
+      const { calculateShippingCharge } = await import("@/lib/actions");
+      const res = await calculateShippingCharge(pincode, currentPrice * quantity);
+      setPincodeResult({
+        available: true,
+        days: res.expectedDelivery,
+        charge: res.shippingCharge,
+        deliveryType: res.deliveryType
+      });
+    } catch (err) {
+      console.error(err);
+      setPincodeResult({
+        available: false,
+        days: "",
+        charge: 0,
+        deliveryType: ""
+      });
+    } finally {
+      setPincodeChecking(false);
+    }
   };
 
   // Magnifying Zoom functionality on hover
@@ -199,7 +236,7 @@ export default function ProductDetailsView({
           </div>
 
           <div className="border-t border-brand-cream-dark/20 pt-6 space-y-4">
-            {/* Quantity Selector & WhatsApp CTA Row */}
+            {/* Quantity Selector & standard buy CTAs */}
             <div className="flex flex-wrap gap-4 items-center">
               <div className="flex items-center border border-brand-cream-dark px-3 py-2.5 rounded-xl bg-brand-cream-light">
                 <button
@@ -220,21 +257,64 @@ export default function ProductDetailsView({
               </div>
 
               <button
-                onClick={handleWhatsAppOrder}
-                className="flex-1 min-w-[200px] bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-6 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-md animate-pulse"
+                onClick={handleAddToCart}
+                className="flex-grow md:flex-1 border border-brand-green hover:border-brand-gold text-brand-green hover:text-brand-gold py-3.5 px-6 rounded-xl text-xs font-bold uppercase tracking-widest transition-all bg-white"
               >
-                <PhoneCall className="w-4 h-4 fill-current text-white" />
-                <span>Order on WhatsApp (₹{currentPrice * quantity})</span>
+                Add to Cart
+              </button>
+              
+              <button
+                onClick={handleBuyNow}
+                className="flex-grow md:flex-1 min-w-[150px] bg-brand-green hover:bg-brand-green/90 text-brand-cream-light py-3.5 px-6 rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-md"
+              >
+                Buy Now
               </button>
             </div>
 
-            {/* Secondary Add to Cart button */}
-            <button
-              onClick={handleAddToCart}
-              className="w-full border border-brand-green hover:border-brand-gold text-brand-green hover:text-brand-gold py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all"
-            >
-              <span>Add to Shopping List</span>
-            </button>
+            {/* Pincode checker widget */}
+            <div className="border-t border-brand-cream-dark/20 pt-6 space-y-3">
+              <span className="text-[10px] uppercase tracking-wider font-bold text-brand-green block">
+                Check Delivery Availability
+              </span>
+              <form onSubmit={handlePincodeCheck} className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Enter 6-digit Pincode"
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  className="border border-brand-cream-dark/50 px-3.5 py-2 rounded-xl text-xs tracking-wider focus:outline-none focus:border-brand-gold text-brand-green flex-1 bg-white"
+                />
+                <button
+                  type="submit"
+                  disabled={pincodeChecking}
+                  className="bg-brand-green text-brand-cream-light px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-brand-green/95 transition-all disabled:opacity-50"
+                >
+                  {pincodeChecking ? "Checking..." : "Check"}
+                </button>
+              </form>
+
+              {pincodeResult && (
+                <div className="bg-brand-cream-light/50 border border-brand-cream-dark/30 p-3 rounded-xl text-xs space-y-1">
+                  {pincodeResult.available ? (
+                    <>
+                      <p className="text-brand-green font-bold flex items-center gap-1.5">
+                        <span>✅ Delivery Available to Pincode</span>
+                      </p>
+                      <p className="text-brand-muted">
+                        📦 Estimated Delivery: <span className="font-semibold text-brand-green">{pincodeResult.days}</span>
+                      </p>
+                      <p className="text-brand-muted">
+                        🚚 Shipping Charge: <span className="font-semibold text-brand-green">{pincodeResult.charge === 0 ? "FREE" : `₹${pincodeResult.charge}`}</span> ({pincodeResult.deliveryType})
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-red-500 font-semibold">
+                      ❌ Delivery currently unavailable to this pincode.
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
         </div>

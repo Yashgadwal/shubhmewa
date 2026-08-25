@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Check, PhoneCall, Gift } from "lucide-react";
+import { Sparkles, Check, ShoppingBag, Gift } from "lucide-react";
+import { useCart } from "@/context/CartContext";
 
 interface HamperBuilderProps {
   whatsappNumber: string;
 }
 
 export default function HamperBuilder({ whatsappNumber }: HamperBuilderProps) {
+  const { addItem, setIsOpen } = useCart();
   const packagingOptions = [
     { id: "wood", name: "Designer Wooden Box", price: 350, image: "/images/hamper_wedding.jpg" },
     { id: "velvet", name: "Premium Velvet Tray", price: 400, image: "/images/gift_packaging.jpg" },
@@ -55,31 +57,25 @@ export default function HamperBuilder({ whatsappNumber }: HamperBuilderProps) {
       return sum + (ing ? ing.pricePer100g * 2 : 0); // 200g of each selected item
     }, 0);
 
-  const handleWhatsAppSubmit = (e: React.FormEvent) => {
+  const handleAddHamperToCart = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (ingredientsCount < 2) return;
 
-    const selectedIngNames = selectedIngredients.map(
-      (id) => ingredientOptions.find((i) => i.id === id)?.name
-    );
+    const selectedIngNames = selectedIngredients
+      .map((id) => ingredientOptions.find((i) => i.id === id)?.name)
+      .filter(Boolean)
+      .join(", ");
 
-    let messageStr = `Hello ShubhMewa 👋\n\n`;
-    messageStr += `I want to order a Custom Gifting Hamper:\n\n`;
-    messageStr += `- *Outer Box:* ${selectedPackDetails.name}\n`;
-    messageStr += `- *Items Selected:*\n`;
-    selectedIngNames.forEach((name) => {
-      if (name) messageStr += `  • ${name} (200g)\n`;
-    });
-    messageStr += `- *Quantity:* ${quantity} units\n`;
-    messageStr += `- *Estimated Value (per unit):* ₹${estimatedHamperCost}\n`;
-    messageStr += `- *Target Budget Range:* ₹${targetBudget} per unit\n`;
-    if (message.trim()) messageStr += `- *Custom Gift Card Msg:* "${message}"\n`;
-    messageStr += `\nPlease confirm custom print options and delivery charges.`;
-
-    const encoded = encodeURIComponent(messageStr);
-    const url = `https://wa.me/${whatsappNumber}?text=${encoded}`;
-    window.open(url, "_blank");
+    addItem({
+      id: `custom-hamper-${Date.now()}`,
+      variantId: undefined,
+      name: `Custom Hamper (${selectedPackDetails.name})`,
+      weight: `${ingredientsCount} Ingredients: ${selectedIngNames}`,
+      price: estimatedHamperCost,
+      image: selectedPackDetails.image,
+    }, quantity);
+    setIsOpen(true);
   };
 
   return (
@@ -276,12 +272,12 @@ export default function HamperBuilder({ whatsappNumber }: HamperBuilderProps) {
 
         <button
           type="button"
-          onClick={handleWhatsAppSubmit}
+          onClick={handleAddHamperToCart}
           disabled={ingredientsCount < 2 || ingredientsCount > 6}
-          className="w-full bg-brand-green hover:bg-brand-green/95 disabled:opacity-50 text-brand-cream-light py-3.5 rounded-xl text-xs font-semibold tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-md mt-6"
+          className="w-full bg-brand-green hover:bg-brand-green/95 disabled:opacity-50 text-brand-cream-light py-3.5 rounded-xl text-xs font-semibold tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-md mt-6 cursor-pointer"
         >
-          <PhoneCall className="w-4 h-4 text-brand-gold" />
-          <span>Order Hamper via WA</span>
+          <ShoppingBag className="w-4 h-4 text-brand-gold" />
+          <span>Add Hamper to Cart</span>
         </button>
       </div>
 

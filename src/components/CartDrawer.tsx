@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { createOrder } from "@/lib/actions";
 
 interface CartDrawerProps {
   settings: Record<string, string>;
 }
 
 export default function CartDrawer({ settings }: CartDrawerProps) {
+  const router = useRouter();
   const {
     items,
     isOpen,
@@ -25,134 +26,23 @@ export default function CartDrawer({ settings }: CartDrawerProps) {
     removeCoupon,
   } = useCart();
 
-  const [checkoutMethod, setCheckoutMethod] = useState<"whatsapp" | "online">("whatsapp");
   const [couponInput, setCouponInput] = useState("");
   const [isApplying, setIsApplying] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Form Fields
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [deliveryType, setDeliveryType] = useState<"DELIVERY" | "PICKUP">("DELIVERY");
-  const [paymentMethod, setPaymentMethod] = useState<"COD" | "ONLINE">("COD");
-  const [orderNotes, setOrderNotes] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
-  const [orderSuccessNum, setOrderSuccessNum] = useState("");
-
-  const isOnlineCheckoutAllowed = settings["online_checkout_active"] !== "false";
-  const whatsappNumber = settings["whatsapp_number"] || "919876543210";
 
   const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!couponInput.trim()) return;
     setIsApplying(true);
-    const success = await applyCoupon(couponInput.trim().toUpperCase());
+    await applyCoupon(couponInput.trim().toUpperCase());
     setIsApplying(false);
-    if (success) {
-      setCouponInput("");
-    }
   };
 
-  const deliveryFee = deliveryType === "DELIVERY" ? (subtotal - discount >= 999 ? 0 : 50) : 0;
-  const grandTotal = subtotal - discount + deliveryFee;
-
-  const handleSubmitOrder = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMsg("");
-
-    if (!name.trim()) {
-      setErrorMsg("Please enter your name.");
-      return;
-    }
-    if (!phone.trim() || phone.length < 10) {
-      setErrorMsg("Please enter a valid 10-digit phone number.");
-      return;
-    }
-    if (deliveryType === "DELIVERY" && !address.trim()) {
-      setErrorMsg("Please enter your delivery address.");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const orderPayload = {
-        customerName: name,
-        phone,
-        whatsapp: phone, // Assuming WhatsApp is same as phone
-        email: "",
-        shippingAddress: deliveryType === "DELIVERY" ? address : "Store Pickup (Ujjain)",
-        deliveryType,
-        orderNotes,
-        couponCode: couponCode || undefined,
-        items: items.map((item) => ({
-          productId: item.id,
-          variantId: item.variantId,
-          productName: item.name,
-          weight: item.weight,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-        paymentMethod: checkoutMethod === "whatsapp" ? "COD" : paymentMethod,
-        checkoutMethod: checkoutMethod.toUpperCase() as "WHATSAPP" | "ONLINE",
-      };
-
-      const res = await createOrder(orderPayload);
-
-      if (res.success && res.order) {
-        const orderNum = res.orderNumber || "";
-        
-        if (checkoutMethod === "whatsapp") {
-          // Format WhatsApp message
-          let message = `Hello ShubhMewa 👋\n\n*NEW ORDER - SHUBHMEWA*\n`;
-          message += `Order Number: ${orderNum}\n`;
-          message += `-----------------------------\n`;
-          message += `*Customer:* ${name}\n`;
-          message += `*Phone:* ${phone}\n`;
-          message += `*Preference:* ${deliveryType === "DELIVERY" ? "Home Delivery" : "Store Pickup"}\n`;
-          if (deliveryType === "DELIVERY") {
-            message += `*Address:* ${address}\n`;
-          }
-          message += `-----------------------------\n`;
-          items.forEach((item) => {
-            message += `• ${item.name} (${item.weight}) x ${item.quantity} - ₹${item.price * item.quantity}\n`;
-          });
-          message += `-----------------------------\n`;
-          if (discount > 0) {
-            message += `Subtotal: ₹${subtotal}\n`;
-            message += `Discount (${couponCode}): -₹${discount}\n`;
-          }
-          if (deliveryFee > 0) {
-            message += `Delivery Fee: ₹${deliveryFee}\n`;
-          }
-          message += `*Total Amount:* ₹${grandTotal}\n`;
-          if (orderNotes) {
-            message += `*Notes:* ${orderNotes}\n`;
-          }
-          message += `\nPlease confirm my order details and share availability!`;
-
-          const encodedMessage = encodeURIComponent(message);
-          const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
-          
-          // Clear and close
-          clearCart();
-          setIsOpen(false);
-          window.open(whatsappUrl, "_blank");
-        } else {
-          // Online Checkout Success
-          setOrderSuccessNum(orderNum);
-          clearCart();
-        }
-      } else {
-        setErrorMsg(res.error || "Failed to process order. Try again.");
-      }
-    } catch (err) {
-      setErrorMsg("An unexpected error occurred. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleProceedToCheckout = () => {
+    setIsOpen(false);
+    router.push("/checkout");
   };
+
+  const totalItemsCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   if (!isOpen) return null;
 
@@ -171,7 +61,7 @@ export default function CartDrawer({ settings }: CartDrawerProps) {
           <div className="px-6 py-5 bg-brand-green text-brand-cream-light flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ShoppingBag className="w-5 h-5 text-brand-gold" />
-              <h2 className="text-xl font-serif-editorial font-semibold tracking-wide">Your Enquiry Cart</h2>
+              <h2 className="text-xl font-serif-editorial font-semibold tracking-wide">Your Shopping Cart</h2>
             </div>
             <button
               onClick={() => setIsOpen(false)}
@@ -183,35 +73,15 @@ export default function CartDrawer({ settings }: CartDrawerProps) {
 
           {items.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-              {orderSuccessNum ? (
-                <div className="space-y-4">
-                  <div className="w-16 h-16 bg-brand-green/10 text-brand-green rounded-full flex items-center justify-center mx-auto mb-2">
-                    <ShoppingBag className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-2xl font-serif-editorial text-brand-green">Order Placed!</h3>
-                  <p className="text-brand-muted text-sm max-w-xs">
-                    Your order **{orderSuccessNum}** has been recorded successfully. Our team will contact you shortly.
-                  </p>
-                  <button
-                    onClick={() => setOrderSuccessNum("")}
-                    className="px-6 py-2 bg-brand-green text-brand-cream-light font-medium rounded-full text-sm hover:bg-brand-green/90 transition-all shadow-sm"
-                  >
-                    Continue Shopping
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <ShoppingBag className="w-16 h-16 text-brand-cream-dark/60 mb-4" />
-                  <p className="text-lg font-serif-editorial text-brand-green font-medium">Your cart is empty</p>
-                  <p className="text-brand-muted text-sm mt-1 mb-6">Add premium dry fruits, gift hampers, or seeds to get started.</p>
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    className="px-6 py-2 bg-brand-green text-brand-cream-light font-medium rounded-full text-sm hover:bg-brand-green/90 transition-all shadow-sm"
-                  >
-                    Explore Collection
-                  </button>
-                </>
-              )}
+              <ShoppingBag className="w-16 h-16 text-brand-cream-dark/60 mb-4" />
+              <p className="text-lg font-serif-editorial text-brand-green font-medium">Your cart is empty</p>
+              <p className="text-brand-muted text-sm mt-1 mb-6">Add premium dry fruits, gift hampers, or seeds to get started.</p>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="px-6 py-2 bg-brand-green text-brand-cream-light font-medium rounded-full text-sm hover:bg-brand-green/90 transition-all shadow-sm"
+              >
+                Explore Collection
+              </button>
             </div>
           ) : (
             <div className="flex-grow overflow-y-auto min-h-0">
@@ -279,7 +149,7 @@ export default function CartDrawer({ settings }: CartDrawerProps) {
                       placeholder="ENTER COUPON CODE"
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value)}
-                      className="flex-1 border border-brand-cream-dark/50 px-3 py-2 rounded-lg text-xs tracking-wider focus:outline-none focus:border-brand-gold uppercase text-brand-green"
+                      className="flex-1 border border-brand-cream-dark/50 px-3 py-2 rounded-lg text-xs tracking-wider focus:outline-none focus:border-brand-gold uppercase text-brand-green bg-white"
                     />
                     <button
                       type="submit"
@@ -316,151 +186,19 @@ export default function CartDrawer({ settings }: CartDrawerProps) {
                       <span>-₹{discount}</span>
                     </div>
                   )}
-                  {deliveryType === "DELIVERY" && (
-                    <div className="flex justify-between text-brand-muted text-xs">
-                      <span>Delivery Fee</span>
-                      <span>{deliveryFee === 0 ? "FREE" : `₹${deliveryFee}`}</span>
-                    </div>
-                  )}
                   <div className="flex justify-between text-brand-green font-semibold text-base pt-1">
                     <span>Total Amount</span>
-                    <span>₹{grandTotal}</span>
+                    <span>₹{subtotal - discount}</span>
                   </div>
                 </div>
 
-                {/* Checkout Methods Selector */}
-                {isOnlineCheckoutAllowed && (
-                  <div className="grid grid-cols-2 gap-2 border border-brand-cream-dark/50 p-1 rounded-xl bg-brand-cream-light">
-                    <button
-                      type="button"
-                      onClick={() => setCheckoutMethod("whatsapp")}
-                      className={`py-2 rounded-lg text-xs font-semibold transition-all ${
-                        checkoutMethod === "whatsapp"
-                          ? "bg-brand-green text-brand-cream-light shadow-sm"
-                          : "text-brand-green hover:text-brand-gold"
-                      }`}
-                    >
-                      WhatsApp Checkout
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setCheckoutMethod("online")}
-                      className={`py-2 rounded-lg text-xs font-semibold transition-all ${
-                        checkoutMethod === "online"
-                          ? "bg-brand-green text-brand-cream-light shadow-sm"
-                          : "text-brand-green hover:text-brand-gold"
-                      }`}
-                    >
-                      Online Checkout (COD)
-                    </button>
-                  </div>
-                )}
-
-                {/* Quick Checkout Form */}
-                <form onSubmit={handleSubmitOrder} className="space-y-3 pt-2">
-                  <h3 className="text-xs font-bold tracking-wider text-brand-green uppercase">
-                    Delivery Details
-                  </h3>
-                  
-                  {errorMsg && <p className="text-red-500 text-xs font-semibold">{errorMsg}</p>}
-
-                  <input
-                    type="text"
-                    placeholder="Your Full Name *"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full border border-brand-cream-dark/50 px-3 py-2 rounded-lg text-xs focus:outline-none focus:border-brand-gold text-brand-green"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="WhatsApp/Phone Number (10 Digits) *"
-                    required
-                    maxLength={10}
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                    className="w-full border border-brand-cream-dark/50 px-3 py-2 rounded-lg text-xs focus:outline-none focus:border-brand-gold text-brand-green"
-                  />
-
-                  {/* Delivery preference */}
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <label className="flex items-center gap-1.5 cursor-pointer text-brand-green">
-                      <input
-                        type="radio"
-                        name="deliveryType"
-                        checked={deliveryType === "DELIVERY"}
-                        onChange={() => setDeliveryType("DELIVERY")}
-                        className="accent-brand-gold"
-                      />
-                      Home Delivery
-                    </label>
-                    <label className="flex items-center gap-1.5 cursor-pointer text-brand-green">
-                      <input
-                        type="radio"
-                        name="deliveryType"
-                        checked={deliveryType === "PICKUP"}
-                        onChange={() => setDeliveryType("PICKUP")}
-                        className="accent-brand-gold"
-                      />
-                      Store Pickup
-                    </label>
-                  </div>
-
-                  {deliveryType === "DELIVERY" && (
-                    <textarea
-                      placeholder="Complete Delivery Address in Ujjain *"
-                      required
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      rows={2}
-                      className="w-full border border-brand-cream-dark/50 px-3 py-2 rounded-lg text-xs focus:outline-none focus:border-brand-gold text-brand-green"
-                    />
-                  )}
-
-                  {checkoutMethod === "online" && (
-                    <div className="space-y-1">
-                      <span className="text-[10px] text-brand-muted font-bold block uppercase tracking-wider">
-                        Payment Method
-                      </span>
-                      <label className="flex items-center gap-1.5 cursor-pointer text-xs text-brand-green">
-                        <input
-                          type="radio"
-                          name="payment"
-                          checked={paymentMethod === "COD"}
-                          onChange={() => setPaymentMethod("COD")}
-                          className="accent-brand-gold"
-                        />
-                        Cash on Delivery (COD)
-                      </label>
-                    </div>
-                  )}
-
-                  <input
-                    type="text"
-                    placeholder="Order Notes (Optional)"
-                    value={orderNotes}
-                    onChange={(e) => setOrderNotes(e.target.value)}
-                    className="w-full border border-brand-cream-dark/50 px-3 py-2 rounded-lg text-xs focus:outline-none focus:border-brand-gold text-brand-green"
-                  />
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-brand-green hover:bg-brand-green/95 text-brand-cream-light py-3 rounded-xl text-sm font-semibold tracking-wide flex items-center justify-center gap-2 transition-all disabled:opacity-50 shadow-md"
-                  >
-                    {isSubmitting ? (
-                      <span className="w-5 h-5 border-2 border-brand-cream-light border-t-transparent rounded-full animate-spin" />
-                    ) : checkoutMethod === "whatsapp" ? (
-                      <>
-                        Confirm via WhatsApp <ArrowRight className="w-4 h-4 text-brand-gold" />
-                      </>
-                    ) : (
-                      <>
-                        Place COD Order <ArrowRight className="w-4 h-4 text-brand-gold" />
-                      </>
-                    )}
-                  </button>
-                </form>
+                <button
+                  onClick={handleProceedToCheckout}
+                  className="w-full bg-brand-green hover:bg-brand-green/95 text-brand-cream-light py-3 rounded-xl text-sm font-semibold tracking-wide flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+                >
+                  <span>Proceed to Checkout</span>
+                  <ArrowRight className="w-4 h-4 text-brand-gold" />
+                </button>
               </div>
             </div>
           )}

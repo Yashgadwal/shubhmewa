@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ShoppingBag, Eye, PhoneCall, Star } from "lucide-react";
+import { ShoppingBag, Eye, Star } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
 export interface ProductVariant {
@@ -40,7 +40,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, whatsappNumber }: ProductCardProps) {
-  const { addItem } = useCart();
+  const { addItem, setIsOpen } = useCart();
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
 
   const hasVariants = product.variants && product.variants.length > 0;
@@ -70,13 +70,17 @@ export default function ProductCard({ product, whatsappNumber }: ProductCardProp
     });
   };
 
-  const handleWhatsAppOrder = (e: React.MouseEvent) => {
+  const handleBuyNow = (e: React.MouseEvent) => {
     e.preventDefault();
-    
-    const message = `Hello ShubhMewa 👋\n\nI want to order:\n\nProduct: ${product.name}\nWeight: ${weightLabel}\nQuantity: 1\n\nPlease confirm product availability, delivery charges and final payable amount.`;
-    const encoded = encodeURIComponent(message);
-    const url = `https://wa.me/${whatsappNumber}?text=${encoded}`;
-    window.open(url, "_blank");
+    addItem({
+      id: product.id,
+      variantId: currentVariant?.id,
+      name: product.name,
+      weight: weightLabel,
+      price: currentPrice,
+      image: imageUrl,
+    });
+    setIsOpen(true);
   };
 
   return (
@@ -166,20 +170,19 @@ export default function ProductCard({ product, whatsappNumber }: ProductCardProp
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-2">
-            <button
-              onClick={handleWhatsAppOrder}
-              className="flex-grow flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20ba5a] text-white py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-xs"
-            >
-              <PhoneCall className="w-3.5 h-3.5 fill-current" />
-              <span>Order WA</span>
-            </button>
+          <div className="grid grid-cols-2 gap-2">
             <button
               onClick={handleAddToCart}
-              className="border border-brand-green hover:border-brand-gold text-brand-green hover:text-brand-gold px-3 py-2.5 rounded-xl transition-all bg-white"
-              title="Add to Shopping List"
+              className="flex items-center justify-center gap-1.5 border border-brand-green hover:border-brand-gold text-brand-green hover:text-brand-gold py-2.5 rounded-xl text-[10px] md:text-xs font-bold uppercase tracking-wider transition-all bg-white"
             >
               <ShoppingBag className="w-3.5 h-3.5" />
+              <span>Add Cart</span>
+            </button>
+            <button
+              onClick={handleBuyNow}
+              className="flex items-center justify-center gap-1.5 bg-brand-green hover:bg-brand-green/90 text-brand-cream-light py-2.5 rounded-xl text-[10px] md:text-xs font-bold uppercase tracking-wider transition-all shadow-xs"
+            >
+              <span>Buy Now</span>
             </button>
           </div>
         </div>
