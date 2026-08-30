@@ -37,6 +37,15 @@ export default function RefundsPage() {
         <p>
           - **Bulk Orders**: Any order consisting of a quantity of **10 or more units** is treated as a Bulk Order and cannot be cancelled or refunded under any circumstances once placed. Custom-designed celebration and wedding favors with specialized monogram engravings or custom box prints are also strictly non-cancellable.
         </p>
+
+        <h2 className="font-serif-editorial text-lg text-brand-green font-bold mt-6">
+          4. Replacement Eligibility Conditions
+        </h2>
+        <ul className="list-disc pl-4 space-y-1.5 mt-2">
+          <li>To complete your return or replacement request, we require a receipt or valid proof of the defected/damaged item (clear photo or unboxing video).</li>
+          <li>Your item must be unused, sealed, and in the same pristine condition that you received it.</li>
+          <li>It must also be returned in the original premium ShubhMewa packaging.</li>
+        </ul>
       </div>
     </div>
   );

@@ -163,7 +163,7 @@ function TrackContent() {
             {/* Policy Reminder */}
             <div className="bg-red-50/50 border border-red-200/50 p-4 rounded-xl text-[10px] text-red-700 leading-relaxed">
               <span className="font-bold block uppercase tracking-wider mb-1">⚠️ Return & Replacement Policy Notice</span>
-              <p>Please inspect your products immediately upon receipt. Any replacement requests regarding incorrect weights, broken packaging seals, or missing ingredients must be reported to support within **12 hours** of delivery. No refunds/cancellations allowed once payment is verified.</p>
+              <p>Please inspect your products immediately upon receipt. Any replacement requests must be reported within **12 hours** of delivery. To qualify, items must be unused, in their original packaging, and accompanied by a receipt or clear proof of defect (photo/unboxing video). No cash/digital refunds once payment is verified.</p>
               <p className="font-semibold mt-1">Support Phone/WhatsApp: 8982010210</p>
             </div>
 
