@@ -3,28 +3,30 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, LayoutDashboard, ShoppingCart, FolderPlus, HelpCircle, Settings, Tag, FileText } from "lucide-react";
 import { adminLogout } from "@/lib/actions";
-
-interface MenuLink {
-  label: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
 
 interface AdminLayoutClientProps {
   children: React.ReactNode;
   session: { name: string; role: string } | null;
-  menuLinks: MenuLink[];
 }
 
 export default function AdminLayoutClient({
   children,
   session,
-  menuLinks,
 }: AdminLayoutClientProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
+
+  const menuLinks = [
+    { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+    { label: "Orders Manager", href: "/admin/orders", icon: ShoppingCart },
+    { label: "Gifting Leads", href: "/admin/enquiries", icon: HelpCircle },
+    { label: "Products CRUD", href: "/admin/products", icon: FolderPlus },
+    { label: "Categories CRUD", href: "/admin/categories", icon: Settings },
+    { label: "Manage Coupons", href: "/admin/coupons", icon: Tag },
+    { label: "CMS Settings", href: "/admin/content", icon: FileText },
+  ];
 
   return (
     <div className="min-h-screen bg-brand-cream-light/60 flex flex-col md:flex-row font-sans select-none" suppressHydrationWarning>
