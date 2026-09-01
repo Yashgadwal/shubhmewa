@@ -11,7 +11,7 @@ export default async function AdminDashboardPage() {
   const kpis = [
     { label: "Total Revenue", value: `₹${stats.totalRevenue}`, icon: TrendingUp, color: "text-green-600 bg-green-50" },
     { label: "WhatsApp order clicks", value: stats.whatsappClicks, icon: ShoppingBag, color: "text-blue-600 bg-blue-50" },
-    { label: "Bulk Hamper Leads", value: stats.enquiriesCount, icon: HelpCircle, color: "text-brand-gold bg-amber-50" },
+    { label: "Bulk Wholesale Leads", value: stats.enquiriesCount, icon: HelpCircle, color: "text-brand-gold bg-amber-50" },
     { label: "Total Products", value: stats.productsCount, icon: UserCheck, color: "text-brand-green bg-emerald-50" },
   ];
 
@@ -97,11 +97,11 @@ export default async function AdminDashboardPage() {
           )}
         </div>
 
-        {/* Recent Hampers Enquiries */}
+        {/* Recent Wholesale Enquiries */}
         <div className="bg-white border border-brand-cream-dark/30 rounded-3xl p-6 space-y-4 shadow-xs">
           <div className="flex justify-between items-center border-b border-brand-cream-dark/20 pb-3">
             <h3 className="font-serif-editorial text-lg text-brand-green font-bold">
-              Recent Gifting Leads
+              Recent Bulk Enquiries
             </h3>
             <Link
               href="/admin/enquiries"
@@ -129,7 +129,7 @@ export default async function AdminDashboardPage() {
                   {stats.recentEnquiries.map((enquiry) => (
                     <tr key={enquiry.id} className="border-b border-brand-cream-light/35 hover:bg-brand-cream-light/10">
                       <td className="py-2.5 font-bold text-brand-green">{enquiry.customerName}</td>
-                      <td className="py-2.5 text-brand-gold font-semibold">{enquiry.occasion || "Hamper"}</td>
+                      <td className="py-2.5 text-brand-gold font-semibold">{enquiry.occasion || "Bulk Order"}</td>
                       <td className="py-2.5 text-brand-muted">{enquiry.quantity || "Custom"} units</td>
                       <td className="py-2.5">
                         <span className="px-2 py-0.5 rounded-md text-[9px] uppercase font-bold bg-amber-50 text-brand-gold border border-brand-gold/20">

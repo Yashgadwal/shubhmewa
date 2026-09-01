@@ -288,7 +288,10 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                     <p className="text-xs text-brand-muted">Address: {selectedOrder.shippingAddress}</p>
                   )}
                   {selectedOrder.orderNotes && (
-                    <p className="text-xs text-red-500 italic">Notes: {selectedOrder.orderNotes}</p>
+                    <div className="text-xs bg-amber-50 text-amber-900 p-2.5 rounded-lg border border-amber-200 mt-2 space-y-1">
+                      <p className="font-bold text-[10px] uppercase tracking-wider text-amber-800">Special Dates & Order Notes</p>
+                      <p className="leading-relaxed">{selectedOrder.orderNotes}</p>
+                    </div>
                   )}
 
                   {/* WhatsApp contact redirect */}

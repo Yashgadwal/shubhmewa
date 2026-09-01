@@ -181,6 +181,59 @@ interface OrderItemInput {
   price: number;
 }
 
+export async function generateWhatsAppOrderText(order: {
+  orderNumber: string;
+  customerName: string;
+  phone: string;
+  shippingAddress: string;
+  deliveryLocation?: string;
+  items: OrderItemInput[];
+  totalAmount: number;
+  birthday?: string;
+  anniversaryDate?: string;
+}) {
+  const itemsText = order.items
+    .map((item) => `• ${item.productName} (${item.weight}) x ${item.quantity} = ₹${item.price * item.quantity}`)
+    .join("\n");
+
+  let text = `🛍️ *NEW SHUBHMEWA WEBSITE ORDER*\n`;
+  text += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+  text += `📦 *Order Number:* ${order.orderNumber}\n`;
+  text += `👤 *Customer Name:* ${order.customerName}\n`;
+  text += `📱 *Phone Number:* ${order.phone}\n`;
+  text += `🏙️ *Delivery Location:* ${order.deliveryLocation || "Ujjain (Local)"}\n`;
+  text += `📍 *Delivery Address:* ${order.shippingAddress || "Ujjain"}\n\n`;
+  text += `🛒 *Items Ordered:*\n${itemsText}\n\n`;
+  text += `💰 *Grand Total:* ₹${order.totalAmount}\n`;
+  text += `🚚 *Delivery Status:* Free Delivery (Ujjain)\n`;
+  if (order.birthday) {
+    text += `🎂 *Birthday Date:* ${order.birthday} (Surprise Gift Eligible 🎁)\n`;
+  }
+  if (order.anniversaryDate) {
+    text += `💍 *Anniversary Date:* ${order.anniversaryDate} (Celebration Gift Eligible 🎁)\n`;
+  }
+  text += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+  text += `⚡ *Website Order Placed Successfully.*`;
+
+  return text;
+}
+
+export async function getAdminWhatsAppUrl(order: {
+  orderNumber: string;
+  customerName: string;
+  phone: string;
+  shippingAddress: string;
+  deliveryLocation?: string;
+  items: OrderItemInput[];
+  totalAmount: number;
+  birthday?: string;
+  anniversaryDate?: string;
+}, adminPhone: string = "8982010210") {
+  const cleanAdmin = adminPhone.replace(/\D/g, "");
+  const text = await generateWhatsAppOrderText(order);
+  return `https://wa.me/91${cleanAdmin}?text=${encodeURIComponent(text)}`;
+}
+
 export async function createOrder(data: {
   customerName: string;
   phone: string;
@@ -191,11 +244,34 @@ export async function createOrder(data: {
   orderNotes?: string;
   items: OrderItemInput[];
   couponCode?: string;
-}): Promise<{ success: boolean; orderNumber?: string; order?: any; error?: string }> {
+  birthday?: string;
+  anniversaryDate?: string;
+}): Promise<{ success: boolean; orderNumber?: string; order?: any; error?: string; whatsAppUrl?: string }> {
   try {
     const orderNumber = `SM-${Math.floor(100000 + Math.random() * 900000)}`;
     const orderAmount = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     
+    // Append birthday & anniversary into order notes for persistence
+    let notes = data.orderNotes || "";
+    if (data.birthday) {
+      notes += ` [Birthday: ${data.birthday}]`;
+    }
+    if (data.anniversaryDate) {
+      notes += ` [Anniversary: ${data.anniversaryDate}]`;
+    }
+
+    const whatsAppUrl = await getAdminWhatsAppUrl({
+      orderNumber,
+      customerName: data.customerName,
+      phone: data.phone,
+      shippingAddress: data.shippingAddress || "Ujjain",
+      deliveryLocation: "Ujjain District",
+      items: data.items,
+      totalAmount: orderAmount,
+      birthday: data.birthday,
+      anniversaryDate: data.anniversaryDate,
+    });
+
     if (isDbActive()) {
       const dbOrder = await prisma.order.create({
         data: {
@@ -206,11 +282,11 @@ export async function createOrder(data: {
           email: data.email || null,
           shippingAddress: data.shippingAddress || null,
           deliveryType: data.deliveryType,
-          orderNotes: data.orderNotes || null,
+          orderNotes: notes || null,
           totalAmount: orderAmount,
           discountAmount: 0,
-          paymentMethod: "COD",
-          checkoutMethod: "WHATSAPP",
+          paymentMethod: "ONLINE",
+          checkoutMethod: "WEBSITE_ONLINE",
           items: {
             create: data.items.map((item) => ({
               productId: item.productId,
@@ -223,7 +299,7 @@ export async function createOrder(data: {
           },
         },
       });
-      return { success: true, orderNumber, order: dbOrder };
+      return { success: true, orderNumber, order: dbOrder, whatsAppUrl };
     }
 
     const mockOrder = {
@@ -235,7 +311,9 @@ export async function createOrder(data: {
       email: data.email || null,
       shippingAddress: data.shippingAddress || null,
       deliveryType: data.deliveryType,
-      orderNotes: data.orderNotes || null,
+      orderNotes: notes || null,
+      birthday: data.birthday || null,
+      anniversaryDate: data.anniversaryDate || null,
       totalAmount: orderAmount,
       orderStatus: "NEW",
       createdAt: new Date().toISOString(),
@@ -243,7 +321,7 @@ export async function createOrder(data: {
     };
 
     console.log("ShubhMewa Checkout - Generated Order (Memory):", mockOrder);
-    return { success: true, orderNumber, order: mockOrder };
+    return { success: true, orderNumber, order: mockOrder, whatsAppUrl };
   } catch (error: any) {
     return { success: false, error: error.message || "Failed to place order." };
   }
@@ -311,47 +389,50 @@ export async function calculateShippingCharge(pincode: string, orderTotal: numbe
   shippingCharge: number;
   deliveryType: string;
   expectedDelivery: string;
+  isDeliverable: boolean;
   isUrgentAvailable: boolean;
+  message: string;
+  futureNotice?: string;
 }> {
-  const cleanPin = pincode.trim();
-  const threshold = Number(GLOBAL_CONFIG.free_shipping_threshold || "399");
-  const chargeUj = Number(GLOBAL_CONFIG.uj_delivery_charge || "40");
-  const chargeMp = Number(GLOBAL_CONFIG.mp_delivery_charge || "60");
-  const chargeIndia = Number(GLOBAL_CONFIG.india_delivery_charge || "90");
+  const cleanPin = pincode.trim().replace(/\D/g, "");
+  const thresholdUj = 399; // Ujjain Free delivery threshold
+  const chargeUj = 40; // Ujjain standard delivery charge
+  const thresholdOutside = 599; // Outside Ujjain free shipping threshold
+  const chargeOutside = 90; // Outside Ujjain standard shipping
 
-  if (!/^\d{6}$/.test(cleanPin)) {
-    // Default to Pan-India
+  if (!cleanPin || cleanPin.length !== 6) {
     return {
-      shippingCharge: orderTotal >= threshold ? 0 : chargeIndia,
-      deliveryType: "Pan-India Shipping",
-      expectedDelivery: "4-6 days",
-      isUrgentAvailable: false,
+      shippingCharge: orderTotal >= thresholdUj ? 0 : chargeUj,
+      deliveryType: "Ujjain Local Delivery",
+      expectedDelivery: "Same-Day / 24 Hours",
+      isDeliverable: true,
+      isUrgentAvailable: true,
+      message: "Enter 6-digit Ujjain Pincode (Free Delivery over ₹399)",
     };
   }
 
+  // Month 1 rule: Ujjain District Only (starts with 456)
   if (cleanPin.startsWith("456")) {
-    // Ujjain local district
     return {
-      shippingCharge: orderTotal >= threshold ? 0 : chargeUj,
+      shippingCharge: orderTotal >= thresholdUj ? 0 : chargeUj,
       deliveryType: "Ujjain Local Delivery",
-      expectedDelivery: "Same-Day / Next-Day (Cutoff 5:00 PM)",
+      expectedDelivery: "Same-Day / Next-Day (Within 24 Hours)",
+      isDeliverable: true,
       isUrgentAvailable: true,
-    };
-  } else if (cleanPin.startsWith("45") || cleanPin.startsWith("46") || cleanPin.startsWith("47") || cleanPin.startsWith("48")) {
-    // Madhya Pradesh state
-    return {
-      shippingCharge: orderTotal >= threshold ? 0 : chargeMp,
-      deliveryType: "Madhya Pradesh Shipping",
-      expectedDelivery: "24-48 Hours",
-      isUrgentAvailable: false,
+      message: orderTotal >= thresholdUj 
+        ? "✅ Free Delivery available in Ujjain!" 
+        : `✅ Delivery available in Ujjain (Add ₹${Math.max(0, thresholdUj - orderTotal)} more for FREE Delivery).`,
     };
   } else {
-    // Other states in India
+    // Outside Ujjain: Not deliverable during Month 1
     return {
-      shippingCharge: orderTotal >= threshold ? 0 : chargeIndia,
-      deliveryType: "Pan-India Shipping",
-      expectedDelivery: "4-6 days",
+      shippingCharge: orderTotal >= thresholdOutside ? 0 : chargeOutside,
+      deliveryType: "Outside Ujjain (Coming Soon)",
+      expectedDelivery: "48–72 Hours (Starting within 2 months)",
+      isDeliverable: false,
       isUrgentAvailable: false,
+      message: "Currently, we are delivering only in Ujjain. We will start accepting orders from your location next month.",
+      futureNotice: "Outside Ujjain District delivery will start within 2 months with ₹599 Free Shipping & 48–72 hours delivery.",
     };
   }
 }

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Mail, Phone, MapPin, MessageSquare } from "lucide-react";
+import { Mail, Phone, MapPin, MessageSquare, Sparkles } from "lucide-react";
 
 interface FooterProps {
   settings: Record<string, string>;
@@ -19,6 +19,28 @@ export default function Footer({ settings }: FooterProps) {
 
   return (
     <footer className="w-full bg-brand-green text-brand-cream-light border-t border-brand-gold/20 pt-16 pb-8 font-sans">
+      
+      {/* Coming Soon E-Commerce Platforms Banner */}
+      <div className="max-w-7xl mx-auto px-4 md:px-8 mb-12">
+        <div className="bg-brand-cream-light/10 border border-brand-gold/30 rounded-2xl p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-1.5 text-brand-gold text-[10px] uppercase font-bold tracking-widest">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Expanding Pan-India</span>
+            </div>
+            <p className="font-serif-editorial text-lg md:text-xl font-bold text-brand-cream-light">
+              Coming Soon on Amazon, Flipkart, Meesho & Other E-commerce Platforms
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider">
+            <span className="px-3.5 py-1.5 rounded-lg bg-white/10 text-brand-cream-light border border-white/20">Amazon</span>
+            <span className="px-3.5 py-1.5 rounded-lg bg-white/10 text-brand-cream-light border border-white/20">Flipkart</span>
+            <span className="px-3.5 py-1.5 rounded-lg bg-white/10 text-brand-cream-light border border-white/20">Meesho</span>
+            <span className="px-3.5 py-1.5 rounded-lg bg-brand-gold/20 text-brand-gold border border-brand-gold/40">Quick-Commerce</span>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         
         {/* Branding & Contact Info */}
@@ -33,7 +55,7 @@ export default function Footer({ settings }: FooterProps) {
             </span>
           </Link>
           <p className="text-xs text-brand-cream-light/75 leading-relaxed">
-            Premium Dry Fruits • Makhana • Spices • Gift Hampers. Sourced with trust, packed fresh, and delivered with care.
+            Premium Dry Fruits • Makhana • Spices • Healthy Seeds. Sourced with trust, packed fresh, and delivered with care.
           </p>
           <div className="flex gap-4 pt-1">
             <Link
@@ -61,10 +83,13 @@ export default function Footer({ settings }: FooterProps) {
               <Link href="/" className="hover:text-brand-gold transition-colors">Home</Link>
             </li>
             <li>
-              <Link href="/shop" className="hover:text-brand-gold transition-colors">Shop Catalog</Link>
+              <Link href="/shop" className="hover:text-brand-gold transition-colors">All Products</Link>
             </li>
             <li>
-              <Link href="/gifting" className="hover:text-brand-gold transition-colors">Gift Hampers</Link>
+              <Link href="/shop?category=dry-fruits" className="hover:text-brand-gold transition-colors">Dry Fruits</Link>
+            </li>
+            <li>
+              <Link href="/shop?category=spices" className="hover:text-brand-gold transition-colors">Masala & Spices</Link>
             </li>
             <li>
               <Link href="/about" className="hover:text-brand-gold transition-colors">About Us</Link>
@@ -78,26 +103,26 @@ export default function Footer({ settings }: FooterProps) {
         {/* Customer Support Column */}
         <div className="space-y-4">
           <h4 className="font-serif-editorial text-brand-gold text-sm font-bold uppercase tracking-widest">
-            Customer Support
+            Customer Support & Policies
           </h4>
           <ul className="space-y-2.5 text-xs text-brand-cream-light/80">
             <li>
               <Link href={`https://wa.me/${whatsappNumber}`} target="_blank" className="hover:text-brand-gold transition-colors flex items-center gap-1">
                 <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
-                <span>WhatsApp Support</span>
+                <span>WhatsApp Support ({whatsappNumber})</span>
               </Link>
             </li>
             <li>
-              <Link href="/contact" className="hover:text-brand-gold transition-colors">Contact Us</Link>
+              <Link href="/shipping" className="hover:text-brand-gold transition-colors">Delivery & Shipping (Ujjain ₹399 Free)</Link>
             </li>
             <li>
-              <Link href="/shipping" className="hover:text-brand-gold transition-colors">Shipping Policy</Link>
+              <Link href="/refunds" className="hover:text-brand-gold transition-colors">Full Refund & Replacement Policy</Link>
             </li>
             <li>
-              <Link href="/refunds" className="hover:text-brand-gold transition-colors">Replacement Policy</Link>
+              <Link href="/terms" className="hover:text-brand-gold transition-colors">Terms of Service</Link>
             </li>
             <li>
-              <Link href="/terms" className="hover:text-brand-gold transition-colors">Cancellation Policy</Link>
+              <Link href="/track" className="hover:text-brand-gold transition-colors">Track Your Order</Link>
             </li>
           </ul>
         </div>
@@ -105,7 +130,7 @@ export default function Footer({ settings }: FooterProps) {
         {/* Store Location Info */}
         <div className="space-y-4">
           <h4 className="font-serif-editorial text-brand-gold text-sm font-bold uppercase tracking-widest">
-            Store Location
+            Boutique Store
           </h4>
           <div className="space-y-3.5 text-xs text-brand-cream-light/80">
             <div className="flex items-start gap-2">
@@ -133,7 +158,7 @@ export default function Footer({ settings }: FooterProps) {
           <Link href="/privacy-policy" className="hover:text-brand-gold transition-colors">Privacy Policy</Link>
           <Link href="/terms" className="hover:text-brand-gold transition-colors">Terms & Conditions</Link>
           <Link href="/shipping" className="hover:text-brand-gold transition-colors">Shipping Policy</Link>
-          <Link href="/refunds" className="hover:text-brand-gold transition-colors">Replacement/Refund Policy</Link>
+          <Link href="/refunds" className="hover:text-brand-gold transition-colors">Full Refund & Replacement</Link>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-brand-cream-light/45 gap-4">

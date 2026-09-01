@@ -31,7 +31,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             Explore Gourmet Collection
           </h1>
           <p className="text-xs text-brand-muted mt-1 leading-relaxed">
-            Hygienically sorted almonds, cashews, raisins, seeds, spices, and custom gift hampers in Ujjain.
+            Hygienically sorted almonds, cashews, raisins, seeds, makhana, and pure spices in Ujjain with Free Delivery on orders over ₹399.
           </p>
         </div>
 

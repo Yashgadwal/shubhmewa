@@ -34,7 +34,7 @@ export default async function ContactPage() {
               Ujjain Boutique Store
             </h2>
             <p className="text-xs text-brand-muted leading-relaxed">
-              We welcome your visits, phone enquiries, and custom hamper meetings. Check local delivery zones or drop us a message.
+              We welcome your visits, phone enquiries, and bulk orders. Check our Ujjain local delivery or send us a direct inquiry below.
             </p>
 
             <div className="space-y-4 text-xs text-brand-green">

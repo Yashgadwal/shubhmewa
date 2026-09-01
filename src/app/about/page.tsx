@@ -67,7 +67,7 @@ export default function AboutPage() {
           </div>
 
           <p className="pt-6">
-            Whether you are choosing daily healthy breakfast toppings, planning elegant wedding favor hampers, or ordering premium celebration gifts, ShubhMewa is proud to be your local trusted partner. Visit our boutique counter in Ujjain to experience our products first-hand.
+            Whether you are choosing daily healthy breakfast toppings, buying organic seeds and makhana, or ordering pure spices for your home kitchen, ShubhMewa is proud to be your trusted partner. Visit our boutique counter in Ujjain to experience our products first-hand.
           </p>
         </div>
 

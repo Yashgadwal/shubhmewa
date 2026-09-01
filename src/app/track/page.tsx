@@ -160,11 +160,21 @@ function TrackContent() {
               </div>
             </div>
             
-            {/* Policy Reminder */}
-            <div className="bg-red-50/50 border border-red-200/50 p-4 rounded-xl text-[10px] text-red-700 leading-relaxed">
-              <span className="font-bold block uppercase tracking-wider mb-1">⚠️ Return & Replacement Policy Notice</span>
-              <p>Please inspect your products immediately upon receipt. Any replacement requests must be reported within **12 hours** of delivery. To qualify, items must be unused, in their original packaging, and accompanied by a receipt or clear proof of defect (photo/unboxing video). No cash/digital refunds once payment is verified.</p>
-              <p className="font-semibold mt-1">Support Phone/WhatsApp: 8982010210</p>
+            {/* Policy Reminder & WhatsApp Dispatch */}
+            <div className="space-y-4">
+              <Link
+                href={`https://wa.me/918982010210?text=${encodeURIComponent(`Hello ShubhMewa, I placed an order with Order No: ${result.orderNumber} for ₹${result.totalAmount}. Please confirm and process.`)}`}
+                target="_blank"
+                className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md"
+              >
+                <span>📲 Notify Store Admin on WhatsApp (8982010210)</span>
+              </Link>
+
+              <div className="bg-brand-cream-light/40 border border-brand-cream-dark/30 p-4 rounded-xl text-[10px] text-brand-green leading-relaxed space-y-1">
+                <span className="font-bold block uppercase tracking-wider text-brand-green">🛡️ Full Refund & Replacement Available</span>
+                <p className="text-brand-muted">Please inspect your package upon receipt. If there are any damages or quality discrepancies, report within **12 hours** of delivery with a photo/video for an instant replacement or full refund.</p>
+                <p className="font-semibold text-brand-gold mt-1">Direct Support: 8982010210 | info@shubhmewa.com</p>
+              </div>
             </div>
 
           </div>

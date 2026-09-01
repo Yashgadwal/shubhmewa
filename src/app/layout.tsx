@@ -19,20 +19,20 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   manifest: "/manifest.json",
-  title: "ShubhMewa | Premium Hampers Ujjain",
-  description: "Discover premium dry fruits, high-grade spices, kirana, and custom gift hampers in Ujjain from ShubhMewa. Perfect for corporate and wedding gifting. Order directly on WhatsApp.",
-  keywords: "dry fruit shop in Ujjain, best dry fruits in Ujjain, premium dry fruits Ujjain, dry fruit home delivery Ujjain, dry fruit gift hampers Ujjain, wedding dry fruit hampers Ujjain, corporate gifting Ujjain, ShubhMewa, Fawara Chowk Ujjain",
+  title: "ShubhMewa | Premium Dry Fruits & Spices Ujjain",
+  description: "Discover pure, hand-sorted California almonds, cashews, walnuts, makhana, and high-grade spices in Ujjain from ShubhMewa. Free local delivery on orders above ₹399 with Full Refund & Replacement guarantee.",
+  keywords: "dry fruit shop in Ujjain, best dry fruits in Ujjain, premium dry fruits Ujjain, dry fruit home delivery Ujjain, California almonds Ujjain, spices Ujjain, ShubhMewa, Fawara Chowk Ujjain",
   openGraph: {
-    title: "ShubhMewa | Premium Hampers Ujjain",
-    description: "Premium dry fruits, spices, and custom gifting hampers in Ujjain. Free local delivery on orders above ₹999.",
+    title: "ShubhMewa | Premium Dry Fruits & Spices Ujjain",
+    description: "Premium dry fruits, makhana, and spices in Ujjain. Free delivery on orders above ₹399 with Full Refund & Replacement guarantee.",
     type: "website",
     locale: "en_IN",
     siteName: "ShubhMewa",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ShubhMewa | Premium Hampers Ujjain",
-    description: "Premium dry fruits and wedding/corporate hampers in Ujjain. Direct WhatsApp ordering.",
+    title: "ShubhMewa | Premium Dry Fruits & Spices Ujjain",
+    description: "Premium dry fruits and spices in Ujjain. Order online with Free Delivery over ₹399.",
   }
 };
 

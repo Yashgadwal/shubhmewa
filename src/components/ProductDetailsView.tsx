@@ -23,7 +23,14 @@ export default function ProductDetailsView({
   const [quantity, setQuantity] = useState(1);
   const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({});
   const [pincode, setPincode] = useState("");
-  const [pincodeResult, setPincodeResult] = useState<{ available: boolean; days: string; charge: number; deliveryType: string } | null>(null);
+  const [pincodeResult, setPincodeResult] = useState<{
+    available: boolean;
+    days: string;
+    charge: number;
+    deliveryType: string;
+    message: string;
+    futureNotice?: string;
+  } | null>(null);
   const [pincodeChecking, setPincodeChecking] = useState(false);
 
   const hasVariants = product.variants && product.variants.length > 0;
@@ -77,10 +84,12 @@ export default function ProductDetailsView({
       const { calculateShippingCharge } = await import("@/lib/actions");
       const res = await calculateShippingCharge(pincode, currentPrice * quantity);
       setPincodeResult({
-        available: true,
+        available: res.isDeliverable,
         days: res.expectedDelivery,
         charge: res.shippingCharge,
-        deliveryType: res.deliveryType
+        deliveryType: res.deliveryType,
+        message: res.message,
+        futureNotice: res.futureNotice,
       });
     } catch (err) {
       console.error(err);
@@ -88,7 +97,9 @@ export default function ProductDetailsView({
         available: false,
         days: "",
         charge: 0,
-        deliveryType: ""
+        deliveryType: "",
+        message: "Currently, we are delivering only in Ujjain. We will start accepting orders from your location next month.",
+        futureNotice: "Outside Ujjain District delivery will start within 2 months (₹599 Free Shipping & 48-72h delivery).",
       });
     } finally {
       setPincodeChecking(false);
@@ -294,11 +305,15 @@ export default function ProductDetailsView({
               </form>
 
               {pincodeResult && (
-                <div className="bg-brand-cream-light/50 border border-brand-cream-dark/30 p-3 rounded-xl text-xs space-y-1">
+                <div className={`p-3.5 rounded-xl text-xs space-y-1.5 border leading-relaxed ${
+                  pincodeResult.available
+                    ? "bg-green-50/70 border-green-200 text-green-900"
+                    : "bg-red-50 border-red-200 text-red-700"
+                }`}>
                   {pincodeResult.available ? (
                     <>
-                      <p className="text-brand-green font-bold flex items-center gap-1.5">
-                        <span>✅ Delivery Available to Pincode</span>
+                      <p className="font-bold flex items-center gap-1.5 text-brand-green">
+                        <span>{pincodeResult.message}</span>
                       </p>
                       <p className="text-brand-muted">
                         📦 Estimated Delivery: <span className="font-semibold text-brand-green">{pincodeResult.days}</span>
@@ -308,9 +323,17 @@ export default function ProductDetailsView({
                       </p>
                     </>
                   ) : (
-                    <p className="text-red-500 font-semibold">
-                      ❌ Delivery currently unavailable to this pincode.
-                    </p>
+                    <div className="space-y-1">
+                      <p className="font-bold flex items-center gap-1.5 text-red-700">
+                        <span>❌ Not Deliverable in Your Location</span>
+                      </p>
+                      <p className="text-xs text-red-700 font-medium">
+                        {pincodeResult.message}
+                      </p>
+                      <p className="text-[10px] text-red-600/80 mt-1">
+                        * {pincodeResult.futureNotice || "Outside Ujjain District delivery will start within 2 months with ₹599 Free Shipping & 48-72h delivery."}
+                      </p>
+                    </div>
                   )}
                 </div>
               )}

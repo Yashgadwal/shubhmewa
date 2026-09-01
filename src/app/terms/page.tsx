@@ -12,7 +12,7 @@ export default function TermsPage() {
         </p>
 
         <p>
-          Welcome to **ShubhMewa**. By accessing our catalog, ordering dry fruits online, or placing custom hamper enquiries, you agree to comply with the terms defined herein.
+          Welcome to **ShubhMewa**. By accessing our catalog, ordering dry fruits online, or placing inquiries, you agree to comply with the terms defined herein.
         </p>
 
         <h2 className="font-serif-editorial text-lg text-brand-green font-bold mt-6">

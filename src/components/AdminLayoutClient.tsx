@@ -21,7 +21,7 @@ export default function AdminLayoutClient({
   const menuLinks = [
     { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { label: "Orders Manager", href: "/admin/orders", icon: ShoppingCart },
-    { label: "Gifting Leads", href: "/admin/enquiries", icon: HelpCircle },
+    { label: "Bulk Enquiries", href: "/admin/enquiries", icon: HelpCircle },
     { label: "Products CRUD", href: "/admin/products", icon: FolderPlus },
     { label: "Categories CRUD", href: "/admin/categories", icon: Settings },
     { label: "Manage Coupons", href: "/admin/coupons", icon: Tag },
