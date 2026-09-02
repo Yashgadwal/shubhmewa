@@ -272,7 +272,7 @@ export default function CheckoutPage() {
           <ShoppingBag className="w-8 h-8" />
         </div>
         <h2 className="text-2xl font-serif-editorial text-brand-green font-bold">Your Cart is Empty</h2>
-        <p className="text-brand-muted text-sm max-w-xs mx-auto">Add some premium dry fruits or spices to your shopping cart before checking out.</p>
+        <p className="text-brand-muted text-sm max-w-xs mx-auto">Add some premium dry fruits or healthy seeds to your shopping cart before checking out.</p>
         <Link href="/shop" className="inline-block bg-brand-green text-brand-cream-light px-8 py-3 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-green/90 transition-all shadow-sm">
           Return to Shop
         </Link>

@@ -38,7 +38,7 @@ export default function AdminLayoutClient({
             ShubhMewa Admin
           </span>
           <span className="text-[7px] uppercase tracking-widest text-brand-gold mt-1 font-semibold">
-            Dryfruits & Masalas
+            Pure Dry Fruits & Superfoods
           </span>
         </div>
         <button
@@ -71,7 +71,7 @@ export default function AdminLayoutClient({
                 ShubhMewa Admin
               </span>
               <span className="text-[8px] uppercase tracking-widest text-brand-gold mt-1.5 font-semibold">
-                Dryfruits & Masalas
+                Pure Dry Fruits & Superfoods
               </span>
             </div>
             <button

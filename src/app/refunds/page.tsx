@@ -15,14 +15,14 @@ export default function RefundsPage() {
           1. Full Refund & Replacement Guarantee
         </h2>
         <p>
-          At ShubhMewa, we are committed to delivering the highest grade of premium dry fruits, makhana, and aromatic spices. **Full Refund & Replacement Available** for any genuine quality issue, transit damage, or incorrect items.
+          At ShubhMewa, we are committed to delivering the highest grade of premium dry fruits, makhana, and nutritious healthy seeds. **Full Refund & Replacement Available** for any genuine quality issue, transit damage, or incorrect items.
         </p>
 
         <h2 className="font-serif-editorial text-lg text-brand-green font-bold mt-6">
           2. Damaged or Quality Issues (12-Hour Reporting Window)
         </h2>
         <p>
-          If you receive incorrect dry fruit weights, damaged packaging, broken vacuum seals, or quality discrepancies, please notify our customer support team at **info@shubhmewa.com** or via WhatsApp (**8982010210**) within **12 hours** of delivery.
+          If you receive incorrect dry fruit weights, damaged outer boxes, broken packaging seals, or quality discrepancies, please notify our customer support team at **info@shubhmewa.com** or via WhatsApp (**8982010210**) within **12 hours** of delivery.
         </p>
         <p>
           Please ensure you inspect the products upon receipt and provide clear photo or video evidence of the outer packaging and defective contents. Once verified by our support team, we will promptly process your choice of an instant replacement or a full refund.

@@ -21,7 +21,7 @@ export default async function HomePage() {
   const address = settings["store_address"] || "Shop No. 5, Gali No. 4, Tilak Marg, Dev Sahab Ki Gali, Fawara Chowk, Daulat Ganj, Ujjain, Madhya Pradesh";
   const mapsLink = settings["google_maps_link"] || "https://maps.google.com/?q=Shop+No.+5,+Gali+No.+4,+Tilak+Marg,+Fawara+Chowk,+Daulat+Ganj,+Ujjain";
   const heroTitle = settings["hero_title"] || "Premium Dry Fruits. Packed Fresh. Delivered with Care.";
-  const heroSubtitle = settings["hero_subtitle"] || "ShubhMewa brings carefully selected dry fruits, makhana, seeds, and aromatic spices directly to your doorstep.";
+  const heroSubtitle = settings["hero_subtitle"] || "ShubhMewa brings carefully selected premium dry fruits, crunchy makhana, and nutritious healthy seeds directly to your doorstep.";
 
   // Filter bestsellers
   const bestsellers = products.filter((p) => p.isBestseller);
@@ -44,7 +44,7 @@ export default async function HomePage() {
           <div className="lg:col-span-6 space-y-6 text-left">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-gold/10 border border-brand-gold/30 rounded-full text-brand-gold">
               <Sparkles className="w-3.5 h-3.5" />
-              <span className="text-[10px] tracking-widest font-bold uppercase">Pure Indian Dry Fruit & Spice Brand</span>
+              <span className="text-[10px] tracking-widest font-bold uppercase">Pure Indian Dry Fruit & Superfood Brand</span>
             </div>
             
             <h1 className="font-serif-editorial text-4xl md:text-5xl lg:text-6xl text-brand-green font-bold leading-[1.1] tracking-tight">
@@ -227,7 +227,7 @@ export default async function HomePage() {
             </div>
             <h3 className="font-serif-editorial text-brand-green font-bold text-lg">Rigorous Sourcing</h3>
             <p className="text-xs text-brand-muted leading-relaxed">
-              We import directly from California and Iran, sourcing Kashmiri walnuts, jumbo cashews, and pure spices of the highest grade.
+              We source directly from premium orchards in California, Chile, and Kashmir, selecting jumbo almonds, cashews, and walnuts of the highest grade.
             </p>
           </div>
           <div className="p-6 space-y-3 bg-white border border-brand-cream-dark/30 rounded-2xl shadow-xs">
@@ -236,7 +236,7 @@ export default async function HomePage() {
             </div>
             <h3 className="font-serif-editorial text-brand-green font-bold text-lg">Hygienic Packaging</h3>
             <p className="text-xs text-brand-muted leading-relaxed">
-              Every nut is hand-sorted, clean-filtered, and vacuum packed to lock in natural moisture, crunch, and aroma.
+              Every nut is hand-sorted, clean-filtered, and packed in sealed food-grade pouches to lock in natural crunch and aroma.
             </p>
           </div>
           <div className="p-6 space-y-3 bg-white border border-brand-cream-dark/30 rounded-2xl shadow-xs">
@@ -268,7 +268,7 @@ export default async function HomePage() {
             </p>
             <p className="flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-brand-gold" />
-              Vacuum sealed bulk bags (5kg, 10kg, 25kg packaging).
+              Hygienically sealed bulk bags (5kg, 10kg, 25kg packaging).
             </p>
             <p className="flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-brand-gold" />

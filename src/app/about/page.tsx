@@ -33,7 +33,7 @@ export default function AboutPage() {
             ShubhMewa was established with a singular objective: to elevate the standard of healthy snacking in Ujjain, Madhya Pradesh. In a market often saturated with low-grade or stale nuts, we committed to supplying only grade-one jumbo almonds, creamy cashews, split-free roasted pistachios, and royal dates.
           </p>
           <p>
-            We believe that clean eating should be delightful and trustworthy. That is why we handpick every product, run them through two thorough cleaning and checking cycles, and vacuum-pack them to ensure the original taste, natural oils, and crispiness remain completely intact until they reach your home.
+            We believe that clean eating should be delightful and trustworthy. That is why we handpick every product, run them through two thorough cleaning and checking cycles, and pack them in airtight food-grade pouches to ensure the original taste, natural oils, and crispiness remain completely intact until they reach your home.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-brand-cream-dark/20 text-brand-green font-semibold">
@@ -67,7 +67,7 @@ export default function AboutPage() {
           </div>
 
           <p className="pt-6">
-            Whether you are choosing daily healthy breakfast toppings, buying organic seeds and makhana, or ordering pure spices for your home kitchen, ShubhMewa is proud to be your trusted partner. Visit our boutique counter in Ujjain to experience our products first-hand.
+            Whether you are choosing daily healthy breakfast toppings, buying organic seeds and makhana, or stocking up on nutritious dry fruits for your family, ShubhMewa is proud to be your trusted partner. Visit our boutique counter in Ujjain to experience our products first-hand.
           </p>
         </div>
 

@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
         </h2>
         <p>
           Your details are utilized to:
-          - Process and dispatch dry fruit and spice orders.
+          - Process and dispatch dry fruit and healthy snack orders.
           - Pre-fill WhatsApp checkout texts and order updates.
           - Record customer orders, surprise gifts, and inquiries.
         </p>

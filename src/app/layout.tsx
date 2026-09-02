@@ -19,20 +19,20 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   manifest: "/manifest.json",
-  title: "ShubhMewa | Premium Dry Fruits & Spices Ujjain",
-  description: "Discover pure, hand-sorted California almonds, cashews, walnuts, makhana, and high-grade spices in Ujjain from ShubhMewa. Free local delivery on orders above ₹399 with Full Refund & Replacement guarantee.",
-  keywords: "dry fruit shop in Ujjain, best dry fruits in Ujjain, premium dry fruits Ujjain, dry fruit home delivery Ujjain, California almonds Ujjain, spices Ujjain, ShubhMewa, Fawara Chowk Ujjain",
+  title: "ShubhMewa | Premium Dry Fruits & Healthy Superfoods Ujjain",
+  description: "Discover pure, hand-sorted California almonds, cashews, walnuts, makhana, and nutritious seeds in Ujjain from ShubhMewa. Free local delivery on orders above ₹399 with Full Refund & Replacement guarantee.",
+  keywords: "dry fruit shop in Ujjain, best dry fruits in Ujjain, premium dry fruits Ujjain, dry fruit home delivery Ujjain, California almonds Ujjain, makhana Ujjain, chia seeds Ujjain, ShubhMewa, Fawara Chowk Ujjain",
   openGraph: {
-    title: "ShubhMewa | Premium Dry Fruits & Spices Ujjain",
-    description: "Premium dry fruits, makhana, and spices in Ujjain. Free delivery on orders above ₹399 with Full Refund & Replacement guarantee.",
+    title: "ShubhMewa | Premium Dry Fruits & Healthy Superfoods Ujjain",
+    description: "Premium dry fruits, makhana, and nutritious seeds in Ujjain. Free delivery on orders above ₹399 with Full Refund & Replacement guarantee.",
     type: "website",
     locale: "en_IN",
     siteName: "ShubhMewa",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ShubhMewa | Premium Dry Fruits & Spices Ujjain",
-    description: "Premium dry fruits and spices in Ujjain. Order online with Free Delivery over ₹399.",
+    title: "ShubhMewa | Premium Dry Fruits & Superfoods Ujjain",
+    description: "Premium dry fruits, dates, and superfood seeds in Ujjain. Order online with Free Delivery over ₹399.",
   }
 };
 

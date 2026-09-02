@@ -55,7 +55,7 @@ export default function Footer({ settings }: FooterProps) {
             </span>
           </Link>
           <p className="text-xs text-brand-cream-light/75 leading-relaxed">
-            Premium Dry Fruits • Makhana • Spices • Healthy Seeds. Sourced with trust, packed fresh, and delivered with care.
+            Premium Dry Fruits • Makhana • Healthy Seeds • Royal Dates. Sourced with trust, packed fresh, and delivered with care.
           </p>
           <div className="flex gap-4 pt-1">
             <Link
@@ -89,7 +89,7 @@ export default function Footer({ settings }: FooterProps) {
               <Link href="/shop?category=dry-fruits" className="hover:text-brand-gold transition-colors">Dry Fruits</Link>
             </li>
             <li>
-              <Link href="/shop?category=spices" className="hover:text-brand-gold transition-colors">Masala & Spices</Link>
+              <Link href="/shop?category=snacks" className="hover:text-brand-gold transition-colors">Makhana & Seeds</Link>
             </li>
             <li>
               <Link href="/about" className="hover:text-brand-gold transition-colors">About Us</Link>

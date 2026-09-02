@@ -36,8 +36,7 @@ export default function Header({ settings }: HeaderProps) {
     { label: "Home", href: "/" },
     { label: "Shop", href: "/shop" },
     { label: "Dry Fruits", href: "/shop?category=dry-fruits" },
-    { label: "Masala & Spices", href: "/shop?category=spices" },
-    { label: "Makhana", href: "/shop?query=Makhana" },
+    { label: "Makhana & Seeds", href: "/shop?category=snacks" },
     { label: "About Us", href: "/about" },
     { label: "Contact", href: "/contact" },
   ];

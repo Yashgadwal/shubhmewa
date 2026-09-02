@@ -58,7 +58,7 @@ export default function ShippingPolicyPage() {
           4. Packaging & Quality Assurance
         </h2>
         <p>
-          Every order is vacuum-packed and sealed in protective food-grade outer boxes to guarantee that your nuts, seeds, and spices arrive in fresh condition.
+          Every order is hygienically packed and sealed in protective food-grade packaging to guarantee that your nuts, dates, and seeds arrive in fresh, crunchy condition.
         </p>
       </div>
     </div>
