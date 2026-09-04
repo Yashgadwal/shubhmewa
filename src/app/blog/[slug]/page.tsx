@@ -270,17 +270,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="flex items-center gap-2.5 shrink-0">
             <Link
               href="/shop"
-              className="bg-brand-gold hover:bg-brand-gold/90 text-brand-cream-light px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-xs"
+              className="bg-brand-gold hover:bg-brand-gold/90 text-brand-cream-light px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-xs flex items-center gap-1.5"
             >
-              Order Online
-            </Link>
-            <Link
-              href={`https://wa.me/91${whatsappNumber}?text=${encodeURIComponent(`Hello ShubhMewa, I read your article "${post.title}" and would like to order fresh dry fruits in Ujjain.`)}`}
-              target="_blank"
-              className="bg-[#25D366] hover:bg-[#20ba5a] text-white px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-xs"
-            >
-              <MessageSquare className="w-4 h-4 fill-current" />
-              <span>WhatsApp</span>
+              <ShoppingBag className="w-4 h-4" />
+              <span>Shop Products</span>
             </Link>
           </div>
         </div>

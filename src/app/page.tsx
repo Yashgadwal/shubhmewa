@@ -64,12 +64,11 @@ export default async function HomePage() {
                 <span>Shop Catalog</span>
               </Link>
               <Link
-                href={`https://wa.me/${whatsappNumber}`}
-                target="_blank"
-                className="bg-[#25D366] hover:bg-[#20ba5a] text-white px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center gap-2 group"
+                href="/shop?bestsellers=true"
+                className="bg-brand-gold hover:bg-brand-gold/90 text-brand-cream-light px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center gap-2 group"
               >
-                <MessageSquare className="w-4 h-4 fill-current" />
-                <span>Order on WhatsApp</span>
+                <Sparkles className="w-4 h-4" />
+                <span>Explore Bestsellers</span>
               </Link>
             </div>
 
@@ -478,18 +477,18 @@ export default async function HomePage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4 pt-4">
             <Link
-              href={`https://wa.me/${whatsappNumber}`}
-              target="_blank"
-              className="bg-[#25D366] hover:bg-[#20ba5a] text-white px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center gap-2"
+              href="/shop"
+              className="bg-brand-gold hover:bg-brand-gold/90 text-brand-cream-light px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center gap-2"
             >
-              <MessageSquare className="w-4 h-4 fill-current" />
-              <span>Order on WhatsApp</span>
+              <ShoppingCart className="w-4 h-4" />
+              <span>Shop All Products</span>
             </Link>
             <Link
               href={`tel:${contactPhone}`}
-              className="bg-brand-gold hover:bg-brand-gold/90 text-brand-cream-light px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md"
+              className="border border-brand-gold/60 text-brand-cream-light hover:bg-brand-gold/20 px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center gap-2"
             >
-              Call Now
+              <Phone className="w-4 h-4 text-brand-gold" />
+              <span>Call: {contactPhone}</span>
             </Link>
           </div>
         </div>

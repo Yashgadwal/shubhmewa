@@ -107,9 +107,8 @@ export default function Footer({ settings }: FooterProps) {
           </h4>
           <ul className="space-y-2.5 text-xs text-brand-cream-light/80">
             <li>
-              <Link href={`https://wa.me/${whatsappNumber}`} target="_blank" className="hover:text-brand-gold transition-colors flex items-center gap-1">
-                <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
-                <span>WhatsApp Support ({whatsappNumber})</span>
+              <Link href="tel:8982010210" className="hover:text-brand-gold transition-colors flex items-center gap-1">
+                <span>Customer Support: +91 89820 10210</span>
               </Link>
             </li>
             <li>
