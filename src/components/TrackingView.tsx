@@ -221,7 +221,7 @@ export default function TrackingView() {
                     {result.data.status === "NEW"
                       ? "Received. An advisor will contact you shortly."
                       : result.data.status === "IN_PROGRESS"
-                      ? "Under design review. Proposal generating."
+                      ? "Under review. Our advisor will reach out shortly."
                       : "Requirement closed."}
                   </p>
                 </div>
@@ -230,10 +230,10 @@ export default function TrackingView() {
               <div className="grid grid-cols-2 gap-4 border-t border-brand-cream-dark/20 pt-4 text-xs text-brand-green leading-relaxed">
                 <div>
                   <span className="font-semibold text-brand-green">Requested Quantity:</span>
-                  <p>{result.data.quantity || "Custom"} Hampers</p>
+                  <p>{result.data.quantity || "Custom"} Units</p>
                 </div>
                 <div>
-                  <span className="font-semibold text-brand-green">Hamper Budget:</span>
+                  <span className="font-semibold text-brand-green">Estimated Budget:</span>
                   <p>₹{result.data.budgetPerHamper || "Custom"} / unit</p>
                 </div>
               </div>

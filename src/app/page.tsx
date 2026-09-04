@@ -5,7 +5,6 @@ import { CATEGORIES, PRODUCTS, TESTIMONIALS, DEFAULT_SETTINGS } from "@/lib/stat
 import HeroCanvas from "@/components/HeroCanvas";
 import ProductCard, { ProductWithDetails } from "@/components/ProductCard";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
-import BulkOrderForm from "@/components/BulkOrderForm";
 
 export const revalidate = 0; // Dynamic server-side rendering
 
@@ -251,38 +250,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 6. WHOLESALE & BULK ENQUIRIES */}
-      <section className="py-20 max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-5 space-y-6">
-          <span className="text-[10px] tracking-widest font-bold uppercase text-brand-gold">Bulk Enquiries</span>
-          <h2 className="font-serif-editorial text-3xl md:text-4xl text-brand-green font-bold leading-tight">
-            Wholesale & Commercial Bulk Dry Fruit Orders
-          </h2>
-          <p className="text-xs text-brand-muted leading-relaxed">
-            For festive family events, institutional orders, or bulk pantry supplies, ShubhMewa provides special wholesale quantity tier pricing.
-          </p>
-          <div className="space-y-3 pt-2 text-xs text-brand-green font-semibold">
-            <p className="flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-brand-gold" />
-              Wholesale grade-1 California almonds & cashews.
-            </p>
-            <p className="flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-brand-gold" />
-              Hygienically sealed bulk bags (5kg, 10kg, 25kg packaging).
-            </p>
-            <p className="flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-brand-gold" />
-              Express local delivery in Ujjain with direct invoices.
-            </p>
-          </div>
-        </div>
-        
-        <div className="lg:col-span-7">
-          <BulkOrderForm whatsappNumber={whatsappNumber} />
-        </div>
-      </section>
-
-      {/* 7. BRAND STORY */}
+      {/* 6. BRAND STORY */}
       <section className="py-24 bg-brand-cream-light/25 border-y border-brand-cream-dark/15">
         <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="aspect-[4/3] bg-brand-cream-light rounded-3xl overflow-hidden shadow-md">
