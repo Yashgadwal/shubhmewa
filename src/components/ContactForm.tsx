@@ -131,7 +131,7 @@ export default function ContactForm() {
               type="text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              placeholder="e.g. Wedding hamper catalogues query"
+              placeholder="e.g. Bulk dry fruits order inquiry"
               className="w-full border border-brand-cream-dark/50 px-3.5 py-2.5 rounded-xl text-xs focus:outline-none focus:border-brand-gold text-brand-green bg-brand-cream-light/10"
             />
           </div>

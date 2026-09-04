@@ -89,7 +89,7 @@ export default function EnquiriesManager({ initialEnquiries }: EnquiriesManagerP
       "Email",
       "Occasion",
       "Quantity",
-      "Budget / Hamper",
+      "Budget / Unit",
       "Delivery Date",
       "Customization details",
       "Status",
@@ -101,7 +101,7 @@ export default function EnquiriesManager({ initialEnquiries }: EnquiriesManagerP
       e.phone,
       e.whatsapp || "",
       e.email || "",
-      `"${e.occasion || "Hamper"}"`,
+      `"${e.occasion || "Bulk Dry Fruits"}"`,
       e.quantity || "",
       e.budgetPerHamper || "",
       e.requiredDeliveryDate ? new Date(e.requiredDeliveryDate).toLocaleDateString() : "",
@@ -186,7 +186,7 @@ export default function EnquiriesManager({ initialEnquiries }: EnquiriesManagerP
                 <th className="p-4">Contact</th>
                 <th className="p-4">Occasion</th>
                 <th className="p-4">Quantity</th>
-                <th className="p-4">Budget / Hamper</th>
+                <th className="p-4">Budget / Unit</th>
                 <th className="p-4">Target Date</th>
                 <th className="p-4">Status</th>
                 <th className="p-4 text-right">Actions</th>
@@ -203,7 +203,7 @@ export default function EnquiriesManager({ initialEnquiries }: EnquiriesManagerP
                 filteredEnquiries.map((e) => (
                   <tr key={e.id} className="border-b border-brand-cream-light/35 hover:bg-brand-cream-light/10">
                     <td className="p-4 font-bold text-brand-green">{e.customerName}</td>
-                    <td className="p-4 text-brand-gold font-semibold uppercase">{e.occasion || "Hamper"}</td>
+                    <td className="p-4 text-brand-gold font-semibold uppercase">{e.occasion || "Bulk Dry Fruits"}</td>
                     <td className="p-4 text-brand-muted">{e.quantity || "Custom"} units</td>
                     <td className="p-4 text-brand-green font-bold">
                       {e.budgetPerHamper ? `₹${e.budgetPerHamper}` : "Custom"}
@@ -253,7 +253,7 @@ export default function EnquiriesManager({ initialEnquiries }: EnquiriesManagerP
               {/* Header */}
               <div className="px-6 py-5 bg-brand-green text-brand-cream-light flex items-center justify-between">
                 <div>
-                  <h2 className="text-lg font-serif-editorial font-bold">Gifting Proposal</h2>
+                  <h2 className="text-lg font-serif-editorial font-bold">Bulk Order Inquiry</h2>
                   <p className="text-[10px] text-brand-gold tracking-widest uppercase font-semibold mt-0.5">
                     Lead ID: {selectedEnquiry.id.slice(0, 8)}
                   </p>
@@ -280,7 +280,7 @@ export default function EnquiriesManager({ initialEnquiries }: EnquiriesManagerP
                   
                   {/* WhatsApp click shortcut */}
                   <a
-                    href={`https://wa.me/${selectedEnquiry.phone}?text=Hello%20${selectedEnquiry.customerName},%20this%20is%20ShubhMewa%20regarding%20your%20custom%20gifting%20enquiry%20for%20${selectedEnquiry.occasion}.`}
+                    href={`https://wa.me/${selectedEnquiry.phone}?text=Hello%20${selectedEnquiry.customerName},%20this%20is%20ShubhMewa%20regarding%20your%20bulk%20dry%20fruit%20enquiry.`}
                     target="_blank"
                     className="mt-4 flex items-center justify-center gap-1 bg-[#25D366] text-white py-2 rounded-xl text-xs font-semibold tracking-wide"
                   >
@@ -304,7 +304,7 @@ export default function EnquiriesManager({ initialEnquiries }: EnquiriesManagerP
                     className="w-full border border-brand-cream-dark/50 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brand-gold text-brand-green font-semibold bg-brand-cream-light/20"
                   >
                     <option value="NEW">New Lead (Unassigned)</option>
-                    <option value="IN_PROGRESS">Proposal generating (In Progress)</option>
+                    <option value="IN_PROGRESS">In Review / Processing</option>
                     <option value="CLOSED">Completed / Closed (Won)</option>
                     <option value="CANCELLED">Cancelled (Lost)</option>
                   </select>
@@ -345,10 +345,10 @@ export default function EnquiriesManager({ initialEnquiries }: EnquiriesManagerP
                     </div>
                     <div className="flex justify-between border-b border-brand-cream-light pb-1">
                       <span>Approx Qty</span>
-                      <span className="font-bold">{selectedEnquiry.quantity || "Custom"} hampers</span>
+                      <span className="font-bold">{selectedEnquiry.quantity || "Custom"} units</span>
                     </div>
                     <div className="flex justify-between border-b border-brand-cream-light pb-1">
-                      <span>Budget / Hamper</span>
+                      <span>Budget / Unit</span>
                       <span className="font-bold">₹{selectedEnquiry.budgetPerHamper || "Custom"}</span>
                     </div>
                     <div className="flex justify-between border-b border-brand-cream-light pb-1">

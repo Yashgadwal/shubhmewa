@@ -58,14 +58,14 @@ export default function BulkOrderForm({ whatsappNumber }: BulkOrderFormProps) {
 
   const handleWhatsAppInstantSubmit = () => {
     // Generate pre-filled bulk enquiry message
-    let message = `*BULK GIFTING QUOTE REQUEST*\n`;
+    let message = `*BULK DRY FRUITS QUOTE REQUEST*\n`;
     message += `-----------------------------\n`;
     message += `*Contact:* ${name}\n`;
     if (company) message += `*Company/Family:* ${company}\n`;
     message += `*Phone:* ${phone}\n`;
     message += `*Occasion:* ${occasion}\n`;
-    message += `*Approx Quantity:* ${quantity} hampers\n`;
-    message += `*Target Budget:* ₹${budget} per hamper\n`;
+    message += `*Approx Quantity:* ${quantity} units\n`;
+    message += `*Target Budget:* ₹${budget} per unit\n`;
     if (date) message += `*Delivery Date:* ${date}\n`;
     if (details) message += `*Customization:* ${details}\n`;
     if (notes) message += `*Message:* ${notes}\n`;
@@ -194,8 +194,8 @@ export default function BulkOrderForm({ whatsappNumber }: BulkOrderFormProps) {
                 className="w-full border border-brand-cream-dark/50 px-3.5 py-2.5 rounded-xl text-xs focus:outline-none focus:border-brand-gold text-brand-green bg-brand-cream-light/10"
               >
                 <option value="Wedding Gifting">Wedding Gifting</option>
-                <option value="Corporate Gifting">Corporate Gifting</option>
-                <option value="Diwali Hampers">Diwali Hampers</option>
+                <option value="Corporate Dry Fruits">Corporate Dry Fruits</option>
+                <option value="Diwali Celebration">Diwali Celebration</option>
                 <option value="Festival Gifting">Festival Gifting</option>
                 <option value="Custom Family Event">Custom Family Event</option>
               </select>
@@ -221,7 +221,7 @@ export default function BulkOrderForm({ whatsappNumber }: BulkOrderFormProps) {
             </div>
             <div>
               <label className="text-[10px] tracking-wider uppercase font-semibold text-brand-green block mb-1">
-                Budget Per Hamper (₹) *
+                Budget Per Unit (₹) *
               </label>
               <select
                 value={budget}

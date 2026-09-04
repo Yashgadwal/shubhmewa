@@ -194,7 +194,7 @@ export default function TrackingView() {
                   <span className="text-[10px] text-brand-muted font-bold block uppercase tracking-wider">
                     Category/Occasion
                   </span>
-                  <p className="text-xs font-bold text-brand-gold uppercase">{result.data.occasion || "Hamper"}</p>
+                  <p className="text-xs font-bold text-brand-gold uppercase">{result.data.occasion || "Bulk Dry Fruits"}</p>
                 </div>
               </div>
 

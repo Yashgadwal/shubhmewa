@@ -172,7 +172,7 @@ export default function HeroCanvas() {
       rotSpeed: new THREE.Vector3(0.007, 0.003, 0.004),
     });
 
-    // 4. Gift Hamper Box (Forest green box with gold ribbon)
+    // 4. Premium Gift Box (Forest green box with gold ribbon)
     const giftBoxGroup = new THREE.Group();
     const boxGeo = new THREE.BoxGeometry(2, 1.2, 2);
     const mainBox = new THREE.Mesh(boxGeo, forestGreenMaterial);
@@ -300,7 +300,7 @@ export default function HeroCanvas() {
       <div className="relative w-full h-full min-h-[400px] md:min-h-[550px] flex items-center justify-center overflow-hidden">
         <img
           src="/images/hero_fruits.jpg"
-          alt="Premium Dry Fruits and Gift Hampers"
+          alt="Premium Dry Fruits and Healthy Superfoods"
           className="absolute inset-0 w-full h-full object-cover rounded-2xl shadow-xl transition-all duration-700 ease-out"
         />
         {/* Soft luxury gold overlay */}

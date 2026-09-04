@@ -54,7 +54,7 @@ export default function TestimonialsCarousel({
           </span>
         </div>
         <p className="text-xs text-brand-muted max-w-sm leading-relaxed mb-4">
-          Trusted by families and corporate organizations in Ujjain for high-quality gifting hampers.
+          Trusted by families and households in Ujjain for premium quality dry fruits and superfoods.
         </p>
         <a
           href={googleMapsLink}

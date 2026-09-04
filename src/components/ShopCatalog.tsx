@@ -107,7 +107,7 @@ export default function ShopCatalog({
           <div className="relative">
             <input
               type="text"
-              placeholder="Search almonds, hampers..."
+              placeholder="Search almonds, walnuts, dates, makhana..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full border border-brand-cream-dark/50 px-3.5 py-2 rounded-xl text-xs focus:outline-none focus:border-brand-gold text-brand-green bg-brand-cream-light/10 pl-9"

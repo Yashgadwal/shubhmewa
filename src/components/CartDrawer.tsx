@@ -75,7 +75,7 @@ export default function CartDrawer({ settings }: CartDrawerProps) {
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
               <ShoppingBag className="w-16 h-16 text-brand-cream-dark/60 mb-4" />
               <p className="text-lg font-serif-editorial text-brand-green font-medium">Your cart is empty</p>
-              <p className="text-brand-muted text-sm mt-1 mb-6">Add premium dry fruits, gift hampers, or seeds to get started.</p>
+              <p className="text-brand-muted text-sm mt-1 mb-6">Add premium dry fruits, makhana, or healthy seeds to get started.</p>
               <button
                 onClick={() => setIsOpen(false)}
                 className="px-6 py-2 bg-brand-green text-brand-cream-light font-medium rounded-full text-sm hover:bg-brand-green/90 transition-all shadow-sm"
