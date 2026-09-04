@@ -33,7 +33,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ShubhMewa | Premium Dry Fruits & Superfoods Ujjain",
     description: "Premium dry fruits, dates, and superfood seeds in Ujjain. Order online with Free Delivery over ₹399.",
-  }
+  },
+  verification: {
+    google: "1QVHaNExkLGa-UCNoqwPA9RSxAkExKEaPZ_T0ac03iM",
+  },
 };
 
 export default async function RootLayout({
