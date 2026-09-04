@@ -1,3 +1,6 @@
+import { BLOG_POSTS_DATA, type BlogPost } from "./blog-data";
+export type { BlogPost };
+
 export interface ProductVariant {
   id: string;
   weight: string;
@@ -52,19 +55,6 @@ export interface Testimonial {
   image?: string;
   isFeatured: boolean;
   isGoogleReview: boolean;
-}
-
-export interface BlogPost {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-  featuredImage: string;
-  categoryName: string;
-  tags: string;
-  status: string;
-  publishDate: string;
-  seoDescription?: string | null;
 }
 
 // 1. Categories
@@ -388,30 +378,7 @@ export const TESTIMONIALS: Testimonial[] = [
 ];
 
 // 4. Blog Posts
-export const BLOG_POSTS: BlogPost[] = [
-  {
-    id: "blog-1",
-    title: "10 Nutrition Benefits of Eating Almonds Daily",
-    slug: "benefits-of-almonds",
-    content: "### Almonds: A Nutrition Powerhouse\n\nAlmonds are packed with essential vitamins, minerals, and healthy fats that offer immense benefits for our daily health. Eating just a handful (about 25-30g) of soaked almonds every morning can help boost your body in various ways:\n\n### 1. Rich in Antioxidants\nAlmonds are a fantastic source of antioxidants, which help protect your cells from oxidative stress.\n\n### 2. High in Vitamin E\nVitamin E is a fat-soluble antioxidant that builds up in cell membranes, protecting them from damage and keeping your skin glowing.\n\n### 3. Regulates Blood Sugar\nLoaded with magnesium, almonds help manage insulin sensitivities and blood sugar levels, making them highly beneficial for individuals with diabetes.\n\n- Eat them soaked in the morning.\n- Keep shells off if you want easier digestion.\n- Add to breakfasts or smoothies daily.",
-    featuredImage: "/images/product_almond.jpg",
-    categoryName: "Healthy Living",
-    tags: "almonds, nutrition, health",
-    status: "PUBLISHED",
-    publishDate: "2026-08-01T00:00:00.000Z",
-  },
-  {
-    id: "blog-2",
-    title: "Why Chilean & Kashmiri Walnuts are Daily Brain Superfoods",
-    slug: "walnuts-brain-superfood",
-    content: "### Nature's Most Powerful Brain Nutrient\n\nWalnuts are uniquely rich in plant-based Omega-3 fatty acids (ALA) which support brain health, cognitive functions, and cardiovascular wellness:\n\n### 1. High Plant-Based Omega-3\nRegular walnut intake helps reduce inflammation and supports cellular health.\n\n### 2. Natural Source of Melatonin & Biotin\nWalnuts contain naturally occurring melatonin and biotin that aid peaceful sleep and nourish hair and skin.\n\n### 3. Sourcing Tips\nAlways look for light, golden halves in sealed moisture-lock food-grade pouches to preserve natural oils.",
-    featuredImage: "/images/product_walnut.jpg",
-    categoryName: "Healthy Living",
-    tags: "walnuts, nutrition, brain health, omega3",
-    status: "PUBLISHED",
-    publishDate: "2026-08-05T00:00:00.000Z",
-  },
-];
+export const BLOG_POSTS: BlogPost[] = BLOG_POSTS_DATA;
 
 // 5. Default Settings
 export const DEFAULT_SETTINGS: Record<string, string> = {

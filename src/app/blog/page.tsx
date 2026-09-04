@@ -66,9 +66,9 @@ export default async function BlogListPage() {
                       </h2>
                     </Link>
 
-                    {/* Excerpt mock from md */}
+                    {/* Excerpt extracted from post content */}
                     <p className="text-xs text-brand-muted leading-relaxed line-clamp-3">
-                      {post.seoDescription || "Discover healthy recipes, nutrition values, and luxury gifting ideas in this expert guide."}
+                      {post.content.replace(/[#*`_\[\]]/g, "").slice(0, 180).trim()}...
                     </p>
                   </div>
 
