@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Background Circle (Premium Green) -->
+  <circle cx="256" cy="256" r="240" fill="#1C3F3A" stroke="#C5A880" stroke-width="8"/>
+  
+  <!-- Outer Gold Rim -->
+  <circle cx="256" cy="256" r="224" fill="none" stroke="#C5A880" stroke-dasharray="12 12" stroke-width="4"/>
+  
+  <!-- Stylized Almond Motif (Gold) -->
+  <path d="M256,120 C320,190 340,290 256,380 C172,290 192,190 256,120 Z" fill="#C5A880" />
+  
+  <!-- Leaf veins / detailing (Green cuts) -->
+  <path d="M256,150 L256,350 M256,200 L280,180 M256,240 L290,210 M256,280 L285,250 M256,200 L232,180 M256,240 L222,210 M256,280 L227,250" stroke="#1C3F3A" stroke-width="4" stroke-linecap="round" fill="none" />
+  
+  <!-- Accent Stars -->
+  <path d="M150,220 L153,227 L160,227 L155,232 L157,239 L150,234 L143,239 L145,232 L140,227 L147,227 Z" fill="#C5A880" />
+  <path d="M362,220 L365,227 L372,227 L367,232 L369,239 L362,234 L355,239 L357,232 L352,227 L359,227 Z" fill="#C5A880" />
+</svg>

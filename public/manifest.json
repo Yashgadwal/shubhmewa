@@ -1,14 +1,20 @@
 {
-  "name": "Best Quality Dryfruits & Masala House Loyalty",
-  "short_name": "BQ Loyalty",
-  "description": "QR Loyalty & Rewards Program for M/S Best Quality Dryfruits and Masala House Ujjain",
-  "start_url": "/loyalty",
+  "name": "ShubhMewa | Premium Dry Fruits & Superfoods Ujjain",
+  "short_name": "ShubhMewa",
+  "description": "Premium hand-sorted dry fruits, crunchy makhana, and superfood seeds in Ujjain with Free Delivery on orders above ₹399.",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFFDF8",
-  "theme_color": "#173C2D",
+  "background_color": "#FAF8F5",
+  "theme_color": "#1C3F3A",
   "orientation": "portrait",
-  "scope": "/loyalty",
+  "scope": "/",
   "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
     {
       "src": "/favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
