@@ -162,8 +162,16 @@ export default function Footer({ settings }: FooterProps) {
 
         <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-brand-cream-light/45 gap-4">
           <p>© {new Date().getFullYear()} SHUBHMEWA. All rights reserved.</p>
-          <p className="text-[10px] tracking-wider uppercase font-semibold text-brand-gold/60">
-            {credit}
+          <p className="text-[11px] tracking-wider text-brand-cream-light/75">
+            Developed &amp; Designed by{" "}
+            <Link
+              href="https://www.instagram.com/nexora.scale"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-gold hover:text-white font-semibold underline underline-offset-2 transition-colors inline-flex items-center gap-1"
+            >
+              <span>Nexora Scale</span>
+            </Link>
           </p>
         </div>
       </div>

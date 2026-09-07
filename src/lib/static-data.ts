@@ -393,7 +393,7 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   store_timings: "10:00 AM - 09:30 PM (All Days Open)",
   google_maps_link: "https://maps.google.com/?q=Shop+No.+5,+Gali+No.+4,+Tilak+Marg,+Fawara+Chowk,+Daulat+Ganj,+Ujjain",
   instagram_link: "https://instagram.com/shubhmewa",
-  footer_credit: "Designed and Powered by ShubhMewa",
+  footer_credit: "Developed and Designed by Nexora Scale",
   online_checkout_active: "true",
   hero_title: "Premium Dry Fruits. Packed Fresh. Delivered with Care.",
   hero_subtitle: "ShubhMewa brings carefully selected premium dry fruits, crunchy makhana, and nutritious healthy seeds directly to your doorstep.",
