@@ -13,7 +13,7 @@ interface LayoutWrapperProps {
 
 export default function LayoutWrapper({ children, settings }: LayoutWrapperProps) {
   const pathname = usePathname();
-  const isAppView = pathname?.startsWith("/admin");
+  const isAppView = pathname?.startsWith("/admin") || pathname?.startsWith("/review");
 
   if (isAppView) {
     return <div className="min-h-screen bg-brand-cream-light/35 font-sans" suppressHydrationWarning>{children}</div>;
