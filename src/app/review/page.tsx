@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 
-const GOOGLE_REVIEW_URL = "https://maps.google.com/?q=Shop+No.+5,+Gali+No.+4,+Tilak+Marg,+Fawara+Chowk,+Daulat+Ganj,+Ujjain";
+const GOOGLE_REVIEW_URL = "https://search.google.com/local/writereview?placeid=ChIJ2w4Wlgx1YzkRVfqAVE-00dE";
 
 const REVIEWS = [
   "Bought California jumbo almonds and Chilean walnuts from ShubhMewa. The quality is exceptional! The nuts are super fresh, crunchy, and have zero bitterness. Best dry fruits store in Ujjain!",
