@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ShubhMewa — Rate Your Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --white: #FFFFFF;
+  --off-white: #FFFDF8;
+  --cream: #FAF7F0;
+  --cream-warm: #F7F1E8;
+  --cream-soft: #EADCC8;
+  --border-cream: rgba(234, 220, 200, 0.7);
+  --text-main: #1A1A1A;
+  --text-soft: #4A453E;
+  --text-muted: #6B6B6B;
+  --brand-green: #173C2D;
+  --brand-green-dark: #0F281F;
+  --brand-green-light: #245542;
+  --brand-green-pale: #EDF4F0;
+  --brand-gold: #B88A44;
+  --brand-gold-light: #D4A359;
+  --brand-gold-pale: #FBF5EB;
+  --brand-gold-border: rgba(184, 138, 68, 0.28);
+  --gold-glow: rgba(184, 138, 68, 0.16);
+  --green-glow: rgba(23, 60, 45, 0.12);
+  --gradient-gold: linear-gradient(135deg, #B88A44 0%, #D4A359 50%, #A37735 100%);
+  --gradient-green: linear-gradient(135deg, #173C2D 0%, #255C46 100%);
+  --shadow-sm: 0 2px 12px rgba(23, 60, 45, 0.05);
+  --shadow-md: 0 8px 30px rgba(23, 60, 45, 0.08);
+  --shadow-lg: 0 20px 50px rgba(23, 60, 45, 0.10);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Semantic Aliases */
+  --bg: var(--off-white);
+  --surface: var(--white);
+  --border: var(--brand-gold-border);
+  --border-hi: rgba(184, 138, 68, 0.50);
+  --text: var(--text-main);
+  --muted: var(--text-soft);
+  --muted2: var(--text-muted);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1.25rem 6rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── Ambient Radial Atmosphere ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 5%, rgba(23, 60, 45, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 85% 85%, rgba(184, 138, 68, 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 35% at 50% 40%, rgba(212, 163, 89, 0.06) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Regal Botanical / Nut Pattern Overlay ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B88A44' fill-opacity='0.045'%3E%3Cpath d='M30 10 C36 17, 40 25, 30 38 C20 25, 24 17, 30 10 Z M10 30 C17 24, 25 20, 38 30 C25 40, 17 36, 10 30 Z M50 30 C43 24, 35 20, 22 30 C35 40, 43 36, 50 30 Z M30 50 C36 43, 40 35, 30 22 C20 35, 24 43, 30 50 Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.75;
+}
+
+/* ── Floating Atmospheric Orbs ── */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat 9s ease-in-out infinite;
+}
+.orb-1 { width: 320px; height: 320px; background: rgba(23, 60, 45, 0.09); top: -100px; left: -100px; animation-delay: 0s; }
+.orb-2 { width: 280px; height: 280px; background: rgba(184, 138, 68, 0.10); bottom: 100px; right: -80px; animation-delay: 3s; }
+.orb-3 { width: 200px; height: 200px; background: rgba(212, 163, 89, 0.08); top: 45%; left: 65%; animation-delay: 5s; }
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(25px, -18px) scale(1.05); }
+  66% { transform: translate(-15px, 22px) scale(0.97); }
+}
+
+/* ── Layout Wrapper ── */
+.wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(35px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Announcement Ribbon ── */
+.announcement-ribbon {
+  background: var(--brand-green);
+  color: var(--cream-warm);
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 0.55rem 1rem;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(23, 60, 45, 0.15);
+  border: 1px solid rgba(184, 138, 68, 0.35);
+}
+
+.announcement-ribbon span.highlight {
+  color: var(--brand-gold-light);
+  font-weight: 700;
+}
+
+/* ── Logo Area ── */
+.logo-area {
+  text-align: center;
+  padding: 1.25rem 0 0.5rem;
+  animation: fadeUp 0.8s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.logo-emblem {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(135deg, rgba(23, 60, 45, 0.08) 0%, rgba(184, 138, 68, 0.12) 100%);
+  border: 2px solid var(--brand-gold);
+  border-radius: 50%;
+  font-size: 2.5rem;
+  margin-bottom: 0.85rem;
+  box-shadow: 0 0 35px var(--gold-glow), inset 0 0 20px rgba(184, 138, 68, 0.08);
+  animation: glowPulse 3.5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(184, 138, 68, 0.20), inset 0 0 20px rgba(184, 138, 68, 0.06);
+    border-color: rgba(184, 138, 68, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(184, 138, 68, 0.35), inset 0 0 30px rgba(184, 138, 68, 0.12);
+    border-color: var(--brand-gold-light);
+  }
+}
+
+.logo-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+
+.brand-shubh {
+  color: var(--brand-green);
+}
+
+.brand-mewa {
+  color: var(--brand-gold);
+}
+
+.logo-tagline {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+  font-weight: 600;
+}
+
+.logo-location {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem;
+}
+
+/* ── Card Styles ── */
+.card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(251, 245, 235, 0.96) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.25rem 2rem;
+  box-shadow:
+    0 0 0 1px rgba(184, 138, 68, 0.06),
+    0 12px 40px rgba(23, 60, 45, 0.06),
+    0 0 50px var(--gold-glow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 15%; right: 15%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--brand-gold), var(--brand-gold-light), transparent);
+  border-radius: 99px;
+}
+
+/* ── Hero Card ── */
+.hero-card {
+  text-align: center;
+  padding: 2.5rem 2rem 2rem;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--brand-gold-pale);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 0.35rem 1rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand-green);
+  margin-bottom: 1.25rem;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 7px; height: 7px;
+  background: var(--brand-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--brand-gold);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--brand-gold); }
+  50% { opacity: 0.4; box-shadow: 0 0 16px var(--brand-gold-light); }
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.9rem, 6vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  color: var(--brand-green);
+}
+
+.hero-title .title-accent {
+  background: linear-gradient(135deg, var(--brand-green) 10%, var(--brand-gold) 75%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 0.88rem;
+  color: var(--muted);
+  font-weight: 400;
+  line-height: 1.65;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+/* ── Animated Stars ── */
+.stars-display {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1.4rem 0 0;
+}
+
+.star-anim {
+  font-size: 2.1rem;
+  color: var(--brand-gold);
+  animation: starPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  filter: drop-shadow(0 0 10px rgba(184, 138, 68, 0.55));
+  cursor: default;
+  user-select: none;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.star-anim:nth-child(1) { animation-delay: 0.1s; }
+.star-anim:nth-child(2) { animation-delay: 0.2s; }
+.star-anim:nth-child(3) { animation-delay: 0.3s; }
+.star-anim:nth-child(4) { animation-delay: 0.4s; }
+.star-anim:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes starPop {
+  from { opacity: 0; transform: scale(0.2) rotate(-30deg); }
+  to { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.star-anim:hover {
+  transform: scale(1.3) rotate(10deg);
+  filter: drop-shadow(0 0 18px rgba(184, 138, 68, 0.85));
+}
+
+/* ── Trust Bar ── */
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.65rem;
+}
+
+.trust-item {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.85rem 0.5rem;
+  text-align: center;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.trust-item:hover {
+  background: var(--brand-gold-pale);
+  border-color: var(--border-hi);
+  transform: translateY(-2px);
+}
+
+.trust-icon {
+  font-size: 1.3rem;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.trust-value {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--brand-green);
+  display: block;
+  line-height: 1.1;
+}
+
+.trust-label {
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 0.2rem;
+  display: block;
+}
+
+/* ── Review Generator Section ── */
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-green);
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(184, 138, 68, 0.35), transparent);
+}
+
+.textarea-wrap {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+
+textarea {
+  width: 100%;
+  min-height: 135px;
+  background: rgba(251, 245, 235, 0.6);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem 1.1rem 2rem;
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  font-weight: 400;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s, opacity 0.25s, transform 0.25s;
+}
+
+textarea:focus {
+  border-color: var(--border-hi);
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(184, 138, 68, 0.12);
+}
+
+textarea::placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.84rem;
+}
+
+.char-count {
+  position: absolute;
+  bottom: 0.7rem;
+  right: 0.9rem;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  font-weight: 500;
+}
+
+/* ── Buttons ── */
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.92rem 1.5rem;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s, opacity 0.15s;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: var(--brand-green);
+  color: #FFFFFF;
+  box-shadow: 0 4px 20px rgba(23, 60, 45, 0.35), 0 1px 0 rgba(255, 255, 255, 0.15) inset;
+}
+
+.btn-primary:hover {
+  background: var(--brand-green-light);
+  box-shadow: 0 6px 28px rgba(23, 60, 45, 0.45), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+  transform: translateY(-2px);
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.55s ease;
+}
+
+.btn-primary:hover::after { left: 160%; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--brand-green);
+  border: 1px solid var(--border-hi);
+  box-shadow: 0 2px 10px rgba(23, 60, 45, 0.05);
+}
+
+.btn-secondary:hover {
+  background: var(--brand-gold-pale);
+  border-color: var(--brand-gold);
+  transform: translateY(-1px);
+}
+
+.btn-google {
+  background: #FFFFFF;
+  color: var(--text-soft);
+  border: 1px solid var(--border);
+  font-size: 0.86rem;
+}
+
+.btn-google:hover {
+  color: var(--brand-green);
+  border-color: var(--border-hi);
+  background: var(--brand-gold-pale);
+}
+
+.btn svg { flex-shrink: 0; transition: transform 0.2s ease; }
+.btn:hover svg { transform: scale(1.08); }
+
+/* Loading spinner */
+.btn-primary.loading::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.btn-primary.loading::after {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  z-index: 2;
+  left: auto; top: auto;
+  transform: none;
+  skewX: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Divider ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.15rem 0;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Privilege & Guarantees Card ── */
+.loyalty-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(251, 245, 235, 0.98) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.loyalty-card::after {
+  content: '🌰';
+  position: absolute;
+  right: -10px; bottom: -15px;
+  font-size: 6.5rem;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.loyalty-header {
+  text-align: center;
+  margin-bottom: 1.4rem;
+}
+
+.loyalty-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--brand-green);
+  margin-bottom: 0.25rem;
+}
+
+.loyalty-subtitle {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.loyalty-perks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.perk-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.perk-item:hover {
+  background: var(--brand-gold-pale);
+  border-color: var(--border-hi);
+  transform: translateY(-1px);
+}
+
+.perk-icon {
+  font-size: 1.35rem;
+  flex-shrink: 0;
+  width: 36px;
+  text-align: center;
+}
+
+.perk-text { flex: 1; }
+
+.perk-name {
+  font-size: 0.87rem;
+  font-weight: 600;
+  color: var(--brand-green);
+  display: block;
+}
+
+.perk-desc {
+  font-size: 0.74rem;
+  color: var(--muted);
+  display: block;
+  margin-top: 0.15rem;
+  line-height: 1.35;
+}
+
+.perk-badge {
+  font-size: 0.65rem;
+  background: var(--brand-gold-pale);
+  border: 1px solid var(--border-hi);
+  color: var(--brand-gold);
+  padding: 0.22rem 0.6rem;
+  border-radius: 99px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* ── Boutique Store Info Card ── */
+.store-info-card {
+  background: linear-gradient(135deg, rgba(23, 60, 45, 0.04) 0%, rgba(184, 138, 68, 0.06) 100%);
+  border: 1px dashed var(--border-hi);
+  border-radius: 16px;
+  padding: 1.25rem 1.4rem;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.store-info-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--brand-green);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.store-info-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  line-height: 1.4;
+}
+
+.store-info-line svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--brand-gold);
+}
+
+.store-info-line a {
+  color: var(--brand-green);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.store-info-line a:hover {
+  color: var(--brand-gold);
+  text-decoration: underline;
+}
+
+/* ── Toast Notification ── */
+.toast {
+  position: fixed;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(30px);
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid var(--brand-gold);
+  color: var(--brand-green);
+  padding: 0.75rem 1.5rem;
+  border-radius: 99px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 10px 40px rgba(23, 60, 45, 0.15), 0 0 25px var(--gold-glow);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+  z-index: 200;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Confetti ── */
+.confetti-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: confettiFall 3s ease-in forwards;
+}
+
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+}
+
+/* ── Textarea Copy Success Overlay ── */
+.copy-success {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 253, 248, 0.97);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 2;
+}
+
+.copy-success.show { opacity: 1; pointer-events: all; }
+
+.copy-success-icon {
+  font-size: 2.4rem;
+  animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.copy-success-text {
+  font-size: 0.88rem;
+  color: var(--brand-green);
+  font-weight: 600;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+/* ── Footer ── */
+.page-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.footer-heart {
+  font-size: 0.88rem;
+  color: var(--text-soft);
+  font-weight: 400;
+  margin-bottom: 0.65rem;
+}
+
+.footer-heart span { color: #DC2626; }
+
+/* ── Nexora Scale Watermark ── */
+.watermark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.25s ease, color 0.25s;
+  padding: 0.4rem 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.watermark:hover {
+  opacity: 1;
+  color: var(--brand-green);
+  border-color: var(--border-hi);
+  background: #FFFFFF;
+}
+
+.watermark-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px; height: 17px;
+  background: var(--gradient-gold);
+  border-radius: 4px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  flex-shrink: 0;
+}
+
+.watermark-sep {
+  width: 1px;
+  height: 10px;
+  background: var(--border);
+  display: inline-block;
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  .card { padding: 1.75rem 1.35rem; }
+  .trust-grid { grid-template-columns: repeat(2, 1fr); }
+  .logo-name { font-size: 2.2rem; }
+  .hero-title { font-size: 1.8rem; }
+}
+
+@media (max-width: 360px) {
+  .trust-grid { grid-template-columns: repeat(2, 1fr); }
+  .logo-name { font-size: 1.9rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Floating ambient background orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- Confetti container -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast" role="alert" aria-live="polite">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg">Review copied!</span>
+</div>
+
+<div class="wrapper">
+  
+  <!-- Announcement Banner -->
+  <div class="announcement-ribbon">
+    <span>🚚 Free Delivery in Ujjain over ₹399</span>
+    <span>&bull;</span>
+    <span class="highlight">Full Refund Guaranteed</span>
+  </div>
+
+  <!-- Logo Area -->
+  <div class="logo-area">
+    <div class="logo-emblem" role="img" aria-label="ShubhMewa royal logo">🌰</div>
+    <div class="logo-name">
+      <span class="brand-shubh">Shubh</span><span class="brand-mewa">Mewa</span>
+    </div>
+    <div class="logo-tagline">Pure Indian Dry Fruit &amp; Superfood Brand</div>
+    <div class="logo-location">Fawara Chowk &bull; Daulat Ganj &bull; Ujjain</div>
+  </div>
+
+  <!-- Hero Card -->
+  <div class="card hero-card">
+    <div class="hero-badge">Verified Customer Experience</div>
+    <h1 class="hero-title">
+      Rate Your<br><span class="title-accent">ShubhMewa Experience</span>
+    </h1>
+    <p class="hero-subtitle">
+      Your genuine feedback helps us continue providing hand-sorted, fresh dry fruits &amp; superfoods to families across Ujjain.
+    </p>
+    <div class="stars-display" aria-label="5 star rating">
+      <span class="star-anim" role="img" aria-label="star">★</span>
+      <span class="star-anim" role="img" aria-label="star">★</span>
+      <span class="star-anim" role="img" aria-label="star">★</span>
+      <span class="star-anim" role="img" aria-label="star">★</span>
+      <span class="star-anim" role="img" aria-label="star">★</span>
+    </div>
+  </div>
+
+  <!-- Trust Bar -->
+  <div class="trust-grid">
+    <div class="trust-item">
+      <span class="trust-icon">🌰</span>
+      <span class="trust-value">100%</span>
+      <span class="trust-label">Sourced Fresh</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">🚚</span>
+      <span class="trust-value">₹399+</span>
+      <span class="trust-label">Free Delivery</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">⭐</span>
+      <span class="trust-value">5.0 ★</span>
+      <span class="trust-label">Google Rating</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">🛡️</span>
+      <span class="trust-value">Full</span>
+      <span class="trust-label">Refund Assured</span>
+    </div>
+  </div>
+
+  <!-- Review Generator Card -->
+  <div class="card" role="region" aria-label="Review generator">
+    <div class="section-label">Generate Your Review</div>
+    <div class="textarea-wrap">
+      <textarea
+        id="reviewText"
+        placeholder='Tap "Click Here For Review" below to get an authentic 5-star review you can post on Google…'
+        readonly
+        aria-label="Generated review text"
+      ></textarea>
+      <span class="char-count" id="charCount">0 / 300</span>
+      <div class="copy-success" id="copySuccess" aria-hidden="true">
+        <div class="copy-success-icon">✅</div>
+        <div class="copy-success-text">Copied &amp; Opening Google Review…</div>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" id="generateBtn" onclick="generateReview()" aria-label="Generate a dry fruits store review">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v3M18.36 5.64l-2.12 2.12M21 12h-3M18.36 18.36l-2.12-2.12M12 21v-3M5.64 18.36l2.12-2.12M3 12h3M5.64 5.64l2.12 2.12"/>
+        </svg>
+        Click Here For Review
+      </button>
+
+      <button class="btn btn-secondary" id="copyBtn" onclick="copyReview()" aria-label="Copy review to clipboard">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copy Review
+      </button>
+
+      <div class="divider" aria-hidden="true">or</div>
+
+      <button class="btn btn-google" id="googleBtn" onclick="openGoogleReview()" aria-label="Open Google review page">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        Open Google Review Page
+      </button>
+    </div>
+  </div>
+
+  <!-- Boutique Store Info Section -->
+  <div class="store-info-card">
+    <div class="store-info-title">
+      <span>📍</span> ShubhMewa Boutique Store &bull; Ujjain
+    </div>
+    <div class="store-info-line">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span>Shop No. 5, Gali No. 4, Tilak Marg, Dev Sahab Ki Gali, Fawara Chowk, Daulat Ganj, Ujjain, MP</span>
+    </div>
+    <div class="store-info-line">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span>10:00 AM – 09:30 PM (All Days Open)</span>
+    </div>
+    <div class="store-info-line">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      <span>Call &amp; WhatsApp: <a href="tel:8982010210">+91 89820 10210</a> &bull; Website: <a href="https://www.shubhmewa.com" target="_blank" rel="noopener">shubhmewa.com</a></span>
+    </div>
+  </div>
+
+  <!-- Privilege / Guarantees Section -->
+  <div class="loyalty-card" role="region" aria-label="ShubhMewa Guarantees">
+    <div class="loyalty-header">
+      <div class="loyalty-title">♛ The ShubhMewa Sourcing Standard</div>
+      <div class="loyalty-subtitle">Pure nutrition, hand-sorted freshness &bull; every order counts</div>
+    </div>
+    <div class="loyalty-perks">
+      <div class="perk-item">
+        <div class="perk-icon" aria-hidden="true">🚚</div>
+        <div class="perk-text">
+          <span class="perk-name">Free Home Delivery Across Ujjain</span>
+          <span class="perk-desc">Enjoy free same-day or 24-hour delivery on all orders above ₹399</span>
+        </div>
+        <span class="perk-badge">₹399+</span>
+      </div>
+
+      <div class="perk-item">
+        <div class="perk-icon" aria-hidden="true">🌰</div>
+        <div class="perk-text">
+          <span class="perk-name">100% Hand-Sorted Grade-1 Nuts</span>
+          <span class="perk-desc">Double manual sorting pass for uniform size, clean crunch &amp; zero bitterness</span>
+        </div>
+        <span class="perk-badge">Premium</span>
+      </div>
+
+      <div class="perk-item">
+        <div class="perk-icon" aria-hidden="true">🛡️</div>
+        <div class="perk-text">
+          <span class="perk-name">Full Refund &amp; Replacement Assurance</span>
+          <span class="perk-desc">Complete peace of mind guarantee for any product defect or discrepancy</span>
+        </div>
+        <span class="perk-badge">Guaranteed</span>
+      </div>
+
+      <div class="perk-item">
+        <div class="perk-icon" aria-hidden="true">🎁</div>
+        <div class="perk-text">
+          <span class="perk-name">Festive &amp; Wedding Gifting Hampers</span>
+          <span class="perk-desc">Custom luxury gift assortments with fresh almonds, cashews &amp; dates</span>
+        </div>
+        <span class="perk-badge">Gifting</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <p class="footer-heart">Thank you for choosing ShubhMewa <span>❤️</span></p>
+    <a class="watermark" href="https://www.nexorascale.com" target="_blank" rel="noopener noreferrer" aria-label="Managed and Powered by Nexora Scale">
+      <span class="watermark-logo">N</span>
+      <span class="watermark-sep"></span>
+      Managed &amp; Powered by Nexora Scale
+    </a>
+  </footer>
+
+</div>
+
+<script>
+// Google Maps review / location destination
+const GOOGLE_REVIEW_URL = "https://maps.google.com/?q=Shop+No.+5,+Gali+No.+4,+Tilak+Marg,+Fawara+Chowk,+Daulat+Ganj,+Ujjain";
+
+// 50 Tailored 5-Star Reviews for ShubhMewa Ujjain
+const REVIEWS = [
+  "Bought California jumbo almonds and Chilean walnuts from ShubhMewa. The quality is exceptional! The nuts are super fresh, crunchy, and have zero bitterness. Best dry fruits store in Ujjain!",
+  "Ordered dry fruits online and was amazed by their same-day delivery service in Ujjain. The packaging is airtight and hygienic. King size cashews are huge and delicious.",
+  "Visited their store at Fawara Chowk, Daulat Ganj. The staff was very polite and explained their sourcing process. Grade-one almonds and walnuts at very genuine prices.",
+  "Their Phool Makhana is the crunchiest I have had in Ujjain! Roasted them with ghee and rock salt for our evening snacks. Highly recommended for health lovers.",
+  "ShubhMewa is our go-to shop for family festive gifting. The gift boxes and nut hampers look royal, and every single almond and cashew is uniform and clean.",
+  "I regularly buy Chilean extra light walnut kernels for my family. Buttery taste and very fresh harvest. Great service and prompt home delivery in Ujjain.",
+  "Very reliable dry fruit brand in Ujjain. Free delivery on orders above ₹399 is super convenient. The quality of W240 cashews is top notch.",
+  "The Medjool dates and salted pistachios were fresh, soft, and naturally delicious. Great variety of healthy seeds and nuts under one roof.",
+  "Outstanding quality! Hand-sorted almonds are large in size with no broken pieces. You can immediately feel the difference from ordinary market dry fruits.",
+  "Prompt delivery, hygienic vacuum-sealed packaging, and top-tier dry fruits. ShubhMewa has set a high benchmark in Ujjain.",
+  "Visited the shop in Tilak Marg near Fawara Chowk. Clean and organized store with courteous staff. Definitely the finest dry fruit boutique in Ujjain.",
+  "We ordered dry fruits for our parents' wellness routine. The chia seeds, raw almonds, and walnuts are very clean and fresh. Thank you ShubhMewa!",
+  "Best place in Ujjain for dry fruit shopping! King size cashews are wholesome and rich in taste. Perfect for snacking and cooking.",
+  "I appreciate their full refund and replacement policy. It gives complete confidence in product purity. The almonds tasted exceptionally fresh.",
+  "Bought salted pistachios and Chilean walnuts yesterday. Packaging was premium and crunchiness was top grade. Will certainly order again.",
+  "Their California almonds are crunchy and full of natural oils. Fast home delivery within Ujjain. So glad we discovered ShubhMewa.",
+  "Excellent dry fruits store in Ujjain! The staff is courteous, portions are accurate, and prices are very fair for this high level of quality.",
+  "ShubhMewa's Phool Makhana is large, clean, and has zero grit or residue. Perfect quality for fasting and daily healthy snacks.",
+  "Ordered an assortment of dry fruits and seeds online. Reached my doorstep in Ujjain in just a few hours. 10/10 experience!",
+  "The walnut kernels are light in color, fresh, and have a naturally sweet, buttery flavor. No rancid smell or bitter aftertaste. Truly grade-one.",
+  "Great customer support on WhatsApp and phone. They helped me pick the right nuts for gifting. My relatives loved the premium dry fruit packs.",
+  "Fresh harvest dry fruits at reasonable rates. The W240 cashews are big and creamy. Best dry fruit shopping experience in Ujjain.",
+  "Cleanliness, quick service, and superior product quality define ShubhMewa. Delighted to have such a reliable dry fruits brand in Ujjain.",
+  "Ordered California jumbo almonds and chia seeds. The freshness is noticeable from the first bite. Very satisfied with the timely delivery.",
+  "Love the fact that every nut is double-sorted. Not a single defective almond or cashew in the entire pouch. Pure quality!",
+  "Great shopping experience at Fawara Chowk. The store is well-maintained and the dry fruits are displayed hygienically. Highly recommended.",
+  "Their royal dates are soft, rich, and naturally sweet without any artificial syrup. Wonderful healthy snack option for kids and elders alike.",
+  "Super fast delivery service in Ujjain. Received fresh, crispy almonds and walnuts neatly sealed in premium food-grade packaging.",
+  "ShubhMewa has the best walnuts and cashews in town. Freshness and quality are consistently maintained on every purchase.",
+  "I have tried many shops in Ujjain, but the aroma and crunch of ShubhMewa almonds are unmatched. 5 stars for authentic quality.",
+  "Very friendly staff who patiently let you check the grade of nuts before buying. Sourced fresh and transparent pricing.",
+  "The roasted salted pistachios were evenly split and perfectly salted. Great crunch and freshness. Best evening snack!",
+  "Ordered dry fruit hampers for a family function in Ujjain. Guests praised the quality of almonds and cashews. Thank you ShubhMewa team.",
+  "Top quality dry fruits and superfoods! The makhana is large and crisp, and the almonds are uniform. Outstanding service.",
+  "Got free doorstep delivery in Ujjain for my order above ₹399. Everything was packed fresh and delivered safely on time.",
+  "The Chilean walnuts are of supreme grade. Extremely light halves and buttery texture. Pure nutrition without any bitterness.",
+  "ShubhMewa stands for authentic purity. Their California almonds are whole, undamaged, and super fresh. Very happy customer!",
+  "Pleasant visit to their boutique store at Tilak Marg, Ujjain. The dry fruits are clean, well-graded, and affordably priced.",
+  "Consistent freshness and polite service every single time. ShubhMewa is our family's trusted dry fruits shop in Ujjain.",
+  "High protein Phool Makhana from ShubhMewa has become a daily staple in our diet. Exceptionally clean and crisp.",
+  "Ordered via phone and received prompt response and quick delivery. The jumbo almonds and cashews exceeded our expectations.",
+  "If you want genuine grade-one dry fruits in Ujjain, ShubhMewa at Fawara Chowk is the best destination. Top quality guaranteed.",
+  "The vacuum sealed packaging preserves the natural crunch and aroma of nuts. Loved their cashews and Medjool dates!",
+  "Very impressed with the hygiene standards and premium presentation. ShubhMewa is a genuine gem for dry fruit lovers in Ujjain.",
+  "Natural sweetness in their dates and rich creaminess in their cashews. Exceptional quality across all products.",
+  "Best dry fruits store in Ujjain by far! Prompt delivery, honest weight, and hand-sorted grade-one almonds.",
+  "Their Chilean extra light walnuts are fresh and full of natural nutrients. Great shop with honest pricing.",
+  "We regularly buy almonds, seeds, and pistachios from ShubhMewa. The quality is always fresh and dependable.",
+  "Staff is polite, ordering is seamless, and product quality is second to none. Proud to have ShubhMewa in Ujjain.",
+  "Delicious, crunchy, and freshly packed dry fruits delivered right to our home. ShubhMewa is 5 stars all the way!"
+];
+
+const textarea = document.getElementById('reviewText');
+const charCount = document.getElementById('charCount');
+const toast = document.getElementById('toast');
+const toastMsg = document.getElementById('toastMsg');
+const generateBtn = document.getElementById('generateBtn');
+const copySuccess = document.getElementById('copySuccess');
+
+let toastTimer = null;
+let lastIndex = -1;
+
+// Restore last review from localStorage
+(function init() {
+  try {
+    const saved = localStorage.getItem('shubhmewa_last_review');
+    if (saved) {
+      textarea.value = saved;
+      updateCharCount(saved.length);
+    }
+  } catch(e) {}
+})();
+
+function updateCharCount(n) {
+  charCount.textContent = `${n} / 300`;
+}
+
+function showToast(message, isError = false) {
+  toastMsg.textContent = message;
+  toast.style.borderColor = isError ? 'rgba(239, 68, 68, 0.4)' : 'var(--brand-gold)';
+  toast.style.color = isError ? '#DC2626' : 'var(--brand-green)';
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function getRandomIndex() {
+  if (REVIEWS.length === 1) return 0;
+  let idx;
+  do {
+    idx = Math.floor(Math.random() * REVIEWS.length);
+  } while (idx === lastIndex);
+  return idx;
+}
+
+function launchConfetti() {
+  const container = document.getElementById('confettiContainer');
+  const colors = ['#173C2D', '#B88A44', '#D4A359', '#FBF5EB', '#255C46', '#FFFFFF', '#EADCC8'];
+  container.innerHTML = '';
+  for (let i = 0; i < 55; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.top = '-10px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.width = (Math.random() * 8 + 5) + 'px';
+    piece.style.height = (Math.random() * 8 + 5) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.animationDelay = (Math.random() * 1.2) + 's';
+    piece.style.animationDuration = (Math.random() * 2 + 2.5) + 's';
+    container.appendChild(piece);
+  }
+  setTimeout(() => { container.innerHTML = ''; }, 5000);
+}
+
+function generateReview() {
+  // Loading state
+  generateBtn.classList.add('loading');
+  generateBtn.disabled = true;
+
+  setTimeout(() => {
+    const idx = getRandomIndex();
+    lastIndex = idx;
+    const review = REVIEWS[idx];
+
+    // Smooth transition
+    textarea.style.opacity = '0.2';
+    textarea.style.transform = 'scale(0.98)';
+
+    setTimeout(() => {
+      textarea.value = review;
+      textarea.style.opacity = '1';
+      textarea.style.transform = 'scale(1)';
+      updateCharCount(review.length);
+      generateBtn.classList.remove('loading');
+      generateBtn.disabled = false;
+
+      // Save to localStorage
+      try { localStorage.setItem('shubhmewa_last_review', review); } catch(e) {}
+
+      // Auto copy
+      copyToClipboard(review, false);
+
+      // Show celebratory confetti
+      launchConfetti();
+
+      // Show success overlay and redirect to Google Review
+      copySuccess.classList.add('show');
+      copySuccess.setAttribute('aria-hidden', 'false');
+
+      setTimeout(() => {
+        copySuccess.classList.remove('show');
+        copySuccess.setAttribute('aria-hidden', 'true');
+        openGoogleReview();
+      }, 1200);
+    }, 200);
+  }, 450);
+}
+
+function copyToClipboard(text, showFeedback = true) {
+  if (!text || !text.trim()) {
+    if (showFeedback) showToast('Generate a review first.', true);
+    return;
+  }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      if (showFeedback) showToast('✓ Review copied to clipboard!');
+    }).catch(() => fallbackCopy(text, showFeedback));
+  } else {
+    fallbackCopy(text, showFeedback);
+  }
+}
+
+function fallbackCopy(text, showFeedback) {
+  textarea.removeAttribute('readonly');
+  textarea.select();
+  try {
+    document.execCommand('copy');
+    if (showFeedback) showToast('✓ Review copied to clipboard!');
+  } catch {
+    if (showFeedback) showToast('Copy failed — please copy manually.', true);
+  }
+  textarea.setAttribute('readonly', true);
+  window.getSelection()?.removeAllRanges();
+}
+
+function copyReview() {
+  const text = textarea.value.trim();
+  if (!text) { showToast('Generate a review first.', true); return; }
+  copyToClipboard(text, true);
+
+  copySuccess.querySelector('.copy-success-text').textContent = 'Copied to clipboard!';
+  copySuccess.classList.add('show');
+  setTimeout(() => {
+    copySuccess.classList.remove('show');
+    copySuccess.querySelector('.copy-success-text').textContent = 'Copied & Opening Google Review…';
+  }, 900);
+}
+
+function openGoogleReview() {
+  window.open(GOOGLE_REVIEW_URL, '_blank', 'noopener,noreferrer');
+}
+
+textarea.addEventListener('transitionend', () => {
+  textarea.style.transition = '';
+});
+</script>
+
+</body>
+</html>
