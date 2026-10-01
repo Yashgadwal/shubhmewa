@@ -110,7 +110,7 @@ export default function BestQualityClient() {
   <div className={`mobile-menu ${isMobileMenuOpen ? "open" : ""}`} id="mobileMenu" aria-hidden={!isMobileMenuOpen}>
     <div className="mobile-menu-header-chip">
       <span>📍</span>
-      <span>55, Fawara Chowk, near Doulatganj, Ujjain</span>
+      <span>55, Fawara Chowk, near Doulatganj, Kharakua Colony, Ujjain</span>
     </div>
     
     <a href="#home" className="mobile-link" onClick={closeMenu}>
@@ -617,7 +617,7 @@ export default function BestQualityClient() {
           </div>
           <h3 className="why-card-title">Convenient Location</h3>
           <p className="why-card-desc">
-            Easy to find at 55, Fawara Chowk near Doulatganj, right in the heart of Ujjain's central marketplace.
+            Easy to find at 55, Fawara Chowk near Doulatganj, Kharakua Colony, right in the heart of Ujjain's central marketplace.
           </p>
         </div>
       </div>
@@ -868,7 +868,7 @@ export default function BestQualityClient() {
         <div className="map-frame-box">
           <iframe 
             title="M/S Best Quality Dryfruits &amp; Masala House Location Map"
-            src="https://maps.google.com/maps?q=55,+Fawara+Chowk,+near+Doulatganj,+Ujjain,+Madhya+Pradesh+456010&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+            src="https://maps.google.com/maps?q=55,+Fawara+Chowk,+near+Doulatganj,+Kharakua+Colony,+Ujjain,+Madhya+Pradesh+456010&t=&z=16&ie=UTF8&iwloc=&output=embed" 
             loading="lazy" 
             allowFullScreen 
             referrerPolicy="no-referrer-when-downgrade">
@@ -985,7 +985,7 @@ export default function BestQualityClient() {
           © 2026 M/S Best Quality Dryfruits &amp; Masala House. All rights reserved.
         </div>
         <div>
-          Fawara Chowk, near Doulatganj, Ujjain, Madhya Pradesh
+          55, Fawara Chowk, near Doulatganj, Kharakua Colony, Ujjain, Madhya Pradesh
         </div>
       </div>
 
@@ -1068,12 +1068,6 @@ export default function BestQualityClient() {
       </div>
     </div>
   </div>
-      {/* FLOATING NEXORA SCALE WATERMARK */}
-      <a href="https://www.instagram.com/nexora.scale" target="_blank" rel="noopener noreferrer" className="floating-watermark" aria-label="Nexora Scale Instagram">
-        <span className="watermark-dot"></span>
-        <span>Powered by <strong style={{ color: "var(--gold-light)" }}>Nexora Scale</strong></span>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-      </a>
-    </div>
+</div>
   );
 }
