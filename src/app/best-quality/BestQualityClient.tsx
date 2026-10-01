@@ -205,23 +205,23 @@ export default function BestQualityClient() {
         <div className="hero-visual-wrapper">
           <div className="hero-visual-grid">
             <div className="hero-img-card card-large">
-              <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80" alt="Authentic Indian spices and masala variety at Best Quality Ujjain" loading="eager" />
+              <img src="/images/product_spices.jpg" alt="Authentic Indian spices and masala variety at Best Quality Ujjain" loading="eager" />
               <span className="img-tag">Aromatic Masalas</span>
             </div>
             <div className="hero-img-card card-medium">
-              <img src="https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=800&q=80" alt="Crisp premium dry fruits almonds and nuts" loading="eager" />
+              <img src="/images/product_almond.jpg" alt="Crisp premium California almonds" loading="eager" />
               <span className="img-tag">Select Dry Fruits</span>
             </div>
             <div className="hero-img-card card-small-1">
-              <img src="https://images.unsplash.com/photo-1582293041079-7814c2f12063?auto=format&fit=crop&w=800&q=80" alt="Fresh whole cashews kaju" loading="lazy" />
+              <img src="/images/product_cashew.jpg" alt="Fresh whole white cashews kaju" loading="lazy" />
               <span className="img-tag">Premium Kaju</span>
             </div>
             <div className="hero-img-card card-small-2">
-              <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80" alt="Dry fruit festive gifting hamper" loading="lazy" />
+              <img src="/images/gift_packaging.jpg" alt="Dry fruit festive gifting hamper" loading="lazy" />
               <span className="img-tag">Gift Hampers</span>
             </div>
             <div className="hero-img-card card-small-3">
-              <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=80" alt="Crisp pistachios pista in bowl" loading="lazy" />
+              <img src="/images/product_pistachio.jpg" alt="Crisp roasted pistachios pista" loading="lazy" />
               <span className="img-tag">Royal Pista</span>
             </div>
           </div>
@@ -277,7 +277,7 @@ export default function BestQualityClient() {
         <div className="category-card">
           <div className="category-img-box">
             <span className="category-number">01 — CATEGORY</span>
-            <img src="https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=800&q=80" alt="Premium dry fruits almonds cashews raisins dates" loading="lazy" />
+            <img src="/images/product_mixed.jpg" alt="Premium dry fruits almonds cashews raisins dates" loading="lazy" />
           </div>
           <div className="category-body">
             <h3 className="category-name">Dry Fruits</h3>
@@ -295,7 +295,7 @@ export default function BestQualityClient() {
         <div className="category-card">
           <div className="category-img-box">
             <span className="category-number">02 — CATEGORY</span>
-            <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80" alt="Indian whole spices and ground masalas in bowls" loading="lazy" />
+            <img src="/images/product_spices.jpg" alt="Indian whole spices and ground masalas in bowls" loading="lazy" />
           </div>
           <div className="category-body">
             <h3 className="category-name">Masalas &amp; Spices</h3>
@@ -313,7 +313,7 @@ export default function BestQualityClient() {
         <div className="category-card">
           <div className="category-img-box">
             <span className="category-number">03 — CATEGORY</span>
-            <img src="https://images.unsplash.com/photo-1509358271058-acd22cc93898?auto=format&fit=crop&w=800&q=80" alt="Grocery and household food cooking essentials" loading="lazy" />
+            <img src="/images/category_grocery.jpg" alt="Grocery and household food cooking essentials" loading="lazy" />
           </div>
           <div className="category-body">
             <h3 className="category-name">Grocery Essentials</h3>
@@ -331,7 +331,7 @@ export default function BestQualityClient() {
         <div className="category-card">
           <div className="category-img-box">
             <span className="category-number">04 — CATEGORY</span>
-            <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80" alt="Festive dry fruit gift hampers and celebration packs" loading="lazy" />
+            <img src="/images/hamper_festive.jpg" alt="Festive dry fruit gift hampers and celebration packs" loading="lazy" />
           </div>
           <div className="category-body">
             <h3 className="category-name">Gift Hampers</h3>
@@ -349,7 +349,7 @@ export default function BestQualityClient() {
         <div className="category-card">
           <div className="category-img-box">
             <span className="category-number">05 — CATEGORY</span>
-            <img src="https://images.unsplash.com/photo-1568283096533-078a24930eb8?auto=format&fit=crop&w=800&q=80" alt="Healthy snacks nuts and select packaged foods" loading="lazy" />
+            <img src="/images/category_snacks.jpg" alt="Crisp phool makhana and healthy nutritious seeds" loading="lazy" />
           </div>
           <div className="category-body">
             <h3 className="category-name">Snacks &amp; Specialties</h3>
@@ -367,7 +367,7 @@ export default function BestQualityClient() {
         <div className="category-card">
           <div className="category-img-box">
             <span className="category-number">06 — CATEGORY</span>
-            <img src="https://images.unsplash.com/photo-1566837945700-30057527ade0?auto=format&fit=crop&w=800&q=80" alt="Festival specials dates nuts and celebratory offerings" loading="lazy" />
+            <img src="/images/category_festival.jpg" alt="Festival specials saffron dates and vrat offerings" loading="lazy" />
           </div>
           <div className="category-body">
             <h3 className="category-name">Festival Specials</h3>
@@ -400,7 +400,7 @@ export default function BestQualityClient() {
         <div className="product-card">
           <div className="product-img-box">
             <span className="product-badge">Select Grade</span>
-            <img src="https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=800&q=80" alt="Badam Almonds" loading="lazy" />
+            <img src="/images/product_almond.jpg" alt="Badam Almonds" loading="lazy" />
           </div>
           <div className="product-body">
             <h3 className="product-title">Badam (Almonds)</h3>
@@ -418,7 +418,7 @@ export default function BestQualityClient() {
         <div className="product-card">
           <div className="product-img-box">
             <span className="product-badge">Whole White</span>
-            <img src="https://images.unsplash.com/photo-1582293041079-7814c2f12063?auto=format&fit=crop&w=800&q=80" alt="Kaju Cashews" loading="lazy" />
+            <img src="/images/product_cashew.jpg" alt="Kaju Cashews" loading="lazy" />
           </div>
           <div className="product-body">
             <h3 className="product-title">Kaju (Cashews)</h3>
@@ -436,7 +436,7 @@ export default function BestQualityClient() {
         <div className="product-card">
           <div className="product-img-box">
             <span className="product-badge">Nutty Aroma</span>
-            <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=80" alt="Pista Pistachios" loading="lazy" />
+            <img src="/images/product_pistachio.jpg" alt="Pista Pistachios" loading="lazy" />
           </div>
           <div className="product-body">
             <h3 className="product-title">Pista (Pistachios)</h3>
@@ -454,7 +454,7 @@ export default function BestQualityClient() {
         <div className="product-card">
           <div className="product-img-box">
             <span className="product-badge">Fresh Kernels</span>
-            <img src="https://images.unsplash.com/photo-1568283096533-078a24930eb8?auto=format&fit=crop&w=800&q=80" alt="Akhrot Walnuts" loading="lazy" />
+            <img src="/images/product_walnut.jpg" alt="Akhrot Walnuts" loading="lazy" />
           </div>
           <div className="product-body">
             <h3 className="product-title">Akhrot (Walnuts)</h3>
@@ -472,7 +472,7 @@ export default function BestQualityClient() {
         <div className="product-card">
           <div className="product-img-box">
             <span className="product-badge">Sweet &amp; Juicy</span>
-            <img src="https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=800&q=80" alt="Kishmish Raisins" loading="lazy" />
+            <img src="/images/product_raisin.jpg" alt="Kishmish Raisins" loading="lazy" />
           </div>
           <div className="product-body">
             <h3 className="product-title">Kishmish (Raisins)</h3>
@@ -490,7 +490,7 @@ export default function BestQualityClient() {
         <div className="product-card">
           <div className="product-img-box">
             <span className="product-badge">Soft Dates</span>
-            <img src="https://images.unsplash.com/photo-1566837945700-30057527ade0?auto=format&fit=crop&w=800&q=80" alt="Khajoor Dates" loading="lazy" />
+            <img src="/images/product_dates.jpg" alt="Khajoor Dates" loading="lazy" />
           </div>
           <div className="product-body">
             <h3 className="product-title">Khajoor (Dates)</h3>
@@ -508,7 +508,7 @@ export default function BestQualityClient() {
         <div className="product-card">
           <div className="product-img-box">
             <span className="product-badge">Whole &amp; Ground</span>
-            <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80" alt="Aromatic Khade & Pise Masale" loading="lazy" />
+            <img src="/images/product_spices.jpg" alt="Aromatic Khade & Pise Masale" loading="lazy" />
           </div>
           <div className="product-body">
             <h3 className="product-title">Premium Masalas</h3>
@@ -526,7 +526,7 @@ export default function BestQualityClient() {
         <div className="product-card">
           <div className="product-img-box">
             <span className="product-badge">Festive Pack</span>
-            <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80" alt="Dry fruit celebration gift hampers" loading="lazy" />
+            <img src="/images/gift_packaging.jpg" alt="Dry fruit celebration gift hampers" loading="lazy" />
           </div>
           <div className="product-body">
             <h3 className="product-title">Gift Hampers</h3>
@@ -653,7 +653,7 @@ export default function BestQualityClient() {
 
         <div className="gifting-visual">
           <div className="gifting-img-box">
-            <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80" alt="Festive Dry Fruit Hamper Boxes" loading="lazy" />
+            <img src="/images/gift_packaging.jpg" alt="Festive Dry Fruit Hamper Boxes" loading="lazy" />
           </div>
         </div>
       </div>
@@ -673,37 +673,37 @@ export default function BestQualityClient() {
 
       <div className="insta-grid">
         <div className="insta-item">
-          <img src="https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=400&q=80" alt="Instagram post almonds" loading="lazy" />
+          <img src="/images/product_almond.jpg" alt="Instagram post almonds" loading="lazy" />
           <a href="https://www.instagram.com/ms_best_quality/" target="_blank" rel="noopener noreferrer" className="insta-overlay" aria-label="View on Instagram">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </a>
         </div>
         <div className="insta-item">
-          <img src="https://images.unsplash.com/photo-1582293041079-7814c2f12063?auto=format&fit=crop&w=400&q=80" alt="Instagram post cashews" loading="lazy" />
+          <img src="/images/product_cashew.jpg" alt="Instagram post cashews" loading="lazy" />
           <a href="https://www.instagram.com/ms_best_quality/" target="_blank" rel="noopener noreferrer" className="insta-overlay" aria-label="View on Instagram">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </a>
         </div>
         <div className="insta-item">
-          <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80" alt="Instagram post spices" loading="lazy" />
+          <img src="/images/product_spices.jpg" alt="Instagram post spices" loading="lazy" />
           <a href="https://www.instagram.com/ms_best_quality/" target="_blank" rel="noopener noreferrer" className="insta-overlay" aria-label="View on Instagram">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </a>
         </div>
         <div className="insta-item">
-          <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80" alt="Instagram post pistachios" loading="lazy" />
+          <img src="/images/product_pistachio.jpg" alt="Instagram post pistachios" loading="lazy" />
           <a href="https://www.instagram.com/ms_best_quality/" target="_blank" rel="noopener noreferrer" className="insta-overlay" aria-label="View on Instagram">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </a>
         </div>
         <div className="insta-item">
-          <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=400&q=80" alt="Instagram post gift packs" loading="lazy" />
+          <img src="/images/hamper_festive.jpg" alt="Instagram post gift packs" loading="lazy" />
           <a href="https://www.instagram.com/ms_best_quality/" target="_blank" rel="noopener noreferrer" className="insta-overlay" aria-label="View on Instagram">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </a>
         </div>
         <div className="insta-item">
-          <img src="https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=400&q=80" alt="Instagram post raisins" loading="lazy" />
+          <img src="/images/product_raisin.jpg" alt="Instagram post raisins" loading="lazy" />
           <a href="https://www.instagram.com/ms_best_quality/" target="_blank" rel="noopener noreferrer" className="insta-overlay" aria-label="View on Instagram">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </a>
