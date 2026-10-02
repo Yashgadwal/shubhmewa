@@ -1,8 +1,8 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import BestQualityClient from "./BestQualityClient";
 
 export const metadata: Metadata = {
-  title: "Best Quality Dryfruits & Masala House | Dry Fruits & Masalas in Ujjain",
+  title: "M/S Best Quality Dryfruits & Masala House | Dry Fruits & Masalas in Ujjain",
   description:
     "Shop quality dry fruits, masalas, grocery essentials and gifting options at M/S Best Quality Dryfruits & Masala House, Fawara Chowk, Ujjain. Call +91 88393 15887 or visit us today.",
   keywords: [
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   authors: [{ name: "M/S Best Quality Dryfruits & Masala House" }],
   openGraph: {
     type: "website",
-    title: "Best Quality Dryfruits & Masala House | Dry Fruits & Masalas in Ujjain",
+    title: "M/S Best Quality Dryfruits & Masala House | Dry Fruits & Masalas in Ujjain",
     description:
       "Premium quality dry fruits, whole & ground masalas, and festive gift hampers at Fawara Chowk, near Doulatganj, Ujjain.",
     url: "https://shubhmewa.com/best-quality",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
         url: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=80",
         width: 1200,
         height: 630,
-        alt: "Best Quality Dryfruits & Masala House Ujjain",
+        alt: "M/S Best Quality Dryfruits & Masala House Ujjain",
       },
     ],
   },
@@ -39,7 +39,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "GroceryStore",
   name: "M/S Best Quality Dryfruits & Masala House",
-  alternateName: "Best Quality Dryfruits and Masala House",
+  alternateName: "M/S Best Quality Dryfruits & Masala House",
   image: [
     "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=800&q=80",
     "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80",

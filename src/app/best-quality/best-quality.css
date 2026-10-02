@@ -213,6 +213,13 @@
       white-space: nowrap;
     }
 
+    @media (max-width: 480px) {
+      .brand-name {
+        font-size: 1.02rem;
+        letter-spacing: 0.05em;
+      }
+    }
+
     @media (min-width: 768px) {
       .brand-name {
         font-size: 1.28rem;

@@ -66,7 +66,7 @@ export default function BestQualityClient() {
     <div className="container navbar-inner">
       {/*  Logo  */}
       <a href="#home" className="brand-logo" aria-label="M/S Best Quality Dryfruits &amp; Masala House">
-        <span className="brand-name">Best Quality</span>
+        <span className="brand-name">M/S Best Quality</span>
         <span className="brand-sub">Dryfruits &amp; Masalas • Ujjain</span>
       </a>
 
@@ -205,7 +205,7 @@ export default function BestQualityClient() {
         <div className="hero-visual-wrapper">
           <div className="hero-visual-grid">
             <div className="hero-img-card card-large">
-              <img src="/images/product_spices.jpg" alt="Authentic Indian spices and masala variety at Best Quality Ujjain" loading="eager" />
+              <img src="/images/product_spices.jpg" alt="Authentic Indian spices and masala variety at M/S Best Quality Ujjain" loading="eager" />
               <span className="img-tag">Aromatic Masalas</span>
             </div>
             <div className="hero-img-card card-medium">
@@ -548,7 +548,7 @@ export default function BestQualityClient() {
     <div className="container">
       <div className="section-header">
         <div className="section-eyebrow">Local Commitment</div>
-        <h2 className="section-title">Why Ujjain Customers Choose Best Quality</h2>
+        <h2 className="section-title">Why Ujjain Customers Choose M/S Best Quality</h2>
         <p className="section-desc">
           Rooted in Fawara Chowk, we are dedicated to bringing reliable quality, friendly service, and everyday value to your home.
         </p>
@@ -632,7 +632,7 @@ export default function BestQualityClient() {
           <div className="gifting-badge">✨ Festive Gifting Collection</div>
           <h2 className="gifting-title">Make Every Celebration More Special</h2>
           <p className="gifting-desc">
-            Looking for a thoughtful gift for family, friends, clients or festive occasions? Explore our dry-fruit and gifting options at Best Quality. Thoughtfully packaged, traditional, and wholesome.
+            Looking for a thoughtful gift for family, friends, clients or festive occasions? Explore our dry-fruit and gifting options at M/S Best Quality. Thoughtfully packaged, traditional, and wholesome.
           </p>
 
           <div className="occasions-list">
