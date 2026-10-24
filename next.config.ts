@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         destination: "/review.html",
         permanent: false,
       },
+      {
+        source: "/links",
+        destination: "/links.html",
+        permanent: false,
+      },
     ];
   },
   async rewrites() {
@@ -15,6 +20,10 @@ const nextConfig: NextConfig = {
       {
         source: "/review",
         destination: "/review.html",
+      },
+      {
+        source: "/links",
+        destination: "/links.html",
       },
     ];
   },

@@ -97,6 +97,9 @@ export default function Footer({ settings }: FooterProps) {
             <li>
               <Link href="/contact" className="hover:text-brand-gold transition-colors">Contact</Link>
             </li>
+            <li>
+              <Link href="/links.html" className="hover:text-brand-gold transition-colors">Official Bio Links</Link>
+            </li>
           </ul>
         </div>
 
