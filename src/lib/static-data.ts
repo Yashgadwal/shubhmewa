@@ -81,6 +81,30 @@ export const CATEGORIES: Category[] = [
 
 // 2. Products
 export const PRODUCTS: Product[] = [
+  // 1 RS LIVE PAYMENT TEST PRODUCT
+  {
+    id: "prod-dummy-test",
+    name: "Live Payment Test Product (₹1)",
+    slug: "dummy-product",
+    description: "Official ₹1 live payment gateway test product for ShubhMewa. Use this item to test real UPI, card, and netbanking transactions via live Razorpay integration with zero shipping fee.",
+    categoryId: "cat-dry-fruits",
+    originalPrice: 1,
+    discountedPrice: 1,
+    sku: "SM-TEST-001",
+    stockQuantity: 9999,
+    stockStatus: "IN_STOCK",
+    isBestseller: false,
+    isNewArrival: true,
+    isActive: true,
+    benefits: "Instant ₹1 live transaction test to verify Razorpay gateway and order generation.",
+    shelfLife: "Digital Verification Order",
+    deliveryInfo: "Instant Gateway Verification (Free Delivery)",
+    storageInstructions: "Not applicable.",
+    images: [{ url: "/images/product_almond.jpg", isPrimary: true }],
+    variants: [
+      { id: "v-test-1", weight: "Sample Pack", originalPrice: 1, discountedPrice: 1, sku: "SM-TEST-1", stockQuantity: 9999 },
+    ],
+  },
   // DRY FRUITS
   {
     id: "prod-badam",

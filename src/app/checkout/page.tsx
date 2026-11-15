@@ -46,9 +46,23 @@ export default function CheckoutPage() {
     };
   }, []);
 
+  // Check if cart contains test product
+  const isTestOrder = items.length > 0 && items.every(item => 
+    item.id.includes("test") || item.name.toLowerCase().includes("test") || item.price <= 1
+  );
+
   // Calculate Shipping charges when subtotal or pincode changes
   useEffect(() => {
     async function updateShipping() {
+      if (isTestOrder) {
+        setShippingCharge(0);
+        setDeliveryType("Live Gateway Test Order (Free)");
+        setExpectedDelivery("Instant Digital Verification");
+        setIsDeliverable(true);
+        setDeliveryNotice("🧪 ₹1 Test Product: Free shipping applied for gateway verification.");
+        return;
+      }
+
       if (/^\d{6}$/.test(pincode)) {
         const res = await calculateShippingCharge(pincode, subtotal - discount);
         setShippingCharge(res.shippingCharge);
@@ -67,13 +81,13 @@ export default function CheckoutPage() {
       }
     }
     updateShipping();
-  }, [pincode, subtotal, discount]);
+  }, [pincode, subtotal, discount, isTestOrder]);
 
   // Bulk Order Checks
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
   const isBulkOrder = totalQuantity >= 10;
 
-  const finalShipping = shippingCharge + (isUrgent ? urgentCharge : 0);
+  const finalShipping = isTestOrder ? 0 : (shippingCharge + (isUrgent ? urgentCharge : 0));
   const grandTotal = Math.max(0, subtotal - discount + finalShipping);
 
   const handleSandboxSimulate = async () => {
@@ -94,7 +108,7 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (!isDeliverable) {
+    if (!isDeliverable && !isTestOrder) {
       setErrorMsg("Currently, we are delivering only in Ujjain. We will start accepting orders from your location next month.");
       return;
     }
@@ -165,7 +179,7 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (!isDeliverable) {
+    if (!isDeliverable && !isTestOrder) {
       setErrorMsg("Currently, we are delivering only in Ujjain. We will start accepting orders from your location next month.");
       return;
     }

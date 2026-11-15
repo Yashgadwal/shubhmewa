@@ -13,6 +13,21 @@ const nextConfig: NextConfig = {
         destination: "/links.html",
         permanent: false,
       },
+      {
+        source: "/test",
+        destination: "/dummy-product",
+        permanent: false,
+      },
+      {
+        source: "/1-rs-product",
+        destination: "/dummy-product",
+        permanent: false,
+      },
+      {
+        source: "/test-product",
+        destination: "/dummy-product",
+        permanent: false,
+      },
     ];
   },
   async rewrites() {
