@@ -4,6 +4,18 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { DEFAULT_SETTINGS, PRODUCTS, CATEGORIES } from "./static-data";
 import { prisma, isDbActive } from "./db";
+import {
+  getAllStoredOrders,
+  saveOrderToStore,
+  updateOrderStatusInStore,
+  updateOrderNotesInStore,
+  getAllStoredEnquiries,
+  saveEnquiryToStore,
+  updateEnquiryStatusInStore,
+  updateEnquiryNotesInStore,
+  StoredOrder,
+  StoredEnquiry,
+} from "./order-storage";
 
 // In-session mutable settings configuration
 let GLOBAL_CONFIG: Record<string, string> = {
@@ -72,99 +84,114 @@ export async function getAdminSession() {
 }
 
 // ==========================================
-// ADMIN DASHBOARD STATS
+// ADMIN DASHBOARD STATS & ORDERS RETRIEVAL
 // ==========================================
 
-export async function getDashboardStats() {
-  let recentOrders = [
-    {
-      id: "ord-1",
-      orderNumber: "ORD-2026-1001",
-      customerName: "Aman Agrawal",
-      totalAmount: 1240,
-      orderStatus: "NEW",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: "ord-2",
-      orderNumber: "ORD-2026-1002",
-      customerName: "Megha Vyas",
-      totalAmount: 780,
-      orderStatus: "PACKED",
-      createdAt: new Date().toISOString(),
-    },
-  ];
-
-  let recentEnquiries = [
-    {
-      id: "enq-1",
-      customerName: "Nisha Garg (Nexora Group)",
-      occasion: "Corporate Gifting",
-      quantity: 50,
-      status: "NEW",
-    },
-    {
-      id: "enq-2",
-      customerName: "Rahul Sethi",
-      occasion: "Wedding Invites",
-      quantity: 120,
-      status: "IN_PROGRESS",
-    },
-  ];
-
-  let totalRevenue = 2020;
-  let enquiriesCount = 2;
-
+export async function getAdminOrders(): Promise<any[]> {
+  let dbOrders: any[] = [];
   if (isDbActive()) {
     try {
-      const dbOrders = await prisma.order.findMany({
-        take: 5,
+      const list = await prisma.order.findMany({
         orderBy: { createdAt: "desc" },
+        include: { items: true },
       });
-      const dbEnquiries = await prisma.enquiry.findMany({
-        take: 5,
-        orderBy: { createdAt: "desc" },
-      });
-      const dbStats = await prisma.order.aggregate({
-        _sum: { totalAmount: true },
-      });
-      const dbEnquiriesCount = await prisma.enquiry.count();
-
-      if (dbOrders.length > 0) {
-        recentOrders = dbOrders.map((o) => ({
-          id: o.id,
-          orderNumber: o.orderNumber,
-          customerName: o.customerName,
-          totalAmount: o.totalAmount,
-          orderStatus: o.orderStatus,
-          createdAt: o.createdAt.toISOString(),
-        }));
-      }
-
-      if (dbEnquiries.length > 0) {
-        recentEnquiries = dbEnquiries.map((e) => ({
-          id: e.id,
-          customerName: e.customerName,
-          occasion: e.occasion || "Celebration",
-          quantity: e.quantity || 1,
-          status: e.status,
-        }));
-      }
-
-      totalRevenue = dbStats._sum.totalAmount || 0;
-      enquiriesCount = dbEnquiriesCount;
+      dbOrders = list.map((o) => ({
+        id: o.id,
+        orderNumber: o.orderNumber,
+        customerName: o.customerName,
+        phone: o.phone,
+        whatsapp: o.whatsapp,
+        shippingAddress: o.shippingAddress,
+        deliveryType: o.deliveryType,
+        orderNotes: o.orderNotes,
+        totalAmount: o.totalAmount,
+        orderStatus: o.orderStatus,
+        paymentStatus: o.paymentStatus,
+        paymentMethod: o.paymentMethod,
+        checkoutMethod: o.checkoutMethod,
+        internalNotes: o.internalNotes,
+        createdAt: o.createdAt.toISOString(),
+        items: o.items.map((i) => ({
+          id: i.id,
+          productId: i.productId,
+          productName: i.productName,
+          weight: i.weight,
+          quantity: i.quantity,
+          price: i.price,
+        })),
+      }));
     } catch (e) {
-      console.error("Postgres dashboard stats fetch failed:", e);
+      console.error("Prisma getAdminOrders failed:", e);
     }
   }
 
+  const storedOrders = getAllStoredOrders();
+
+  // Combine & deduplicate by orderNumber or id
+  const map = new Map<string, any>();
+  [...storedOrders, ...dbOrders].forEach((o) => {
+    if (o && (o.orderNumber || o.id)) {
+      map.set(o.orderNumber || o.id, o);
+    }
+  });
+
+  const all = Array.from(map.values());
+  all.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+  return all;
+}
+
+export async function getAdminEnquiries(): Promise<any[]> {
+  let dbEnquiries: any[] = [];
+  if (isDbActive()) {
+    try {
+      const list = await prisma.enquiry.findMany({
+        orderBy: { createdAt: "desc" },
+      });
+      dbEnquiries = list.map((e) => ({
+        id: e.id,
+        customerName: e.customerName,
+        phone: e.phone,
+        whatsapp: e.whatsapp,
+        email: e.email,
+        occasion: e.occasion,
+        quantity: e.quantity,
+        budgetPerHamper: e.budgetPerHamper,
+        requiredDeliveryDate: e.requiredDeliveryDate ? e.requiredDeliveryDate.toISOString() : null,
+        customizationDetails: e.customizationDetails,
+        message: e.message,
+        status: e.status,
+        notes: e.notes,
+        createdAt: e.createdAt.toISOString(),
+      }));
+    } catch (e) {
+      console.error("Prisma getAdminEnquiries failed:", e);
+    }
+  }
+
+  const stored = getAllStoredEnquiries();
+  const map = new Map<string, any>();
+  [...stored, ...dbEnquiries].forEach((e) => {
+    if (e && e.id) map.set(e.id, e);
+  });
+
+  const all = Array.from(map.values());
+  all.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+  return all;
+}
+
+export async function getDashboardStats() {
+  const orders = await getAdminOrders();
+  const enquiries = await getAdminEnquiries();
+
+  const totalRevenue = orders.reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0);
+
   return {
     totalRevenue,
-    whatsappClicks: 42,
-    enquiriesCount,
+    whatsappClicks: 0,
+    enquiriesCount: enquiries.length,
     productsCount: PRODUCTS.length,
-    recentOrders,
-    recentEnquiries,
+    recentOrders: orders.slice(0, 5),
+    recentEnquiries: enquiries.slice(0, 5),
   };
 }
 
@@ -246,10 +273,17 @@ export async function createOrder(data: {
   couponCode?: string;
   birthday?: string;
   anniversaryDate?: string;
+  totalAmount?: number;
+  paymentMethod?: string;
+  paymentStatus?: string;
+  checkoutMethod?: string;
+  paymentId?: string;
+  razorpayOrderId?: string;
 }): Promise<{ success: boolean; orderNumber?: string; order?: any; error?: string; whatsAppUrl?: string }> {
   try {
     const orderNumber = `SM-${Math.floor(100000 + Math.random() * 900000)}`;
-    const orderAmount = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const calculatedAmount = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const finalTotal = data.totalAmount !== undefined ? data.totalAmount : calculatedAmount;
     
     // Append birthday & anniversary into order notes for persistence
     let notes = data.orderNotes || "";
@@ -267,62 +301,83 @@ export async function createOrder(data: {
       shippingAddress: data.shippingAddress || "Ujjain",
       deliveryLocation: "Ujjain District",
       items: data.items,
-      totalAmount: orderAmount,
+      totalAmount: finalTotal,
       birthday: data.birthday,
       anniversaryDate: data.anniversaryDate,
     });
 
-    if (isDbActive()) {
-      const dbOrder = await prisma.order.create({
-        data: {
-          orderNumber,
-          customerName: data.customerName,
-          phone: data.phone,
-          whatsapp: data.whatsapp,
-          email: data.email || null,
-          shippingAddress: data.shippingAddress || null,
-          deliveryType: data.deliveryType,
-          orderNotes: notes || null,
-          totalAmount: orderAmount,
-          discountAmount: 0,
-          paymentMethod: "ONLINE",
-          checkoutMethod: "WEBSITE_ONLINE",
-          items: {
-            create: data.items.map((item) => ({
-              productId: item.productId,
-              variantId: item.variantId || null,
-              productName: item.productName,
-              weight: item.weight,
-              quantity: item.quantity,
-              price: item.price,
-            })),
-          },
-        },
-      });
-      return { success: true, orderNumber, order: dbOrder, whatsAppUrl };
-    }
-
-    const mockOrder = {
-      id: `ord-${Math.floor(1000 + Math.random() * 9000)}`,
+    const orderRecord: StoredOrder = {
+      id: `ord-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
       orderNumber,
       customerName: data.customerName,
       phone: data.phone,
-      whatsapp: data.whatsapp,
+      whatsapp: data.whatsapp || data.phone,
       email: data.email || null,
       shippingAddress: data.shippingAddress || null,
       deliveryType: data.deliveryType,
       orderNotes: notes || null,
+      totalAmount: finalTotal,
+      orderStatus: "NEW",
+      paymentStatus: data.paymentStatus || "PAID",
+      paymentMethod: data.paymentMethod || "ONLINE",
+      checkoutMethod: data.checkoutMethod || "RAZORPAY_LIVE",
+      paymentId: data.paymentId || null,
+      razorpayOrderId: data.razorpayOrderId || null,
+      internalNotes: null,
       birthday: data.birthday || null,
       anniversaryDate: data.anniversaryDate || null,
-      totalAmount: orderAmount,
-      orderStatus: "NEW",
       createdAt: new Date().toISOString(),
-      items: data.items,
+      items: data.items.map((item, idx) => ({
+        id: `itm-${Date.now()}-${idx}`,
+        productId: item.productId,
+        variantId: item.variantId || null,
+        productName: item.productName,
+        weight: item.weight,
+        quantity: item.quantity,
+        price: item.price,
+      })),
     };
 
-    console.log("ShubhMewa Checkout - Generated Order (Memory):", mockOrder);
-    return { success: true, orderNumber, order: mockOrder, whatsAppUrl };
+    // ALWAYS persist order to store (file and memory)
+    saveOrderToStore(orderRecord);
+
+    if (isDbActive()) {
+      try {
+        await prisma.order.create({
+          data: {
+            orderNumber,
+            customerName: data.customerName,
+            phone: data.phone,
+            whatsapp: data.whatsapp,
+            email: data.email || null,
+            shippingAddress: data.shippingAddress || null,
+            deliveryType: data.deliveryType,
+            orderNotes: notes || null,
+            totalAmount: finalTotal,
+            discountAmount: 0,
+            paymentStatus: data.paymentStatus || "PAID",
+            paymentMethod: data.paymentMethod || "ONLINE",
+            checkoutMethod: data.checkoutMethod || "RAZORPAY_LIVE",
+            items: {
+              create: data.items.map((item) => ({
+                productId: item.productId,
+                variantId: item.variantId || null,
+                productName: item.productName,
+                weight: item.weight,
+                quantity: item.quantity,
+                price: item.price,
+              })),
+            },
+          },
+        });
+      } catch (dbErr) {
+        console.error("Prisma order.create failed, order preserved in storage:", dbErr);
+      }
+    }
+
+    return { success: true, orderNumber, order: orderRecord, whatsAppUrl };
   } catch (error: any) {
+    console.error("createOrder error:", error);
     return { success: false, error: error.message || "Failed to place order." };
   }
 }
@@ -340,30 +395,11 @@ export async function createEnquiry(data: {
   message?: string;
 }): Promise<{ success: boolean; enquiry?: any; error?: string }> {
   try {
-    if (isDbActive()) {
-      const dbEnquiry = await prisma.enquiry.create({
-        data: {
-          customerName: data.customerName,
-          phone: data.phone,
-          whatsapp: data.whatsapp || null,
-          email: data.email || null,
-          occasion: data.occasion || null,
-          quantity: data.quantity || null,
-          budgetPerHamper: data.budgetPerHamper || null,
-          requiredDeliveryDate: data.requiredDeliveryDate ? new Date(data.requiredDeliveryDate) : null,
-          customizationDetails: data.customizationDetails || null,
-          message: data.message || null,
-          status: "NEW",
-        },
-      });
-      return { success: true, enquiry: dbEnquiry };
-    }
-
-    const mockEnquiry = {
-      id: `enq-${Math.floor(1000 + Math.random() * 9000)}`,
+    const enquiryRecord: StoredEnquiry = {
+      id: `enq-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
       customerName: data.customerName,
       phone: data.phone,
-      whatsapp: data.whatsapp,
+      whatsapp: data.whatsapp || null,
       email: data.email || null,
       occasion: data.occasion || null,
       quantity: data.quantity || null,
@@ -372,10 +408,36 @@ export async function createEnquiry(data: {
       customizationDetails: data.customizationDetails || null,
       message: data.message || null,
       status: "NEW",
+      notes: null,
       createdAt: new Date().toISOString(),
     };
-    console.log("ShubhMewa Proposal - Saved Enquiry (Memory):", mockEnquiry);
-    return { success: true, enquiry: mockEnquiry };
+
+    // ALWAYS persist enquiry to store
+    saveEnquiryToStore(enquiryRecord);
+
+    if (isDbActive()) {
+      try {
+        await prisma.enquiry.create({
+          data: {
+            customerName: data.customerName,
+            phone: data.phone,
+            whatsapp: data.whatsapp || null,
+            email: data.email || null,
+            occasion: data.occasion || null,
+            quantity: data.quantity || null,
+            budgetPerHamper: data.budgetPerHamper || null,
+            requiredDeliveryDate: data.requiredDeliveryDate ? new Date(data.requiredDeliveryDate) : null,
+            customizationDetails: data.customizationDetails || null,
+            message: data.message || null,
+            status: "NEW",
+          },
+        });
+      } catch (dbErr) {
+        console.error("Prisma enquiry.create failed, enquiry preserved in storage:", dbErr);
+      }
+    }
+
+    return { success: true, enquiry: enquiryRecord };
   } catch (error: any) {
     return { success: false, error: error.message || "Failed to submit enquiry." };
   }
@@ -572,6 +634,7 @@ export async function updateWebsiteSetting(key: string, value: string) {
 // ==========================================
 
 export async function updateOrderStatus(orderId: string, status: string): Promise<{ success: boolean; order?: any; error?: string }> {
+  updateOrderStatusInStore(orderId, status);
   if (isDbActive()) {
     try {
       const order = await prisma.order.update({
@@ -580,13 +643,14 @@ export async function updateOrderStatus(orderId: string, status: string): Promis
       });
       return { success: true, order };
     } catch (e: any) {
-      return { success: false, error: e.message };
+      console.error("Prisma updateOrderStatus error:", e);
     }
   }
   return { success: true, order: { id: orderId, orderStatus: status } };
 }
 
 export async function updateOrderInternalNotes(orderId: string, notes: string): Promise<{ success: boolean; order?: any; error?: string }> {
+  updateOrderNotesInStore(orderId, notes);
   if (isDbActive()) {
     try {
       const order = await prisma.order.update({
@@ -595,13 +659,14 @@ export async function updateOrderInternalNotes(orderId: string, notes: string): 
       });
       return { success: true, order };
     } catch (e: any) {
-      return { success: false, error: e.message };
+      console.error("Prisma updateOrderInternalNotes error:", e);
     }
   }
   return { success: true, order: { id: orderId, internalNotes: notes } };
 }
 
 export async function updateEnquiryStatus(enquiryId: string, status: string): Promise<{ success: boolean; enquiry?: any; error?: string }> {
+  updateEnquiryStatusInStore(enquiryId, status);
   if (isDbActive()) {
     try {
       const enquiry = await prisma.enquiry.update({
@@ -610,13 +675,14 @@ export async function updateEnquiryStatus(enquiryId: string, status: string): Pr
       });
       return { success: true, enquiry };
     } catch (e: any) {
-      return { success: false, error: e.message };
+      console.error("Prisma updateEnquiryStatus error:", e);
     }
   }
   return { success: true, enquiry: { id: enquiryId, status } };
 }
 
 export async function updateEnquiryNotes(enquiryId: string, notes: string): Promise<{ success: boolean; enquiry?: any; error?: string }> {
+  updateEnquiryNotesInStore(enquiryId, notes);
   if (isDbActive()) {
     try {
       const enquiry = await prisma.enquiry.update({
@@ -625,7 +691,7 @@ export async function updateEnquiryNotes(enquiryId: string, notes: string): Prom
       });
       return { success: true, enquiry };
     } catch (e: any) {
-      return { success: false, error: e.message };
+      console.error("Prisma updateEnquiryNotes error:", e);
     }
   }
   return { success: true, enquiry: { id: enquiryId, notes } };
@@ -792,27 +858,95 @@ export async function trackOrderOrEnquiry(query: string) {
     }
   }
 
-  return {
-    success: true,
-    type: "ORDER",
-    details: {
-      orderNumber: cleanQuery.startsWith("ORD") ? cleanQuery : "SM-2026-1001",
-      customerName: "Valued Customer",
-      totalAmount: 1240,
-      orderStatus: "OUT_FOR_DELIVERY",
-      deliveryType: "DELIVERY",
-      shippingAddress: "Shop No. 5, Fawara Chowk, Daulat Ganj, Ujjain",
-      createdAt: new Date().toISOString(),
-      items: [
-        { productName: "California Jumbo Almonds (Badam)", weight: "500g", quantity: 2, price: 500 }
-      ],
-      timeline: [
-        { status: "NEW", title: "Order Placed", date: new Date().toISOString(), description: "Your order has been received and is pending confirmation." },
-        { status: "CONFIRMED", title: "Confirmed", date: new Date().toISOString(), description: "Our boutique store has accepted your order." },
-        { status: "PACKED", title: "Packed & Sealed", date: new Date().toISOString(), description: "Items have been hand-sorted and sealed in fresh food-grade packaging." },
-        { status: "OUT_FOR_DELIVERY", title: "Out for Delivery", date: new Date().toISOString(), description: "Our delivery partner is on the way to Fawara Chowk." }
-      ]
+  // Look in stored orders (local disk, /tmp, or memory)
+  const storedOrders = getAllStoredOrders();
+  const digitsOnly = cleanQuery.replace(/\D/g, "");
+  const matched = storedOrders.find((o) => {
+    if (!o) return false;
+    if (o.orderNumber && o.orderNumber.toUpperCase() === cleanQuery) return true;
+    if (o.id && o.id.toUpperCase() === cleanQuery) return true;
+    if (digitsOnly.length >= 6) {
+      const orderPhoneDigits = (o.phone || "").replace(/\D/g, "");
+      const orderWaDigits = (o.whatsapp || "").replace(/\D/g, "");
+      if (orderPhoneDigits.includes(digitsOnly) || digitsOnly.includes(orderPhoneDigits)) return true;
+      if (orderWaDigits.includes(digitsOnly) || digitsOnly.includes(orderWaDigits)) return true;
     }
+    return false;
+  });
+
+  if (matched) {
+    const timeline = [
+      {
+        status: "NEW",
+        title: "Order Placed",
+        date: matched.createdAt,
+        description: "Your order has been received and confirmed.",
+      },
+    ];
+
+    if (matched.orderStatus === "PACKED") {
+      timeline.push({
+        status: "PACKED",
+        title: "Packed & Sealed",
+        date: matched.createdAt,
+        description: "Items have been hand-sorted and sealed in fresh food-grade packaging.",
+      });
+    } else if (matched.orderStatus === "OUT_FOR_DELIVERY") {
+      timeline.push(
+        {
+          status: "PACKED",
+          title: "Packed & Sealed",
+          date: matched.createdAt,
+          description: "Items have been hand-sorted and sealed in fresh food-grade packaging.",
+        },
+        {
+          status: "OUT_FOR_DELIVERY",
+          title: "Out for Delivery",
+          date: matched.createdAt,
+          description: "Our delivery partner is out for delivery to your address.",
+        }
+      );
+    } else if (matched.orderStatus === "DELIVERED") {
+      timeline.push(
+        {
+          status: "PACKED",
+          title: "Packed & Sealed",
+          date: matched.createdAt,
+          description: "Items have been hand-sorted and sealed in fresh food-grade packaging.",
+        },
+        {
+          status: "DELIVERED",
+          title: "Delivered",
+          date: matched.createdAt,
+          description: "Package successfully delivered to customer.",
+        }
+      );
+    }
+
+    return {
+      success: true,
+      type: "ORDER",
+      details: {
+        orderNumber: matched.orderNumber,
+        customerName: matched.customerName,
+        totalAmount: matched.totalAmount,
+        orderStatus: matched.orderStatus,
+        deliveryType: matched.deliveryType || "DELIVERY",
+        shippingAddress: matched.shippingAddress || "Shop No. 5, Fawara Chowk, Daulat Ganj, Ujjain",
+        createdAt: matched.createdAt,
+        items: (matched.items || []).map((item) => ({
+          productName: item.productName,
+          weight: item.weight,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        timeline,
+      },
+    };
+  }
+
+  return {
+    error: `No active order found with tracking number or phone: ${query}`,
   };
 }
 

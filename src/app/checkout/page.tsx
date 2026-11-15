@@ -126,6 +126,10 @@ export default function CheckoutPage() {
         shippingAddress: `${apartment}, ${address}, ${area}, ${city}, ${state} - ${pincode}`,
         deliveryType: "DELIVERY",
         orderNotes: `SIMULATED TEST CHECKOUT (SANDBOX). ${isUrgent ? "URGENT. " : ""}${isBulkOrder ? "FLAG: BULK ORDER 10+." : ""}`,
+        totalAmount: grandTotal,
+        paymentStatus: "PAID",
+        paymentMethod: "TEST",
+        checkoutMethod: "SANDBOX_TEST",
         birthday: birthday || undefined,
         anniversaryDate: anniversaryDate || undefined,
         items: items.map(item => ({
@@ -251,6 +255,12 @@ export default function CheckoutPage() {
               shippingAddress: `${apartment}, ${address}, ${area}, ${city}, ${state} - ${pincode}`,
               deliveryType: "DELIVERY",
               orderNotes: `${isUrgent ? "URGENT DELIVERY REQUIRED. " : ""}${isBulkOrder ? "FLAG: BULK ORDER 10+ UNITS." : ""}`,
+              totalAmount: grandTotal,
+              paymentStatus: "PAID",
+              paymentMethod: "ONLINE",
+              checkoutMethod: "RAZORPAY_LIVE",
+              paymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
               birthday: birthday || undefined,
               anniversaryDate: anniversaryDate || undefined,
               items: items.map(item => ({
