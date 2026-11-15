@@ -188,6 +188,30 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     try {
+      // 0. Ensure Razorpay checkout script is loaded
+      const loadRazorpayScript = () => {
+        return new Promise<boolean>((resolve) => {
+          if (typeof window !== "undefined" && (window as any).Razorpay) {
+            return resolve(true);
+          }
+          const existingScript = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+          if (existingScript) {
+            return resolve(true);
+          }
+          const script = document.createElement("script");
+          script.src = "https://checkout.razorpay.com/v1/checkout.js";
+          script.async = true;
+          script.onload = () => resolve(true);
+          script.onerror = () => resolve(false);
+          document.body.appendChild(script);
+        });
+      };
+
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded && !(window as any).Razorpay) {
+        throw new Error("Unable to load Razorpay payment gateway. Please check your internet connection.");
+      }
+
       // 1. Call server actions to generate Razorpay Order ID
       const { createRazorpayOrderAction } = await import("@/lib/actions");
       const orderRes = await createRazorpayOrderAction(grandTotal);
@@ -199,10 +223,10 @@ export default function CheckoutPage() {
       // 2. Configure Razorpay modal options
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_U0MVQTSw8kIXiY", // Razorpay Live Key ID
-        amount: grandTotal * 100,
-        currency: "INR",
+        amount: orderRes.amount || Math.round(grandTotal * 100),
+        currency: orderRes.currency || "INR",
         name: "ShubhMewa",
-        description: isBulkOrder ? "Bulk Dry Fruit Order" : "Retail Dry Fruit Order Checkout",
+        description: isBulkOrder ? "Bulk Dry Fruit Order" : (isTestOrder ? "₹1 Test Gateway Verification" : "Retail Dry Fruit Order Checkout"),
         order_id: orderRes.orderId,
         handler: async function (response: any) {
           // Trigger server side payment verification
@@ -246,7 +270,11 @@ export default function CheckoutPage() {
 
               // Auto dispatch WhatsApp Order Notification to admin
               if (typeof window !== "undefined" && dbOrderRes.whatsAppUrl) {
-                window.open(dbOrderRes.whatsAppUrl, "_blank");
+                try {
+                  window.open(dbOrderRes.whatsAppUrl, "_blank");
+                } catch (e) {
+                  console.warn("WhatsApp window could not be opened automatically:", e);
+                }
               }
 
               clearCart();
@@ -260,6 +288,11 @@ export default function CheckoutPage() {
             setIsSubmitting(false);
           }
         },
+        modal: {
+          ondismiss: function () {
+            setIsSubmitting(false);
+          },
+        },
         prefill: {
           name: name,
           email: email || "customer@shubhmewa.com",
@@ -271,6 +304,14 @@ export default function CheckoutPage() {
       };
 
       const rzp = new (window as any).Razorpay(options);
+
+      rzp.on("payment.failed", function (resp: any) {
+        console.error("Razorpay payment failed:", resp);
+        const reason = resp?.error?.description || resp?.error?.reason || "Transaction declined or cancelled.";
+        setErrorMsg(`Payment Failed: ${reason}`);
+        setIsSubmitting(false);
+      });
+
       rzp.open();
     } catch (err: any) {
       setErrorMsg(err.message || "Failed to process payment.");

@@ -820,37 +820,48 @@ export async function trackOrderOrEnquiry(query: string) {
 // RAZORPAY SERVER ACTIONS
 // ==========================================
 
+const RAZORPAY_CONFIG = {
+  keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || "rzp_live_U0MVQTSw8kIXiY",
+  keySecret: process.env.RAZORPAY_KEY_SECRET || "boHcyWxmrlUTYn8PDnOBpltC",
+};
+
 export async function createRazorpayOrderAction(amount: number) {
   try {
-    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID;
-    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+    const { keyId, keySecret } = RAZORPAY_CONFIG;
 
-    if (keyId && keySecret) {
-      const auth = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
-      const res = await fetch("https://api.razorpay.com/v1/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Basic ${auth}`,
-        },
-        body: JSON.stringify({
-          amount: Math.round(amount * 100), // in paise
-          currency: "INR",
-          receipt: `rcpt_${Date.now()}`,
-        }),
-      });
-
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(`Razorpay API error: ${errText}`);
-      }
-
-      const orderData = await res.json();
-      return { success: true, orderId: orderData.id };
+    if (!keyId || !keySecret) {
+      throw new Error("Razorpay credentials are not configured.");
     }
 
-    const orderId = `order_${Math.random().toString(36).substring(2, 16)}`;
-    return { success: true, orderId };
+    const auth = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
+    // Ensure amount is in integer paise and at least ₹1 (100 paise)
+    const amountInPaise = Math.max(100, Math.round(amount * 100));
+
+    const res = await fetch("https://api.razorpay.com/v1/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${auth}`,
+      },
+      body: JSON.stringify({
+        amount: amountInPaise,
+        currency: "INR",
+        receipt: `rcpt_${Date.now()}`,
+      }),
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Razorpay API error (${res.status}): ${errText}`);
+    }
+
+    const orderData = await res.json();
+    return { 
+      success: true, 
+      orderId: orderData.id, 
+      amount: orderData.amount, 
+      currency: orderData.currency 
+    };
   } catch (e: any) {
     console.error("createRazorpayOrderAction error:", e);
     return { success: false, error: e.message };
@@ -863,11 +874,11 @@ export async function verifyRazorpayPaymentAction(
   signature: string
 ) {
   try {
-    const secret = process.env.RAZORPAY_KEY_SECRET;
-    if (secret) {
+    const { keySecret } = RAZORPAY_CONFIG;
+    if (keySecret) {
       const crypto = await import("crypto");
       const expected = crypto
-        .createHmac("sha256", secret)
+        .createHmac("sha256", keySecret)
         .update(`${orderId}|${paymentId}`)
         .digest("hex");
       if (expected !== signature) {
