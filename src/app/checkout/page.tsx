@@ -184,7 +184,7 @@ export default function CheckoutPage() {
 
       // 2. Configure Razorpay modal options
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_mockkey123456", // Load live or test key
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_U0MVQTSw8kIXiY", // Razorpay Live Key ID
         amount: grandTotal * 100,
         currency: "INR",
         name: "ShubhMewa",

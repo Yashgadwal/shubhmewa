@@ -822,7 +822,7 @@ export async function trackOrderOrEnquiry(query: string) {
 
 export async function createRazorpayOrderAction(amount: number) {
   try {
-    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
 
     if (keyId && keySecret) {
